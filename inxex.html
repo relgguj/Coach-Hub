@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Coach Hub</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --green:#1D9E75;--gl:#e8f7f1;--gd:#136b50;
+  --amber:#f59e0b;--al:#fef3c7;
+  --blue:#3b82f6;--bl:#eff6ff;
+  --rose:#f43f5e;--rl:#fff1f2;
+  --purple:#7c3aed;--pl:#f5f3ff;
+  --indigo:#4f46e5;--il:#eef2ff;
+  --bg:#f7f6f2;--sur:#fff;--bdr:#e5e3db;--bdr2:#ccc;
+  --txt:#1a1a18;--txt2:#6b6a64;--txt3:#a8a79f;
+  --sh:0 1px 3px rgba(0,0,0,0.08);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;}
+.topbar{background:var(--sur);border-bottom:1px solid var(--bdr);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh);}
+.logo{font-size:15px;font-weight:600;display:flex;align-items:center;gap:9px;}
+.logo-mark{width:28px;height:28px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.logo-mark svg{width:15px;height:15px;}
+.nav{display:flex;gap:2px;}
+.nb{padding:5px 13px;border-radius:8px;border:none;background:transparent;font-size:13px;cursor:pointer;color:var(--txt2);font-family:inherit;font-weight:400;}
+.nb.active{background:#f0ede6;color:var(--txt);font-weight:500;}
+.nb:hover:not(.active){background:#f0ede6;}
+.content{padding:20px 24px;max-width:1280px;margin:0 auto;}
+.sec{display:none;}.sec.active{display:block;}
+label{font-size:12px;color:var(--txt2);display:block;margin-bottom:4px;font-weight:500;}
+input[type=text],input[type=email],input[type=url],input[type=number],input[type=date],textarea,select{width:100%;font-family:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--bdr);border-radius:8px;background:var(--sur);color:var(--txt);}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--green);}
+textarea{resize:vertical;}
+.fr{margin-bottom:11px;}.fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px;}.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:11px;}
+.btn{padding:7px 15px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;border:none;white-space:nowrap;transition:all .12s;}
+.btn-p{background:var(--green);color:#fff;}.btn-p:hover{background:var(--gd);}
+.btn-o{background:var(--sur);color:var(--txt);border:1px solid var(--bdr2);}.btn-o:hover{background:var(--bg);}
+.btn-ghost{background:transparent;color:var(--txt2);border:none;padding:5px 8px;}.btn-ghost:hover{background:var(--bg);}
+.btn-amber{background:var(--al);color:#92400e;border:1px solid #fde68a;}.btn-amber:hover{background:#fef3c7;}
+.btn-sm{padding:4px 10px;font-size:12px;}.btn-xs{padding:3px 8px;font-size:11px;}
+.btn-d{background:transparent;color:#dc2626;border:1px solid #fca5a5;padding:3px 8px;font-size:11px;border-radius:6px;cursor:pointer;font-family:inherit;}
+.btn-d:hover{background:#fef2f2;}
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:16px;box-shadow:var(--sh);}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sh h2{font-size:16px;font-weight:600;}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500;}
+.b-g{background:var(--gl);color:var(--gd);}.b-a{background:var(--al);color:#92400e;}.b-b{background:var(--bl);color:#1d4ed8;}.b-r{background:var(--rl);color:#be123c;}.b-p{background:var(--pl);color:var(--purple);}.b-x{background:#f1efe8;color:#5f5e5a;}.b-i{background:var(--il);color:var(--indigo);}
+.avatar{border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--gd);flex-shrink:0;}
+.divider{border:none;border-top:1px solid var(--bdr);margin:14px 0;}
+.empty{text-align:center;padding:26px 20px;color:var(--txt3);font-size:13px;}
+.hint{font-size:12px;color:var(--txt3);margin-bottom:5px;line-height:1.5;}
+.ml{margin-left:auto;}
+.flash{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:8px 20px;border-radius:99px;font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:opacity .2s;pointer-events:none;}
+.flash.show{opacity:1;}
+.goal-box{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.gb{background:var(--bg);border-radius:8px;padding:10px;}
+.gb-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--txt3);margin-bottom:5px;}
+.gb textarea{background:transparent;border:none;padding:0;font-size:13px;min-height:52px;color:var(--txt);width:100%;resize:vertical;outline:none;font-family:inherit;}
+.sec-cat{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--txt3);margin-bottom:7px;}
+.tip-wrap{position:relative;display:inline-flex;}
+.tip-btn{width:16px;height:16px;border-radius:50%;background:#e5e3db;border:none;cursor:pointer;font-size:10px;color:var(--txt2);display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
+.tip-btn:hover{background:var(--gl);color:var(--green);}
+.tooltip{display:none;position:absolute;left:22px;top:-4px;background:#1a1a18;color:#fff;font-size:12px;line-height:1.55;padding:8px 12px;border-radius:8px;width:240px;z-index:99;font-family:inherit;font-weight:400;}
+.tip-btn:hover+.tooltip,.tip-wrap:hover .tooltip{display:block;}
+/* Modals */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--sur);border-radius:16px;padding:24px;width:760px;max-width:100%;position:relative;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.15);}
+.modal-sm{max-width:520px;}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--txt3);line-height:1;}
+.dv-section{margin-bottom:14px;}
+.dv-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px;}
+.dv-content{background:var(--bg);border-radius:8px;padding:10px 12px;}
+.dv-content textarea{background:transparent;border:none;outline:none;font-size:13px;color:var(--txt);line-height:1.7;width:100%;resize:vertical;font-family:inherit;min-height:36px;}
+.dv-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.share-row{display:flex;align-items:center;gap:8px;padding:11px 0;border-bottom:1px solid var(--bdr);}
+/* Profile */
+.profile-header{background:linear-gradient(135deg,var(--gl),#fff);border:1px solid var(--bdr);border-radius:14px;padding:20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;}
+.stat-pill{background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;flex:1;min-width:70px;}
+.stat-pill-val{font-size:22px;font-weight:600;}.stat-pill-label{font-size:11px;color:var(--txt3);font-weight:500;text-transform:uppercase;letter-spacing:.04em;}
+/* Dashboard grid */
+.dash-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;align-items:start;}
+.widget{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:16px;box-shadow:var(--sh);position:relative;}
+.widget.w2{grid-column:span 2;}.widget.w3{grid-column:span 3;}.widget.w4{grid-column:span 4;}.widget.w5{grid-column:span 5;}.widget.w6{grid-column:span 6;}.widget.w7{grid-column:span 7;}.widget.w8{grid-column:span 8;}.widget.w9{grid-column:span 9;}.widget.w12{grid-column:span 12;}
+.widget-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--txt3);margin-bottom:10px;}
+/* Widget three-dot menu */
+.widget-dots-btn{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;font-size:18px;color:var(--txt3);line-height:1;padding:2px 4px;border-radius:6px;z-index:5;}
+.widget-dots-btn:hover{background:var(--bg);color:var(--txt);}
+.widget-menu{position:absolute;top:32px;right:10px;background:var(--sur);border:1px solid var(--bdr);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:50;min-width:160px;}
+.widget-menu-item{padding:8px 14px;font-size:13px;cursor:pointer;color:var(--txt);border-radius:6px;}
+.widget-menu-item:hover{background:var(--bg);}
+/* drag cursor */
+.widget{cursor:grab;}.widget:active{cursor:grabbing;}
+/* corner resize handle */
+.widget-resize-handle{position:absolute;bottom:0;right:0;width:18px;height:18px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 0%,transparent 45%,var(--bdr2) 45%,var(--bdr2) 55%,transparent 55%,transparent 70%,var(--bdr2) 70%,var(--bdr2) 80%,transparent 80%);border-bottom-right-radius:14px;opacity:.45;transition:opacity .15s;}
+.widget:hover .widget-resize-handle{opacity:1;}
+.widget-resize-handle:hover{opacity:1;background:linear-gradient(135deg,transparent 0%,transparent 45%,var(--green) 45%,var(--green) 55%,transparent 55%,transparent 70%,var(--green) 70%,var(--green) 80%,transparent 80%);}
+/* Obs notes timestamps */
+.notes-area-wrap{position:relative;}
+.ts-btn{position:absolute;right:8px;top:8px;background:var(--sur);border:1px solid var(--bdr2);border-radius:6px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit;color:var(--txt2);font-weight:500;z-index:2;}
+.ts-btn:hover{background:var(--gl);color:var(--green);border-color:var(--green);}
+.ts-mark{display:inline;font-family:'DM Mono',monospace;font-size:11px;color:var(--txt3);cursor:pointer;position:relative;font-weight:500;}
+.ts-mark:hover{color:var(--green);}
+.ts-bubble{display:none;position:absolute;bottom:20px;left:0;background:#1a1a18;color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;white-space:nowrap;z-index:10;pointer-events:none;}
+.ts-mark:hover .ts-bubble{display:block;}
+/* Interaction log */
+.log-type-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500;}
+.lt-obs{background:var(--gl);color:var(--gd);}
+.lt-meeting{background:var(--bl);color:#1d4ed8;}
+.lt-email{background:#f0fdf4;color:#166534;}
+.lt-hallway{background:var(--al);color:#92400e;}
+.lt-coplanning{background:var(--pl);color:var(--purple);}
+.lt-plc{background:var(--il);color:var(--indigo);}
+.lt-debrief{background:#fce7f3;color:#9f1239;}
+.lt-real-time-coaching{background:#fef3c7;color:#92400e;}
+.lt-walkthrough{background:#e0f2fe;color:#075985;}
+.lt-pd{background:#dcfce7;color:#166534;}
+.lt-meeting-check-in{background:var(--bl);color:#1d4ed8;}
+.lt-other{background:#f1efe8;color:#5f5e5a;}
+/* Type checkbox group */
+.type-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;padding:10px;}
+.type-check-item{display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;padding:3px 4px;border-radius:5px;}
+.type-check-item:hover{background:var(--sur);}
+.type-check-item input{width:auto;accent-color:var(--green);margin:0;}
+/* Duration quick-pick chips */
+.dur-chip{padding:5px 10px;font-size:12px;font-weight:500;border-radius:7px;border:1px solid var(--bdr2);background:var(--sur);color:var(--txt2);cursor:pointer;font-family:inherit;transition:all .12s;}
+.dur-chip:hover{background:var(--gl);color:var(--green);border-color:var(--green);}
+.dur-chip.active{background:var(--green);color:#fff;border-color:var(--green);}
+.workspace-tile{background:var(--sur);border:1px solid var(--bdr);border-radius:12px;padding:14px;margin-bottom:10px;}
+.workspace-tile-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.workspace-tile-title{font-size:14px;font-weight:600;}
+.workspace-link-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr);}
+.workspace-link-row:last-child{border-bottom:none;}
+/* Timer */
+.timer-display{font-family:'DM Mono',monospace;font-size:36px;font-weight:500;text-align:center;padding:14px 0 6px;letter-spacing:.05em;}
+#live-steps .step-card{background:var(--bg);border-radius:10px;padding:11px 14px;margin-bottom:7px;border:1px solid transparent;cursor:pointer;}
+#live-steps .step-card.cur{background:var(--gl);border-color:var(--green);}
+#live-steps .step-card .sn{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--txt3);margin-bottom:2px;}
+#live-steps .step-card.cur .sn{color:var(--gd);}
+/* Obs banner */
+.obs-banner{background:var(--bl);border:1px solid #bfdbfe;border-radius:10px;padding:12px 14px;margin-bottom:14px;}
+.obs-banner-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1d4ed8;margin-bottom:5px;}
+/* Cal embed */
+.cal-setup{display:flex;flex-direction:column;gap:12px;}
+.cal-steps{background:var(--bg);border-radius:10px;padding:12px 14px;}
+.cal-step-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;font-size:12px;color:var(--txt2);line-height:1.5;}
+.cal-step-row:last-child{margin-bottom:0;}
+.cal-step-num{width:20px;height:20px;background:var(--green);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+/* Sample data banner */
+.sample-banner{background:var(--al);border:1px solid #fde68a;border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;font-size:13px;color:#92400e;}
+/* Obs panel inside debrief modal */
+.obs-panel{background:var(--bl);border:1px solid #bfdbfe;border-radius:10px;margin-bottom:16px;overflow:hidden;}
+.obs-panel-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;user-select:none;}
+.obs-panel-header:hover{background:rgba(59,130,246,0.05);}
+.obs-panel-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1d4ed8;display:flex;align-items:center;gap:6px;}
+.obs-panel-body{padding:0 14px 12px;}
+.obs-panel-body .notes-text{font-size:13px;color:var(--txt);line-height:1.75;white-space:pre-wrap;background:#fff;padding:10px 12px;border-radius:8px;margin-top:2px;}
+/* Debrief linked pill on observation rows */
+.debrief-linked-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500;background:var(--pl);color:var(--purple);cursor:pointer;}
+.debrief-linked-pill:hover{background:#ede9fe;}
+.no-debrief-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:11px;background:#f1efe8;color:var(--txt3);}
+/* Row styles */
+.tr{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--sur);border:1px solid var(--bdr);border-radius:10px;margin-bottom:6px;cursor:pointer;}
+.tr:hover{border-color:var(--green);}
+.le{padding:12px 14px;background:var(--sur);border:1px solid var(--bdr);border-radius:10px;margin-bottom:8px;transition:border-color .12s;}
+.le:hover{border-color:var(--green);}
+.le-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.rc{padding:9px 12px;background:var(--sur);border:1px solid var(--bdr);border-radius:10px;margin-bottom:5px;display:flex;align-items:center;gap:10px;}
+/* Tabs */
+.tabs{display:inline-flex;gap:2px;background:#f0ede6;padding:3px;border-radius:8px;margin-bottom:14px;}
+.tab{padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:none;background:transparent;font-family:inherit;color:var(--txt2);}
+.tab.active{background:var(--sur);color:var(--txt);font-weight:500;box-shadow:var(--sh);}
+</style>
+</head>
+<body>
+<div class="flash" id="flash"></div>
+
+<!-- ── MODALS ── -->
+<div class="modal-bg" id="profile-modal"><div class="modal" style="max-width:860px;"><button class="modal-close" onclick="cm('profile-modal')">×</button><div id="profile-content"></div></div></div>
+<div class="modal-bg" id="dv-modal">
+  <div class="modal"><button class="modal-close" onclick="cm('dv-modal')">×</button>
+    <div id="dv-content"></div>
+    <div class="divider"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-p btn-sm" onclick="saveEditedDebrief()">Save changes</button>
+      <button class="btn btn-o btn-sm" style="background:var(--gl);color:var(--gd);border-color:var(--green);" onclick="startLive()">▶ Start debrief</button>
+      <button class="btn btn-o btn-sm" onclick="exportDebriefGDoc()">Export to Google Doc</button>
+      <button class="btn btn-o btn-sm" onclick="printDebrief()">Print</button>
+      <button class="btn-d btn-sm btn" id="dv-del-btn">Delete</button>
+    </div>
+    <div id="dv-msg" style="margin-top:10px;font-size:12px;color:var(--green);display:none;"></div>
+  </div>
+</div>
+<div class="modal-bg" id="live-modal">
+  <div class="modal" style="max-width:640px;"><button class="modal-close" onclick="stopLive()">×</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div style="font-size:16px;font-weight:700;" id="live-title"></div>
+      <button class="btn btn-o btn-sm" onclick="openGCal()">📅 Schedule next obs</button>
+    </div>
+    <div class="timer-display" id="live-timer">00:00</div>
+    <div style="display:flex;gap:6px;justify-content:center;margin-bottom:14px;">
+      <button class="btn btn-sm btn-p" id="live-tog" onclick="toggleTimer()">Start</button>
+      <button class="btn btn-sm btn-o" onclick="resetTimer()">Reset</button>
+      <button class="btn btn-sm" style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;" onclick="endLiveDebrief()">⏹ End debrief</button>
+    </div>
+    <div id="live-steps" style="max-height:320px;overflow-y:auto;"></div>
+    <div class="divider"></div>
+    <div class="fr"><label>Notes from this debrief</label><textarea id="live-notes" rows="3"></textarea></div>
+    <button class="btn btn-p btn-sm" onclick="saveLiveNotes()">Save notes</button>
+  </div>
+</div>
+<div class="modal-bg" id="obs-modal"><div class="modal modal-sm"><button class="modal-close" onclick="cm('obs-modal')">×</button><div id="obs-content"></div></div></div>
+<div class="modal-bg" id="int-modal"><div class="modal modal-sm"><button class="modal-close" onclick="cm('int-modal')">×</button><div id="int-content"></div></div></div>
+<div class="modal-bg" id="share-modal">
+  <div class="modal modal-sm"><button class="modal-close" onclick="cm('share-modal')">×</button>
+    <div style="font-size:15px;font-weight:600;margin-bottom:12px;">Share resource</div>
+    <div id="share-info" style="padding:8px 0 14px;border-bottom:1px solid var(--bdr);"></div>
+    <div class="share-row"><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Copy link</div><div style="font-size:12px;color:var(--txt3);" id="share-url-s"></div></div><button class="btn btn-o btn-sm" onclick="copyLink()">Copy</button></div>
+    <div class="share-row"><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Email to teacher</div><div style="font-size:12px;color:var(--txt3);" id="share-email-h"></div></div><button class="btn btn-o btn-sm" onclick="emailRes()">Open email ↗</button></div>
+    <div class="share-row" style="border:none;"><div style="flex:1;"><div style="font-size:13px;font-weight:500;">Open resource</div></div><button class="btn btn-o btn-sm" onclick="openRes()">Open ↗</button></div>
+  </div>
+</div>
+<div class="modal-bg" id="dash-settings-modal">
+  <div class="modal modal-sm"><button class="modal-close" onclick="cm('dash-settings-modal')">×</button>
+    <div style="font-size:15px;font-weight:600;margin-bottom:4px;">Dashboard widgets</div>
+    <div style="font-size:13px;color:var(--txt2);margin-bottom:14px;">Toggle widgets on or off. Drag to reorder. Use the resize controls on each widget.</div>
+    <div id="widget-toggle-list"></div>
+    <div class="divider"></div>
+    <button class="btn btn-p btn-sm" onclick="cm('dash-settings-modal');renderDash()">Done</button>
+  </div>
+</div>
+<div class="modal-bg" id="workspace-modal">
+  <div class="modal modal-sm"><button class="modal-close" onclick="cm('workspace-modal')">×</button>
+    <div id="workspace-content"></div>
+  </div>
+</div>
+
+<!-- ── TOPBAR ── -->
+<div class="topbar">
+  <div class="logo"><div class="logo-mark"><svg viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Math Coach Hub</div>
+  <div class="nav">
+    <button class="nb active" onclick="nav('home')">Home</button>
+    <button class="nb" onclick="nav('teachers')">Teachers</button>
+    <button class="nb" onclick="nav('debrief')">Debrief planner</button>
+    <button class="nb" onclick="nav('resources')">Resources</button>
+    <button class="nb" onclick="nav('log')">Log</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ══ HOME ══ -->
+<div id="home" class="sec active">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <h2 style="font-size:16px;font-weight:600;">Dashboard</h2>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-amber btn-sm" onclick="loadSampleData()" id="sample-btn">Load sample data</button>
+      <button class="btn btn-o btn-sm" onclick="openCustomizeMenu()">⚙ Customize</button>
+    </div>
+  </div>
+  <div id="sample-banner" style="display:none;" class="sample-banner">
+    <span>📊 Sample data is loaded — explore freely, then clear it when you're ready.</span>
+    <button class="btn btn-sm btn-o" style="border-color:#92400e;color:#92400e;" onclick="clearSampleData()">Clear sample data</button>
+  </div>
+  <div class="dash-grid" id="dash-grid"></div>
+</div>
+
+<!-- ══ TEACHERS ══ -->
+<div id="teachers" class="sec">
+  <div class="sh"><h2>Teachers</h2>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <select id="school-filter-t" onchange="renderTeachers()" style="width:auto;font-size:12px;padding:5px 8px;"><option value="">All schools</option></select>
+      <button class="btn btn-p btn-sm" onclick="toggleForm('tf')">+ Add teacher</button>
+    </div>
+  </div>
+  <div id="tf" class="card" style="display:none;margin-bottom:14px;">
+    <div style="font-size:13px;font-weight:600;margin-bottom:10px;">New teacher</div>
+    <div class="fr2"><div><label>Name</label><input type="text" id="tn" placeholder="Ms. Johnson"></div><div><label>Grade / subject</label><input type="text" id="tg" placeholder="4th grade math"></div></div>
+    <div class="fr3"><div><label>Room number</label><input type="text" id="troom" placeholder="Room 214"></div><div><label>School</label><input type="text" id="tschool" placeholder="e.g. Lincoln Elementary"></div><div><label>Email</label><input type="email" id="temail" placeholder="teacher@school.org"></div></div>
+    <div class="fr"><label>Notes</label><input type="text" id="tnotes" placeholder="Any context to remember"></div>
+    <div style="display:flex;gap:7px;"><button class="btn btn-p btn-sm" onclick="addTeacher()">Save</button><button class="btn btn-o btn-sm" onclick="toggleForm('tf')">Cancel</button></div>
+  </div>
+  <div id="tlist"><div class="empty">No teachers yet.</div></div>
+</div>
+
+<!-- ══ DEBRIEF PLANNER ══ -->
+<div id="debrief" class="sec">
+  <div class="sh"><h2>Debrief planner</h2></div>
+  <div id="obs-banner" style="display:none;"></div>
+  <div style="max-width:760px;">
+      <div class="card" style="margin-bottom:12px;">
+        <div class="fr2"><div><label>Teacher</label><select id="dt"><option value="">Select teacher...</option></select></div><div><label>Date</label><input type="date" id="dd"></div></div>
+        <div class="fr"><label>Lesson / class observed</label><input type="text" id="dlesson" placeholder="e.g. 3rd period Algebra · fractions unit"></div>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-g">Praise</span><span style="font-size:14px;font-weight:600;">What's working</span><div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">Starters: "I noticed that when you… students responded by…" / "Something working really well was…"</div></div></div>
+        <div class="hint">What was working in the lesson and how do you know?</div>
+        <textarea id="d-praise" rows="3" placeholder="Name a specific teacher move + the student evidence that shows it worked..."></textarea>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-r">Questions</span><span style="font-size:14px;font-weight:600;">Targeted questions</span><div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">Starters: "What did you notice about…?" / "How did students respond when…?" / "What would you try differently?"</div></div></div>
+        <div class="hint">1–3 open questions to help the teacher recognize the focus area</div>
+        <div class="fr"><textarea id="d-q1" rows="2" placeholder="Q1:"></textarea></div>
+        <div class="fr"><textarea id="d-q2" rows="2" placeholder="Q2:"></textarea></div>
+        <div class="fr" style="margin-bottom:8px;"><textarea id="d-q3" rows="2" placeholder="Q3:"></textarea></div>
+        <div class="hint">What data will you bring?</div>
+        <textarea id="d-qdata" rows="2" placeholder="Scripted teacher talk, student work samples, error analysis..."></textarea>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-a">Change</span><span style="font-size:14px;font-weight:600;">Name the change</span><div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">Starters: "One thing with the biggest impact is…" / "The pattern I keep seeing is…"</div></div></div>
+        <div class="fr"><div class="hint">What is the most important thing that needs to change?</div><textarea id="d-change" rows="2" placeholder="Be specific — name the instructional move or student outcome..."></textarea></div>
+        <div class="hint">What data is driving your thinking?</div>
+        <textarea id="d-data" rows="2" placeholder="Evidence from today's observation, student work, assessment data..."></textarea>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-b">Skill</span><span style="font-size:14px;font-weight:600;">Transfer the skill</span><div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">Starters: "To make this shift the teacher needs to…" / "I could support this by…"</div></div></div>
+        <div class="fr"><div class="hint">What skills does the teacher need to develop?</div><textarea id="d-skill" rows="2" placeholder="e.g. launching a number talk, using wait time, revoicing..."></textarea></div>
+        <div class="fr"><div class="hint">How will you support that development?</div><textarea id="d-support" rows="2" placeholder="Co-planning, modeling, side-by-side observation, video analysis..."></textarea></div>
+        <div class="fr" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="d-rtc" style="width:auto;accent-color:var(--green);"><label for="d-rtc" style="display:inline;cursor:pointer;margin:0;">Real-time coaching is a viable strategy here</label></div>
+        <div class="hint">How will the teacher demonstrate readiness?</div>
+        <textarea id="d-ready" rows="2" placeholder="e.g. Teacher articulates the change, role-plays the move..."></textarea>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-p">Goal</span><span style="font-size:14px;font-weight:600;">Draft a goal</span><div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">A strong goal is Meaningful for students, Motivating for the teacher, and Measurable for you.</div></div></div>
+        <div class="goal-box" style="margin-bottom:10px;"><div class="gb"><div class="gb-label">Meaningful for students</div><textarea id="d-g1" placeholder="How does this connect to student outcomes?"></textarea></div><div class="gb"><div class="gb-label">Motivating for teacher</div><textarea id="d-g2" placeholder="Why will the teacher care?"></textarea></div><div class="gb"><div class="gb-label">Measurable for you</div><textarea id="d-g3" placeholder="What evidence shows progress?"></textarea></div></div>
+        <label>Goal statement</label>
+        <textarea id="d-goal" rows="2" placeholder="By [date], [teacher] will _______ so that students _______. We'll know it's working when _______."></textarea>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-x">Next</span><span style="font-size:14px;font-weight:600;">Plan for next steps</span></div>
+        <div class="hint">How will you check progress?</div>
+        <textarea id="d-next" rows="2" placeholder="Follow-up observation in 2 weeks, review exit tickets together..."></textarea>
+      </div>
+      <div class="card" style="margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span>✎</span><span style="font-size:14px;font-weight:600;">Debrief notes</span></div>
+        <textarea id="d-notes" rows="4" placeholder="What did the teacher say? What shifted? What surprised you?"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;"><button class="btn btn-p" onclick="saveDebrief()">Save debrief</button><button class="btn btn-o" onclick="clearDebrief()">Clear form</button></div>
+  </div>
+</div>
+
+<!-- ══ RESOURCES ══ -->
+<div id="resources" class="sec">
+  <div class="sh"><h2>Resource library</h2>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-o btn-sm" onclick="openNewWorkspace()">+ New workspace</button>
+      <button class="btn btn-p btn-sm" onclick="toggleForm('rfm')">+ Add resource</button>
+    </div>
+  </div>
+  <!-- WORKSPACES -->
+  <div id="workspaces-section" style="margin-bottom:24px;">
+    <div class="sec-cat">Workspaces</div>
+    <div id="workspaces-list"><div style="font-size:13px;color:var(--txt3);padding:8px 0;">No workspaces yet. Create one to group related links together.</div></div>
+  </div>
+  <!-- INDIVIDUAL RESOURCES -->
+  <div class="sec-cat">All resources</div>
+  <div id="rfm" class="card" style="display:none;margin-bottom:14px;">
+    <div style="font-size:13px;font-weight:600;margin-bottom:10px;">Add resource</div>
+    <div class="fr2"><div><label>Name</label><input type="text" id="rn" placeholder="e.g. CGI Problem Bank"></div><div><label>Folder / tag</label><input type="text" id="rtag" placeholder="e.g. Number Sense, PD, Grade 4..."></div></div>
+    <div class="fr2"><div><label>Category</label><select id="rcat"><option>PD / professional learning</option><option>Lesson resources</option><option>Assessment tools</option><option>Curriculum / standards</option><option>Tech tools</option><option>Student materials</option><option>Other</option></select></div><div><label>URL</label><input type="url" id="rurl" placeholder="https://drive.google.com/..."></div></div>
+    <div class="fr2"><div><label>Notes (optional)</label><input type="text" id="rnotes" placeholder="Brief description"></div><div><label>Assign to teacher (optional)</label><select id="rtsel"><option value="">My reference only</option></select></div></div>
+    <div style="display:flex;gap:7px;"><button class="btn btn-p btn-sm" onclick="addResource()">Save</button><button class="btn btn-o btn-sm" onclick="toggleForm('rfm')">Cancel</button></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;"><input type="text" id="rsearch" placeholder="Search by name, tag, notes..." oninput="renderResources()" style="max-width:260px;"><select id="rfilter" onchange="renderResources()" style="max-width:180px;"><option value="">All categories</option><option>PD / professional learning</option><option>Lesson resources</option><option>Assessment tools</option><option>Curriculum / standards</option><option>Tech tools</option><option>Student materials</option><option>Other</option></select><select id="rtagfilter" onchange="renderResources()" style="max-width:160px;"><option value="">All folders/tags</option></select></div>
+  <div id="rlist"><div class="empty">No resources yet.</div></div>
+</div>
+
+<!-- ══ LOG ══ -->
+<div id="log" class="sec">
+  <div class="sh">
+    <h2>Coaching log</h2>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-p btn-sm" id="btn-new-obs" onclick="openNewLog('observation')">+ Log observation</button>
+      <button class="btn btn-o btn-sm" id="btn-new-int" onclick="openNewLog('interaction')">+ Log interaction</button>
+    </div>
+  </div>
+
+  <!-- New obs form — hides list when open -->
+  <div id="lfm-obs" style="display:none;margin-bottom:14px;">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:14px;font-weight:600;">New observation</div>
+        <button class="btn-ghost btn-sm btn" onclick="closeNewLog()">✕ Cancel</button>
+      </div>
+      <div class="fr2"><div><label>Teacher</label><select id="lt-obs" onchange="showTeacherLookback(this.value)"><option value="">Select teacher...</option></select></div><div><label>Date</label><input type="date" id="ld-obs"></div></div>
+      <div id="lookback-card" style="display:none;background:var(--bl);border:1px solid #bfdbfe;border-radius:10px;padding:11px 14px;margin-bottom:11px;"></div>
+      <div class="fr2"><div><label>Focus area</label><input type="text" id="lfocus-obs" placeholder="e.g. questioning, pacing, discourse"></div><div><label>Lesson link (optional)</label><input type="url" id="llink-obs" placeholder="https://docs.google.com/..."></div></div>
+      <div class="fr"><label>Observation notes</label><div class="notes-area-wrap"><button class="ts-btn" onclick="insertTs('lnotes-obs')" type="button">⏱ Insert time</button><textarea id="lnotes-obs" style="min-height:160px;padding-top:32px;" placeholder="Tap '⏱ Insert time' to stamp a moment, then type your notes..."></textarea></div></div>
+      <button class="btn btn-p" onclick="saveObs()">Save observation</button>
+    </div>
+  </div>
+
+  <!-- New interaction form — hides list when open -->
+  <div id="lfm-int" style="display:none;margin-bottom:14px;">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:14px;font-weight:600;">Log interaction</div>
+        <button class="btn-ghost btn-sm btn" onclick="closeNewLog()">✕ Cancel</button>
+      </div>
+      <div class="fr2"><div><label>Teacher</label><select id="lt-int"><option value="">Select teacher...</option></select></div><div><label>Date</label><input type="date" id="ld-int"></div></div>
+      <div class="fr">
+        <label>Type(s) — select one or more</label>
+        <div class="type-checks" id="lint-type-checks">
+          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Observation"> Observation</label>
+          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Debrief"> Debrief</label>
+          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Co-planning"> Co-planning</label>
+          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Real-time coaching"> Real-time coaching</label>
+          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Meeting/Check-in"> Meeting/Check-in</label>
+          <label class="type-check-item"><input type="checkbox" name="lint-type" value="PLC"> PLC</label>
+          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Walkthrough"> Walkthrough</label>
+          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Email"> Email</label>
+          <label class="type-check-item"><input type="checkbox" name="lint-type" value="PD"> PD</label>
+          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Other"> Other</label>
+        </div>
+      </div>
+      <div class="fr">
+        <label>Duration (min)</label>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+          <input type="number" id="lint-dur" placeholder="custom" min="0" style="max-width:110px;">
+          <div style="display:flex;gap:5px;flex-wrap:wrap;">
+            <button type="button" class="dur-chip" onclick="setDuration('lint-dur',5)">5m</button>
+            <button type="button" class="dur-chip" onclick="setDuration('lint-dur',10)">10m</button>
+            <button type="button" class="dur-chip" onclick="setDuration('lint-dur',15)">15m</button>
+            <button type="button" class="dur-chip" onclick="setDuration('lint-dur',30)">30m</button>
+            <button type="button" class="dur-chip" onclick="setDuration('lint-dur',45)">45m</button>
+            <button type="button" class="dur-chip" onclick="setDuration('lint-dur',60)">60m</button>
+          </div>
+        </div>
+      </div>
+      <div class="fr"><label>Quick notes</label><textarea id="lint-notes" rows="3" placeholder="What was discussed? Any decisions made? Next steps?"></textarea></div>
+      <button class="btn btn-p" onclick="saveInteraction()">Save interaction</button>
+    </div>
+  </div>
+
+  <!-- Log content (hidden while form is open) -->
+  <div id="log-list-area">
+    <!-- Stats bar -->
+    <div id="log-stats" style="display:flex;flex-direction:column;gap:4px;margin-bottom:16px;"></div>
+    <!-- Filter bar -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+      <select id="ltype-filter" onchange="renderLog()" style="max-width:170px;">
+        <option value="">All types</option>
+        <option value="Observation">Observation</option>
+        <option value="Debrief">Debrief</option>
+        <option value="Co-planning">Co-planning</option>
+        <option value="Real-time coaching">Real-time coaching</option>
+        <option value="Meeting/Check-in">Meeting/Check-in</option>
+        <option value="PLC">PLC</option>
+        <option value="Walkthrough">Walkthrough</option>
+        <option value="Email">Email</option>
+        <option value="PD">PD</option>
+        <option value="Other">Other</option>
+      </select>
+      <select id="lfilter" onchange="renderLog()" style="max-width:200px;"><option value="">All teachers</option></select>
+      <select id="lschool-filter" onchange="renderLog()" style="max-width:180px;"><option value="">All schools</option></select>
+      <select id="lsort" onchange="renderLog()" style="max-width:170px;">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="teacher">By teacher A–Z</option>
+        <option value="nodebrief">Obs with no debrief</option>
+      </select>
+    </div>
+    <div id="llist"><div class="empty">No entries yet.</div></div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+// ── STATE ──
+let S={teachers:[],resources:[],workspaces:[],logs:[],interactions:[],debriefs:[]};
+let curDebriefId=null,curShareRes=null,curWsId=null,pendingObsId=null;
+let timerInt=null,timerSec=0,timerOn=false;
+let dashWidgets=[
+  {id:'stats',label:'Stats',on:false,cols:12},
+  {id:'actions',label:'Quick Actions',on:true,cols:3},
+  {id:'recent',label:'Recent Activity',on:true,cols:4},
+  {id:'calendar',label:'Google Calendar',on:true,cols:5}
+];
+let sampleLoaded=false;
+
+try{const sv=localStorage.getItem('mch_v9');if(sv){const p=JSON.parse(sv);S=p.S||S;dashWidgets=p.dashWidgets||dashWidgets;}}catch(e){}
+
+function save(){try{localStorage.setItem('mch_v9',JSON.stringify({S,dashWidgets}));}catch(e){}}
+function gi(id){return document.getElementById(id);}
+function gv(id){const e=gi(id);return e?e.value.trim():'';}
+function sv2(id,v){const e=gi(id);if(e)e.value=v||'';}
+function cv(id){sv2(id,'');}
+function flash(msg){const e=gi('flash');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
+function cm(id){gi(id).classList.remove('open');}
+function initials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
+function avi(n,s=32,col=''){return `<div class="avatar" style="width:${s}px;height:${s}px;font-size:${Math.round(s*.35)}px;${col?'background:'+col+';color:#fff;':''}">${initials(n)}</div>`;}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// Convert readable "April 24" or "April 24, 2026" → "2026-04-24" (for date input value)
+function dateToISO(readable){
+  if(!readable||readable==='No date')return '';
+  const d=new Date(readable+(readable.match(/\d{4}/)?'':', '+new Date().getFullYear()));
+  if(isNaN(d))return '';
+  const yyyy=d.getFullYear(),mm=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+// Convert "2026-04-24" → "April 24" (current year) or "April 24, 2026" (different year)
+function dateFromISO(iso){
+  if(!iso)return '';
+  const [y,m,d]=iso.split('-').map(Number);
+  if(!y||!m||!d)return '';
+  const date=new Date(y,m-1,d);
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const cur=new Date().getFullYear();
+  return y===cur ? `${months[m-1]} ${d}` : `${months[m-1]} ${d}, ${y}`;
+}
+// Today's ISO for default date input value
+function todayISO(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function setDuration(inputId,minutes){
+  const el=gi(inputId);if(!el)return;
+  el.value=minutes;
+  // Highlight the active chip if it's near this input
+  const wrap=el.closest('.fr');if(!wrap)return;
+  wrap.querySelectorAll('.dur-chip').forEach(c=>c.classList.remove('active'));
+  const chips=wrap.querySelectorAll('.dur-chip');
+  chips.forEach(c=>{if(c.textContent===`${minutes}m`)c.classList.add('active');});
+}
+
+// ── NAV ──
+function nav(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  gi(id).classList.add('active');
+  ['home','teachers','debrief','resources','log'].forEach((x,i)=>document.querySelectorAll('.nb')[i].classList.toggle('active',x===id));
+  if(id==='home')renderDash();
+  if(id==='debrief'){refreshDDs();renderDebriefs();gi('obs-banner').style.display='none';if(gi('dd')&&!gi('dd').value)sv2('dd',todayISO());}
+  if(id==='log'){refreshDDs();['ltype-filter','lfilter','lschool-filter','lsort'].forEach(f=>{const el=gi(f);if(el)el.value=el.tagName==='SELECT'?(el.options[0]?el.options[0].value:''):'';});renderLog();renderLogStats();}
+  if(id==='resources'){refreshDDs();renderResources();renderWorkspaces();}
+  if(id==='teachers'){refreshSchoolFilters();renderTeachers();}
+}
+function toggleForm(id){const e=gi(id);e.style.display=(e.style.display==='block')?'none':'block';}
+// Modal close on backdrop click — only if mousedown started on the backdrop too
+// (prevents accidental close when text-selection drag ends outside)
+let _modalMouseDownTarget=null;
+document.addEventListener('mousedown',e=>{_modalMouseDownTarget=e.target;});
+document.addEventListener('click',e=>{
+  if(e.target.classList.contains('modal-bg')&&_modalMouseDownTarget===e.target){
+    e.target.classList.remove('open');
+  }
+});
+
+// ── DROPDOWNS ──
+function refreshDDs(){
+  [['dt','Select teacher...'],['lt-obs','Select teacher...'],['lt-int','Select teacher...']].forEach(([id,ph])=>{
+    const el=gi(id);if(!el)return;const cur=el.value;
+    el.innerHTML=`<option value="">${ph}</option>`;
+    S.teachers.forEach(t=>{const o=document.createElement('option');o.value=t.name;o.textContent=t.name+(t.school?' ('+t.school+')':'');el.appendChild(o);});
+    if(cur)el.value=cur;
+  });
+  ['lfilter'].forEach(id=>{
+    const el=gi(id);if(!el)return;const cur=el.value;
+    el.innerHTML='<option value="">All teachers</option>';
+    S.teachers.forEach(t=>{const o=document.createElement('option');o.value=t.name;o.textContent=t.name;el.appendChild(o);});
+    if(cur)el.value=cur;
+  });
+  const rt=gi('rtsel');if(rt){const c=rt.value;rt.innerHTML='<option value="">My reference only</option>';S.teachers.forEach(t=>{const o=document.createElement('option');o.value=t.name;o.textContent=t.name;rt.appendChild(o);});rt.value=c||'';}
+  const tags=new Set(S.resources.map(r=>r.tag).filter(Boolean));
+  const rtf=gi('rtagfilter');if(rtf){const c=rtf.value;rtf.innerHTML='<option value="">All folders/tags</option>';tags.forEach(tag=>{const o=document.createElement('option');o.value=tag;o.textContent=tag;rtf.appendChild(o);});rtf.value=c||'';}
+  refreshSchoolFilters();
+}
+function refreshSchoolFilters(){
+  const schools=[...new Set(S.teachers.map(t=>t.school).filter(Boolean))];
+  ['school-filter-t','lschool-filter'].forEach(id=>{
+    const el=gi(id);if(!el)return;const c=el.value;
+    el.innerHTML=id==='school-filter-t'?'<option value="">All schools</option>':'<option value="">All schools</option>';
+    schools.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;el.appendChild(o);});
+    if(c)el.value=c;
+  });
+}
+
+// ── DASHBOARD ──
+let dragSrcIdx=null;
+
+function renderDash(){
+  const grid=gi('dash-grid');
+  grid.innerHTML='';
+  // Close any open widget menus on outside click
+  dashWidgets.filter(w=>w.on).forEach((w,idx)=>{
+    const div=document.createElement('div');
+    div.className=`widget w${w.cols}`;
+    div.id=`widget-${w.id}`;
+    div.setAttribute('draggable','true');
+    div.innerHTML=
+      `<div class="widget-dots-btn" onclick="toggleWidgetMenu('wmenu-${w.id}',event)" title="Widget options">⋯</div>
+      <div class="widget-menu" id="wmenu-${w.id}" style="display:none;">
+        <div class="widget-menu-item" onclick="hideWidget('${w.id}')">Hide widget</div>
+        <div style="padding:4px 10px;font-size:11px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;border-top:1px solid var(--bdr);margin-top:2px;">Move</div>
+        <div style="display:flex;gap:4px;padding:4px 10px 8px;">
+          ${idx>0?`<button onclick="moveWidget('${w.id}',-1)" style="padding:2px 8px;border-radius:5px;border:1px solid var(--bdr2);background:var(--sur);font-size:11px;cursor:pointer;font-family:inherit;">← Left</button>`:''}
+          ${idx<dashWidgets.filter(x=>x.on).length-1?`<button onclick="moveWidget('${w.id}',1)" style="padding:2px 8px;border-radius:5px;border:1px solid var(--bdr2);background:var(--sur);font-size:11px;cursor:pointer;font-family:inherit;">Right →</button>`:''}
+        </div>
+        <div style="padding:6px 10px 8px;font-size:11px;color:var(--txt3);border-top:1px solid var(--bdr);">💡 Tip: drag the bottom-right corner to resize</div>
+      </div>
+      ${buildWidget(w)}
+      <div class="widget-resize-handle" title="Drag to resize"></div>`;
+    // Drag-to-reorder events
+    div.addEventListener('dragstart',e=>{
+      // Don't initiate drag if grabbing the resize handle
+      if(e.target.classList.contains('widget-resize-handle')){e.preventDefault();return;}
+      dragSrcIdx=dashWidgets.filter(x=>x.on).indexOf(w);e.dataTransfer.effectAllowed='move';div.style.opacity='0.4';
+    });
+    div.addEventListener('dragend',()=>{div.style.opacity='';});
+    div.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='move';div.style.outline='2px solid var(--green)';});
+    div.addEventListener('dragleave',()=>{div.style.outline='';});
+    div.addEventListener('drop',e=>{
+      e.preventDefault();div.style.outline='';
+      const onWidgets=dashWidgets.filter(x=>x.on);
+      const targetIdx=onWidgets.indexOf(w);
+      if(dragSrcIdx===null||dragSrcIdx===targetIdx)return;
+      const allSrc=dashWidgets.indexOf(onWidgets[dragSrcIdx]);
+      const allTarget=dashWidgets.indexOf(onWidgets[targetIdx]);
+      const [moved]=dashWidgets.splice(allSrc,1);
+      dashWidgets.splice(allTarget,0,moved);
+      dragSrcIdx=null;save();renderDash();
+    });
+    // Corner resize
+    const handle=div.querySelector('.widget-resize-handle');
+    handle.addEventListener('mousedown',e=>{
+      e.preventDefault();e.stopPropagation();
+      div.setAttribute('draggable','false'); // disable drag while resizing
+      const startX=e.clientX;
+      const gridRect=grid.getBoundingClientRect();
+      const colWidth=gridRect.width/12;
+      const startCols=w.cols;
+      div.style.outline='2px solid var(--green)';
+      function onMove(ev){
+        const dx=ev.clientX-startX;
+        const colDelta=Math.round(dx/colWidth);
+        const newCols=Math.max(2,Math.min(12,startCols+colDelta));
+        if(newCols!==w.cols){
+          w.cols=newCols;
+          div.className=`widget w${newCols}`;
+        }
+      }
+      function onUp(){
+        document.removeEventListener('mousemove',onMove);
+        document.removeEventListener('mouseup',onUp);
+        div.style.outline='';
+        div.setAttribute('draggable','true');
+        save();
+      }
+      document.addEventListener('mousemove',onMove);
+      document.addEventListener('mouseup',onUp);
+    });
+    grid.appendChild(div);
+  });
+  document.addEventListener('click',e=>{
+    if(!e.target.classList.contains('widget-dots-btn'))
+      document.querySelectorAll('.widget-menu').forEach(m=>m.style.display='none');
+  });
+  loadCalWidget();
+}
+
+function toggleWidgetMenu(id,e){
+  e.stopPropagation();
+  document.querySelectorAll('.widget-menu').forEach(m=>{if(m.id!==id)m.style.display='none';});
+  const m=gi(id);m.style.display=m.style.display==='none'?'block':'none';
+}
+
+function hideWidget(id){
+  const w=dashWidgets.find(x=>x.id===id);if(w)w.on=false;
+  save();renderDash();
+  flash('Widget hidden — use ⚙ Customize to bring it back');
+}
+
+function moveWidget(id,dir){
+  const onWidgets=dashWidgets.filter(x=>x.on);
+  const curOnIdx=onWidgets.findIndex(x=>x.id===id);
+  const newOnIdx=curOnIdx+dir;
+  if(newOnIdx<0||newOnIdx>=onWidgets.length)return;
+  const allCur=dashWidgets.indexOf(onWidgets[curOnIdx]);
+  const allTarget=dashWidgets.indexOf(onWidgets[newOnIdx]);
+  const [moved]=dashWidgets.splice(allCur,1);
+  dashWidgets.splice(allTarget,0,moved);
+  save();renderDash();
+}
+
+function openCustomizeMenu(){
+  // Build the customize panel: existing widgets with toggles + workspace pinning
+  const widgetRows=dashWidgets.map(w=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bdr);">
+      <input type="checkbox" id="cw-${w.id}" ${w.on?'checked':''} onchange="toggleWidgetOn('${w.id}',this.checked)" style="width:auto;accent-color:var(--green);">
+      <label for="cw-${w.id}" style="font-size:13px;font-weight:500;flex:1;cursor:pointer;margin:0;">${w.label}</label>
+      ${w.id.startsWith('ws-')?`<button class="btn-d" onclick="removeWidget('${w.id}')">Remove</button>`:`<span style="font-size:11px;color:var(--txt3);">built-in</span>`}
+    </div>`).join('');
+  const pinnedIds=dashWidgets.filter(w=>w.id.startsWith('ws-')).map(w=>w.wsId);
+  const availableWs=S.workspaces.filter(ws=>!pinnedIds.includes(ws.id));
+  const pinSection=availableWs.length
+    ? `<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr);">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Pin a workspace to the dashboard</div>
+        <div style="font-size:12px;color:var(--txt3);margin-bottom:8px;">Adds the workspace and its links as a tile on your dashboard.</div>
+        <div class="fr" style="display:flex;gap:7px;align-items:flex-end;">
+          <div style="flex:1;"><label>Workspace</label><select id="pin-ws-select">${availableWs.map(w=>`<option value="${w.id}">${w.title}</option>`).join('')}</select></div>
+          <button class="btn btn-p btn-sm" onclick="doPinWorkspace()">Pin</button>
+        </div>
+      </div>`
+    : (S.workspaces.length
+      ? `<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr);font-size:12px;color:var(--txt3);">All workspaces are already pinned. Create a new one in Resources to add more.</div>`
+      : `<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr);font-size:12px;color:var(--txt3);">Create a workspace in Resources to pin it here.</div>`);
+  gi('widget-toggle-list').innerHTML=`
+    <div style="font-size:15px;font-weight:600;margin-bottom:4px;">Customize dashboard</div>
+    <div style="font-size:12px;color:var(--txt2);margin-bottom:14px;">Toggle widgets on or off. Drag-and-drop on the dashboard to reorder. Drag the bottom-right corner to resize.</div>
+    ${widgetRows}
+    ${pinSection}
+    <div style="display:flex;justify-content:flex-end;margin-top:14px;"><button class="btn btn-p btn-sm" onclick="cm('dash-settings-modal')">Done</button></div>`;
+  gi('dash-settings-modal').classList.add('open');
+}
+
+function toggleWidgetOn(id,on){
+  const w=dashWidgets.find(x=>x.id===id);if(!w)return;
+  w.on=on;save();renderDash();
+}
+
+function removeWidget(id){
+  if(!confirm('Remove this widget from the dashboard? (Your workspace itself will not be deleted.)'))return;
+  dashWidgets=dashWidgets.filter(w=>w.id!==id);
+  save();openCustomizeMenu();renderDash();
+}
+
+function doPinWorkspace(){
+  const wsId=parseInt(gi('pin-ws-select').value);
+  const ws=S.workspaces.find(x=>x.id===wsId);if(!ws)return;
+  const wid=`ws-${wsId}`;
+  if(dashWidgets.find(w=>w.id===wid)){flash('Already pinned!');return;}
+  dashWidgets.push({id:wid,label:ws.title,on:true,cols:4,wsId});
+  save();openCustomizeMenu();renderDash();flash(`"${ws.title}" pinned to dashboard!`);
+}
+
+function buildWidget(w){
+  if(w.id==='stats') return buildStatsWidget();
+  if(w.id==='actions') return buildActionsWidget();
+  if(w.id==='recent') return buildRecentWidget();
+  if(w.id==='calendar') return buildCalWidget();
+  if(w.id.startsWith('ws-')) return buildWsWidget(w);
+  return `<div class="widget-label">${w.label}</div>`;
+}
+
+function buildWsWidget(w){
+  const ws=S.workspaces.find(x=>x.id===w.wsId);
+  if(!ws) return `<div class="widget-label">${w.label}</div><div style="font-size:13px;color:var(--txt3);">Workspace removed.</div>`;
+  return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+    <div style="width:10px;height:10px;border-radius:50%;background:${ws.color||'var(--green)'};flex-shrink:0;"></div>
+    <div class="widget-label" style="margin:0;">${ws.title}</div>
+    <button class="btn btn-o btn-xs" style="margin-left:auto;" onclick="openWorkspace(${ws.id})">Open →</button>
+  </div>
+  ${ws.description?`<div style="font-size:12px;color:var(--txt2);margin-bottom:10px;">${ws.description}</div>`:''}
+  ${ws.links.map(l=>`<div style="padding:5px 0;border-bottom:1px solid var(--bdr);"><a href="${l.url}" target="_blank" style="font-size:13px;font-weight:500;color:var(--blue);text-decoration:none;">${l.name}</a>${l.notes?`<div style="font-size:11px;color:var(--txt3);">${l.notes}</div>`:''}</div>`).join('')}
+  ${!ws.links.length?`<div style="font-size:13px;color:var(--txt3);">No links yet.</div>`:''}`;
+}
+
+function buildStatsWidget(){
+  const totalLogs=S.logs.length+S.interactions.length;
+  return `<div class="widget-label">Overview</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+    <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><div style="font-size:22px;font-weight:600;">${S.teachers.length}</div><div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;font-weight:500;">Teachers</div></div>
+    <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><div style="font-size:22px;font-weight:600;">${S.logs.length}</div><div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;font-weight:500;">Observations</div></div>
+    <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><div style="font-size:22px;font-weight:600;">${S.debriefs.length}</div><div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;font-weight:500;">Debriefs</div></div>
+    <div style="background:var(--bg);border-radius:10px;padding:10px 12px;"><div style="font-size:22px;font-weight:600;">${S.interactions.length}</div><div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;font-weight:500;">Interactions</div></div>
+  </div>`;
+}
+
+function buildActionsWidget(){
+  return `<div class="widget-label">Quick actions</div>
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <button class="btn btn-p" style="justify-content:flex-start;" onclick="openNewLog('observation')">+ Log observation</button>
+    <button class="btn btn-o" style="justify-content:flex-start;" onclick="openNewLog('interaction')">+ Log interaction</button>
+    <button class="btn btn-o" style="justify-content:flex-start;" onclick="nav('debrief')">+ Plan a debrief</button>
+    <button class="btn btn-o" style="justify-content:flex-start;" onclick="nav('resources')">+ Add a resource</button>
+    <button class="btn btn-o" style="justify-content:flex-start;" onclick="nav('teachers')">+ Add a teacher</button>
+  </div>`;
+}
+
+function buildRecentWidget(){
+  const allRecent=[
+    ...S.logs.map(l=>({...l,_type:'obs'})),
+    ...S.interactions.map(i=>({...i,_type:'int'}))
+  ].sort((a,b)=>b.id-a.id).slice(0,6);
+  if(!allRecent.length) return `<div class="widget-label">Recent activity</div><div class="empty" style="padding:16px 0;">Nothing logged yet</div>`;
+  return `<div class="widget-label">Recent activity</div>`+allRecent.map(e=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr);cursor:pointer;" onclick="${e._type==='obs'?`openObsModal(${e.id})`:`openIntModal(${e.id})`}">
+      ${avi(e.teacher,24,'var(--green)')}
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:500;">${e.teacher}</div>
+        <div style="font-size:12px;color:var(--txt3);">${e._type==='obs'?'Observation':(e.type||'Interaction')}${e.focus?' · '+e.focus:''}</div>
+      </div>
+      <span style="font-size:11px;color:var(--txt3);">${e.date||''}</span>
+    </div>`).join('');
+}
+
+function buildCalWidget(){
+  const url=localStorage.getItem('mch_cal_url');
+  if(url){
+    return `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div class="widget-label" style="margin-bottom:0;">Google Calendar</div><button class="btn-ghost btn-sm btn" style="font-size:11px;" onclick="showCalSetup()">⚙ Re-link</button></div>
+    <div style="border-radius:8px;overflow:hidden;border:1px solid var(--bdr);">
+      <iframe id="cal-iframe" src="${addCalParams(url)}" style="width:100%;height:420px;display:block;border:none;"></iframe>
+    </div>`;
+  }
+  return `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div class="widget-label" style="margin-bottom:0;">Google Calendar</div></div>
+  <div id="cal-setup-inner" class="cal-setup">
+    <div style="font-size:13px;color:var(--txt2);line-height:1.6;">Link your Google Calendar to see it live here.</div>
+    <div class="cal-steps">
+      <div class="cal-step-row"><div class="cal-step-num">1</div><div>Go to <strong>calendar.google.com</strong> → click <strong>⋮</strong> next to your calendar → <strong>Settings and sharing</strong></div></div>
+      <div class="cal-step-row"><div class="cal-step-num">2</div><div>Scroll to <strong>"Integrate calendar"</strong> → find <strong>"Embed code"</strong></div></div>
+      <div class="cal-step-row"><div class="cal-step-num">3</div><div>Copy the URL inside <code style="background:#e8e6df;padding:1px 4px;border-radius:3px;font-size:11px;">src="..."</code></div></div>
+    </div>
+    <input type="url" id="cal-url-input" placeholder="https://calendar.google.com/calendar/embed?src=..." style="width:100%;">
+    <button class="btn btn-p btn-sm" style="width:100%;" onclick="saveCalUrl()">Save calendar</button>
+  </div>`;
+}
+
+function addCalParams(url){
+  let u=url;
+  if(!u.includes('showTitle='))u+=(u.includes('?')?'&':'?')+'showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0';
+  return u;
+}
+
+function loadCalWidget(){/* called after render, iframe already in DOM */}
+
+function saveCalUrl(){
+  let url=gv('cal-url-input');
+  if(!url){flash('Please paste your Google Calendar embed URL.');return;}
+  const m=url.match(/src="([^"]+)"/);if(m)url=m[1];
+  if(!url.includes('calendar.google.com')){flash('That doesn\'t look like a Google Calendar URL.');return;}
+  localStorage.setItem('mch_cal_url',url);
+  renderDash();flash('Calendar linked!');
+}
+function showCalSetup(){localStorage.removeItem('mch_cal_url');renderDash();}
+function openGCal(){window.open('https://calendar.google.com','_blank');}
+
+function resizeWidget(id,cols){
+  const w=dashWidgets.find(x=>x.id===id);if(w)w.cols=parseInt(cols);
+  document.querySelectorAll('.widget-menu').forEach(m=>m.style.display='none');
+  save();renderDash();
+}
+
+// ── SAMPLE DATA ──
+function loadSampleData(){
+  if(sampleLoaded){flash('Sample data already loaded.');return;}
+  const sTeachers=[
+    {name:'Ms. Johnson',grade:'4th grade math',room:'Room 102',school:'Lincoln Elementary',email:'johnson@lincoln.edu',notes:'Working on number talks',id:1000},
+    {name:'Mr. Patel',grade:'6th grade math',room:'Room 214',school:'Riverside Middle',email:'patel@riverside.edu',notes:'Strong with discourse',id:1001},
+    {name:'Ms. Chen',grade:'3rd grade math',room:'Room 108',school:'Lincoln Elementary',email:'chen@lincoln.edu',notes:'New teacher, 2nd year',id:1002},
+    {name:'Mr. Rodriguez',grade:'5th grade math',room:'Room 205',school:'Lincoln Elementary',email:'rodriguez@lincoln.edu',notes:'Veteran teacher, open to coaching',id:1003},
+    {name:'Ms. Williams',grade:'7th grade math',room:'Room 301',school:'Riverside Middle',email:'williams@riverside.edu',notes:'Pre-algebra focus this year',id:1004},
+    {name:'Ms. Park',grade:'2nd grade math',room:'Room 110',school:'Lincoln Elementary',email:'park@lincoln.edu',notes:'Loves manipulatives',id:1005},
+    {name:'Mr. Brooks',grade:'8th grade algebra',room:'Room 312',school:'Riverside Middle',email:'brooks@riverside.edu',notes:'First year teaching algebra',id:1006},
+    {name:'Ms. Thompson',grade:'1st grade math',room:'Room 115',school:'Lincoln Elementary',email:'thompson@lincoln.edu',notes:'Working on small group instruction',id:1007},
+  ];
+  const sLogs=[
+    {teacher:'Ms. Johnson',date:'April 22',focus:'Number talks',link:'',notes:'[9:14 AM] Class started with number talk — 15 min\n[9:29 AM] Transition to partner work on fractions\n[9:44 AM] 4 out of 6 groups stayed on task\nTeacher used good wait time but revoicing was limited.',id:2000},
+    {teacher:'Mr. Patel',date:'April 19',focus:'Math discourse',link:'',notes:'[1:02 PM] Launch — teacher modeled problem\n[1:15 PM] Students worked independently first, then pairs\nStrong questioning observed — 3 open-ended Qs in 10 min',id:2001},
+    {teacher:'Ms. Chen',date:'April 24',focus:'Exit tickets',link:'',notes:'[10:30 AM] Lesson on place value\n[10:55 AM] Exit ticket — only 8/22 completed\nPacing was the main concern today.',id:2002},
+    {teacher:'Mr. Rodriguez',date:'April 21',focus:'Small group rotations',link:'',notes:'[11:00 AM] Strong launch with multiplication strategies\n[11:18 AM] Smooth transition to rotations\nGroups stayed engaged — great use of timer and visual cues.',id:2003},
+    {teacher:'Ms. Williams',date:'April 26',focus:'Equation solving',link:'',notes:'[2:05 PM] Students working on 2-step equations\n[2:22 PM] Common error: order of operations\nWould benefit from anticipating misconceptions in lesson plan.',id:2004},
+    {teacher:'Ms. Park',date:'April 28',focus:'Manipulatives use',link:'',notes:'[10:15 AM] Students using base-10 blocks\n[10:30 AM] Strong vocabulary use throughout\nTeacher prompted students to explain their thinking — excellent.',id:2005},
+    {teacher:'Mr. Brooks',date:'April 29',focus:'Lesson pacing',link:'',notes:'[1:30 PM] Bell ringer took 12 min — too long\n[1:50 PM] Only got through 1 example before exit ticket\nStruggled to wrap up cleanly. Pacing is the priority.',id:2006},
+  ];
+  const sInteractions=[
+    {teacher:'Ms. Johnson',date:'April 23',type:'Debrief',types:['Debrief'],duration:30,location:'Room 102',notes:'Debrief from 4/22 observation. Discussed number talk structure. Will try revoicing protocol next week.',id:3000},
+    {teacher:'Mr. Patel',date:'April 20',type:'Co-planning',types:['Co-planning'],duration:45,location:'Zoom',notes:'Co-planned Friday lesson on ratios. Agreed on launch problem.',id:3001},
+    {teacher:'Ms. Chen',date:'April 25',type:'Meeting/Check-in',types:['Meeting/Check-in'],duration:15,location:'Hallway',notes:'Quick check-in — she felt the pacing issue too. Scheduled a co-planning session.',id:3002},
+    {teacher:'Mr. Rodriguez',date:'April 18',type:'Walkthrough',types:['Walkthrough'],duration:10,location:'Room 205',notes:'Brief walkthrough during rotations — students engaged, teacher checking in with each group.',id:3003},
+    {teacher:'Ms. Williams',date:'April 24',type:'Co-planning, PLC',types:['Co-planning','PLC'],duration:60,location:'Library',notes:'Co-planning during PLC time. Group worked through Unit 6 launch and discussed common misconceptions.',id:3004},
+    {teacher:'Ms. Park',date:'April 22',type:'Real-time coaching',types:['Real-time coaching'],duration:25,location:'Room 110',notes:'In-class side-by-side coaching during small group time. Whispered prompts about questioning. She tried 4 of the 5 prompts naturally.',id:3005},
+    {teacher:'Mr. Brooks',date:'April 27',type:'Email',types:['Email'],duration:5,location:'',notes:'Sent pacing self-reflection template via email. Asked him to bring his completed reflection to our Friday meeting.',id:3006},
+    {teacher:'Ms. Johnson',date:'April 28',type:'PLC',types:['PLC'],duration:45,location:'Room 102',notes:'4th grade PLC — discussed fractions unit progress. Ms. Johnson shared her revoicing tally chart.',id:3007},
+    {teacher:'Mr. Patel',date:'April 29',type:'PD',types:['PD'],duration:90,location:'Library',notes:'Led PD session on math discourse. Mr. Patel co-facilitated and shared examples from his classroom.',id:3008},
+    {teacher:'Ms. Chen',date:'April 30',type:'Co-planning, Real-time coaching',types:['Co-planning','Real-time coaching'],duration:50,location:'Room 108',notes:'Co-planned the lesson together, then I stayed and side-by-side coached during execution. She used the chunking strategy we planned.',id:3009},
+    {teacher:'Mr. Rodriguez',date:'April 30',type:'Meeting/Check-in',types:['Meeting/Check-in'],duration:20,location:'Room 205',notes:'Monthly check-in. Reviewed his goals from the year. He wants to focus on differentiation in Q4.',id:3010},
+    {teacher:'Ms. Thompson',date:'April 26',type:'Walkthrough, Meeting/Check-in',types:['Walkthrough','Meeting/Check-in'],duration:20,location:'Room 115',notes:'Walked through during small group time, stayed for a quick check-in. Reviewed her small group rotation plan.',id:3011},
+  ];
+  const sDebriefs=[
+    {teacher:'Ms. Johnson',date:'April 23',lesson:'Fractions — 4th grade',obsId:2000,praise:'Strong number talk launch — wait time was evident and 6 students volunteered vs. usual 2.',change:'Revoicing — teacher restates answers but doesn\'t attribute thinking back to students.',data:'Script from 9:14–9:29: 0 instances of "So what I hear [student] saying is…"',skill:'Targeted revoicing to elevate student voice during discussions.',support:'Model revoicing in next co-teach, then observe.',rtc:true,ready:'Teacher can script 2 revoicing moves during debrief role-play.',q1:'What did you notice about who was talking during the number talk?',q2:'What might happen if students heard their own thinking reflected back?',q3:'',qdata:'Participation tally from observation.',g1:'More students feel ownership of math ideas.',g2:'Builds on her existing strength with wait time.',g3:'Count revoicing moves per 15-min block.',goal:'By May 15, Ms. Johnson will use revoicing at least 3x per number talk. We\'ll know it\'s working when student talk increases.',next:'Follow-up observation May 14.',notes:'Teacher was receptive. Excited to try it.',id:4000},
+    {teacher:'Mr. Brooks',date:'April 30',lesson:'2-step equations — 8th grade algebra',obsId:2006,praise:'Bell ringer task was well-chosen — students were engaged from minute one.',change:'Lesson pacing — bell ringer ran 12 min instead of 5, leaving no time to wrap up.',data:'Timestamps from observation: bell ringer 1:30–1:42, only 1 example completed before 2:00 exit ticket.',skill:'Time-boxing each lesson segment with visible timer for students.',support:'Co-planning sessions to script timing for each segment. Use lesson timer template.',rtc:false,ready:'Teacher can articulate target time for each segment of next lesson.',q1:'How did you decide when to move on from the bell ringer?',q2:'What would you do differently if you only had 30 minutes total?',q3:'',qdata:'Lesson observation timestamps.',g1:'Students get full lessons every day, including practice and reflection.',g2:'Reduces end-of-class stress for the teacher.',g3:'Lesson timer use 4 of 5 days per week.',goal:'By May 20, Mr. Brooks will use a visible lesson timer in 4 of 5 lessons each week. We\'ll know it\'s working when exit tickets happen consistently.',next:'Co-plan Tuesday\'s lesson together with explicit timing.',notes:'Brooks acknowledged pacing has been a recurring concern. Open to trying timer.',id:4001},
+  ];
+  const sResources=[
+    {name:'CGI Problem Types Guide',url:'https://drive.google.com',cat:'Lesson resources',tag:'Number Sense',notes:'Core CGI resource',teacher:'',id:5000},
+    {name:'Math Discourse Sentence Starters',url:'https://drive.google.com',cat:'PD / professional learning',tag:'PD',notes:'Laminated card for teachers',teacher:'',id:5001},
+    {name:'Exit Ticket Templates',url:'https://drive.google.com',cat:'Assessment tools',tag:'Formative',notes:'3 formats',teacher:'Ms. Chen',id:5002},
+  ];
+  const sWorkspaces=[
+    {id:6000,title:'PLC Resources',description:'Links used in weekly PLC meetings',color:'var(--green)',links:[{name:'PLC Agenda (running doc)',url:'https://docs.google.com',notes:'Updated weekly'},{name:'Grade-Level Standards Map',url:'https://drive.google.com',notes:''}]},
+    {id:6001,title:'Planning Resources',description:'Lesson planning tools to share with teachers',color:'var(--blue)',links:[{name:'Unit Planning Template',url:'https://drive.google.com',notes:''},{name:'Lesson Launch Ideas',url:'https://drive.google.com',notes:'Great for number talks'}]},
+  ];
+  S.teachers=[...S.teachers,...sTeachers.filter(st=>!S.teachers.find(t=>t.id===st.id))];
+  S.logs=[...S.logs,...sLogs.filter(sl=>!S.logs.find(l=>l.id===sl.id))];
+  S.interactions=[...S.interactions,...sInteractions.filter(si=>!S.interactions.find(i=>i.id===si.id))];
+  S.debriefs=[...S.debriefs,...sDebriefs.filter(sd=>!S.debriefs.find(d=>d.id===sd.id))];
+  S.resources=[...S.resources,...sResources.filter(sr=>!S.resources.find(r=>r.id===sr.id))];
+  S.workspaces=[...S.workspaces,...sWorkspaces.filter(sw=>!S.workspaces.find(w=>w.id===sw.id))];
+  sampleLoaded=true;
+  save();
+  gi('sample-banner').style.display='flex';
+  gi('sample-btn').style.display='none';
+  renderDash();refreshDDs();refreshSchoolFilters();
+  flash('Sample data loaded!');
+}
+
+function clearSampleData(){
+  if(!confirm('Remove all sample data? Your own data will not be affected.'))return;
+  const sIds=[1000,1001,1002,1003,1004,1005,1006,1007,2000,2001,2002,2003,2004,2005,2006,3000,3001,3002,3003,3004,3005,3006,3007,3008,3009,3010,3011,4000,4001,5000,5001,5002,6000,6001];
+  S.teachers=S.teachers.filter(t=>!sIds.includes(t.id));
+  S.logs=S.logs.filter(l=>!sIds.includes(l.id));
+  S.interactions=S.interactions.filter(i=>!sIds.includes(i.id));
+  S.debriefs=S.debriefs.filter(d=>!sIds.includes(d.id));
+  S.resources=S.resources.filter(r=>!sIds.includes(r.id));
+  S.workspaces=S.workspaces.filter(w=>!sIds.includes(w.id));
+  sampleLoaded=false;
+  gi('sample-banner').style.display='none';
+  gi('sample-btn').style.display='';
+  save();renderDash();refreshDDs();refreshSchoolFilters();
+  flash('Sample data cleared.');
+}
+
+// ── TEACHERS ──
+function addTeacher(){
+  const name=gv('tn');if(!name)return;
+  S.teachers.push({name,grade:gv('tg'),room:gv('troom'),school:gv('tschool'),email:gv('temail'),notes:gv('tnotes'),id:Date.now()});
+  ['tn','tg','troom','tschool','temail','tnotes'].forEach(cv);gi('tf').style.display='none';
+  save();renderTeachers();refreshDDs();refreshSchoolFilters();renderDash();
+}
+function renderTeachers(){
+  const el=gi('tlist');
+  const sf=gv('school-filter-t');
+  const list=S.teachers.filter(t=>!sf||t.school===sf);
+  if(!list.length){el.innerHTML='<div class="empty">No teachers yet.</div>';return;}
+  // group by school
+  const bySchool={};
+  list.forEach(t=>{const k=t.school||'Unassigned';if(!bySchool[k])bySchool[k]=[];bySchool[k].push(t);});
+  el.innerHTML=Object.keys(bySchool).sort().map(school=>`
+    <div style="margin-bottom:18px;">
+      <div class="sec-cat">${school}</div>
+      ${bySchool[school].map(t=>`
+        <div class="tr" onclick="openProfile(${t.id})">
+          ${avi(t.name,38,'var(--green)')}
+          <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;">${t.name}</div><div style="font-size:12px;color:var(--txt2);">${t.grade||''}${t.room?' · Room '+t.room:''}</div>${t.email?`<div style="font-size:12px;color:var(--txt3);">${t.email}</div>`:''}</div>
+          <div class="ml" style="display:flex;gap:6px;align-items:center;">
+            <span class="badge b-g">${S.logs.filter(l=>l.teacher===t.name).length} obs</span>
+            <span class="badge b-b">${S.interactions.filter(i=>i.teacher===t.name).length} int</span>
+            <span class="badge b-p">${S.debriefs.filter(d=>d.teacher===t.name).length} debriefs</span>
+            <span style="font-size:12px;color:var(--txt3);">View →</span>
+          </div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function openProfile(id){
+  const t=S.teachers.find(x=>x.id===id);if(!t)return;
+  const tL=S.logs.filter(l=>l.teacher===t.name).slice().reverse();
+  const tI=S.interactions.filter(i=>i.teacher===t.name).slice().reverse();
+  const tD=S.debriefs.filter(d=>d.teacher===t.name).slice().reverse();
+  const totalMin=tI.reduce((a,i)=>a+(parseInt(i.duration)||0),0);
+  gi('profile-content').innerHTML=`
+    <div class="profile-header">${avi(t.name,56,'var(--green)')}
+      <div style="flex:1;"><div style="font-size:20px;font-weight:700;">${t.name}</div>
+      <div style="font-size:13px;color:var(--txt2);">${t.grade||''}${t.room?' · Room '+t.room:''}${t.school?' · '+t.school:''}</div>
+      ${t.email?`<div style="font-size:13px;color:var(--txt3);">${t.email}</div>`:''}
+      ${t.notes?`<div style="font-size:12px;color:var(--txt3);font-style:italic;margin-top:3px;">${t.notes}</div>`:''}</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;">
+        <button class="btn btn-p btn-sm" onclick="goDebrief('${t.name}');cm('profile-modal')">Plan debrief ↗</button>
+        <button class="btn btn-o btn-sm" onclick="openTeacherEdit(${id})">✎ Edit</button>
+        <button class="btn-d" onclick="if(confirm('Remove?')){S.teachers=S.teachers.filter(x=>x.id!==${id});save();renderTeachers();refreshDDs();cm('profile-modal');}">Remove</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+      <div class="stat-pill"><div class="stat-pill-val">${tL.length}</div><div class="stat-pill-label">Observations</div></div>
+      <div class="stat-pill"><div class="stat-pill-val">${tI.length}</div><div class="stat-pill-label">Interactions</div></div>
+      <div class="stat-pill"><div class="stat-pill-val">${tD.length}</div><div class="stat-pill-label">Debriefs</div></div>
+      <div class="stat-pill"><div class="stat-pill-val">${totalMin}m</div><div class="stat-pill-label">Total time</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:600;">Observations</span>
+          <span style="font-size:11px;color:var(--txt3);background:var(--bg);padding:2px 8px;border-radius:99px;">${tL.length} total</span>
+        </div>
+        <div style="max-height:380px;overflow-y:auto;padding-right:4px;border:1px solid var(--bdr);border-radius:10px;background:var(--bg);padding:8px;">
+          ${tL.length?tL.map(l=>{const linked=S.debriefs.find(d=>d.obsId===l.id);return `<div class="le" style="cursor:pointer;margin-bottom:6px;" onclick="cm('profile-modal');openObsModal(${l.id})"><div class="le-meta">${l.focus?`<span class="badge b-g">${l.focus}</span>`:''}<span style="margin-left:auto;font-size:11px;color:var(--txt3);">${l.date}</span></div><div style="font-size:13px;color:var(--txt2);">${l.notes.substring(0,80)}…</div><div style="margin-top:5px;display:flex;align-items:center;gap:5px;">${linked?`<span class="debrief-linked-pill" onclick="event.stopPropagation();cm('profile-modal');openDebrief(${linked.id})">🔗 Debrief →</span>`:`<span class="no-debrief-pill">No debrief</span>`}<span style="font-size:12px;color:var(--green);font-weight:500;margin-left:auto;">View obs →</span></div></div>`;}).join(''):'<div class="empty">None yet.</div>'}
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:600;">Interactions</span>
+          <span style="font-size:11px;color:var(--txt3);background:var(--bg);padding:2px 8px;border-radius:99px;">${tI.length} total</span>
+        </div>
+        <div style="max-height:380px;overflow-y:auto;padding-right:4px;border:1px solid var(--bdr);border-radius:10px;background:var(--bg);padding:8px;">
+          ${tI.length?tI.map(i=>{const types=i.types&&Array.isArray(i.types)?i.types:(i.type?i.type.split(',').map(s=>s.trim()):['Other']);const badges=types.map(t=>`<span class="log-type-badge lt-${t.toLowerCase().replace(/[\s/]+/g,'-')}">${t}</span>`).join(' ');return `<div class="le" style="cursor:pointer;margin-bottom:6px;" onclick="cm('profile-modal');openIntModal(${i.id})"><div class="le-meta">${badges}${i.duration?`<span class="badge b-x">${i.duration}m</span>`:''}<span style="margin-left:auto;font-size:11px;color:var(--txt3);">${i.date}</span></div>${i.notes?`<div style="font-size:13px;color:var(--txt2);">${i.notes.substring(0,80)}…</div>`:''}<div style="font-size:12px;color:var(--green);margin-top:4px;font-weight:500;">View →</div></div>`;}).join(''):'<div class="empty">None yet.</div>'}
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:600;">Debriefs</span>
+          <span style="font-size:11px;color:var(--txt3);background:var(--bg);padding:2px 8px;border-radius:99px;">${tD.length} total</span>
+        </div>
+        <div style="max-height:380px;overflow-y:auto;padding-right:4px;border:1px solid var(--bdr);border-radius:10px;background:var(--bg);padding:8px;">
+          ${tD.length?tD.map(d=>{const lo=d.obsId?S.logs.find(l=>l.id===d.obsId):null;return `<div class="le" style="cursor:pointer;margin-bottom:6px;" onclick="cm('profile-modal');openDebrief(${d.id})"><div class="le-meta">${d.rtc?`<span class="badge b-a">RTC</span>`:''}<span style="margin-left:auto;font-size:11px;color:var(--txt3);">${d.date||'No date'}</span></div>${d.change?`<div style="font-size:13px;color:var(--txt2);">${d.change.substring(0,80)}…</div>`:''} ${lo?`<div style="font-size:11px;color:var(--purple);margin-top:3px;">🔗 Obs: ${lo.date}${lo.focus?' · '+lo.focus:''}</div>`:''}<div style="font-size:12px;color:var(--green);margin-top:4px;font-weight:500;">View →</div></div>`;}).join(''):'<div class="empty">None yet.</div>'}
+        </div>
+      </div>
+    </div>`;
+  gi('profile-modal').classList.add('open');
+}
+function goDebrief(name){nav('debrief');setTimeout(()=>{const s=gi('dt');for(let o of s.options)if(o.value===name){o.selected=true;break;}},80);}
+
+function openTeacherEdit(id){
+  const t=S.teachers.find(x=>x.id===id);if(!t)return;
+  gi('profile-content').innerHTML=`
+    <div style="font-size:17px;font-weight:700;margin-bottom:14px;">Edit teacher</div>
+    <div class="fr2"><div><label>Name</label><input type="text" id="te-name" value="${esc(t.name)}"></div><div><label>Grade / subject</label><input type="text" id="te-grade" value="${esc(t.grade||'')}"></div></div>
+    <div class="fr3"><div><label>Room number</label><input type="text" id="te-room" value="${esc(t.room||'')}"></div><div><label>School</label><input type="text" id="te-school" value="${esc(t.school||'')}"></div><div><label>Email</label><input type="email" id="te-email" value="${esc(t.email||'')}"></div></div>
+    <div class="fr"><label>Notes</label><input type="text" id="te-notes" value="${esc(t.notes||'')}"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-p btn-sm" onclick="saveTeacherEdit(${id})">Save changes</button>
+      <button class="btn btn-o btn-sm" onclick="openProfile(${id})">Cancel</button>
+    </div>
+    <div id="te-msg" style="font-size:12px;color:var(--green);margin-top:8px;display:none;"></div>`;
+}
+
+function saveTeacherEdit(id){
+  const t=S.teachers.find(x=>x.id===id);if(!t)return;
+  const newName=gv('te-name');if(!newName){alert('Name is required.');return;}
+  const oldName=t.name;
+  t.name=newName;
+  t.grade=gv('te-grade');
+  t.room=gv('te-room');
+  t.school=gv('te-school');
+  t.email=gv('te-email');
+  t.notes=gv('te-notes');
+  // If name changed, update all references in logs/interactions/debriefs/resources
+  if(oldName!==newName){
+    S.logs.forEach(l=>{if(l.teacher===oldName)l.teacher=newName;});
+    S.interactions.forEach(i=>{if(i.teacher===oldName)i.teacher=newName;});
+    S.debriefs.forEach(d=>{if(d.teacher===oldName)d.teacher=newName;});
+    S.resources.forEach(r=>{if(r.teacher===oldName)r.teacher=newName;});
+  }
+  save();renderTeachers();refreshDDs();refreshSchoolFilters();renderDash();
+  // Reload the profile view with updated info
+  openProfile(id);
+  flash('✓ Teacher updated!');
+}
+
+// ── TIMESTAMPS ──
+function insertTs(taId){
+  const ta=gi(taId);if(!ta)return;
+  const now=new Date();const h=now.getHours(),m=now.getMinutes();
+  const ap=h>=12?'PM':'AM';const hh=((h%12)||12);const mm=m.toString().padStart(2,'0');
+  const stamp=`[${hh}:${mm} ${ap}] `;
+  const pos=ta.selectionStart,before=ta.value.substring(0,pos),after=ta.value.substring(ta.selectionEnd);
+  const pre=(before.length>0&&!before.endsWith('\n'))?'\n':'';
+  ta.value=before+pre+stamp+after;ta.selectionStart=ta.selectionEnd=pos+pre.length+stamp.length;ta.focus();
+}
+function renderNotesWithTs(text){
+  if(!text)return '';
+  return esc(text).replace(/\[(\d{1,2}:\d{2}\s*[AP]M)\]/g,(match,ts)=>`<span class="ts-mark">[${ts}]<span class="ts-bubble">Logged at ${ts}</span></span>`);
+}
+
+// ── LOG ENTRIES ──
+function openNewLog(type){
+  closeNewLog();
+  refreshDDs();
+  // Clear sticky values from previous entries
+  ['lt-obs','ld-obs','lfocus-obs','llink-obs','lnotes-obs','lt-int','ld-int','lint-dur','lint-loc','lint-notes'].forEach(cv);
+  // Clear interaction type checkboxes
+  document.querySelectorAll('input[name="lint-type"]').forEach(cb=>cb.checked=false);
+  // Default date to today
+  const t=todayISO();
+  if(type==='observation')sv2('ld-obs',t);else sv2('ld-int',t);
+  // Reset lookback card
+  const lc=gi('lookback-card');if(lc){lc.style.display='none';lc.innerHTML='';}
+  gi('log-list-area').style.display='none';
+  if(type==='observation'){
+    gi('lfm-obs').style.display='block';
+    nav('log');
+    gi('lfm-obs').scrollIntoView({behavior:'smooth'});
+  } else {
+    gi('lfm-int').style.display='block';
+    nav('log');
+    gi('lfm-int').scrollIntoView({behavior:'smooth'});
+  }
+}
+function closeNewLog(){
+  gi('lfm-obs').style.display='none';gi('lfm-int').style.display='none';
+  gi('log-list-area').style.display='block';
+}
+
+function showTeacherLookback(teacherName){
+  const card=gi('lookback-card');if(!card)return;
+  if(!teacherName){card.style.display='none';card.innerHTML='';return;}
+  const tDebriefs=S.debriefs.filter(d=>d.teacher===teacherName).sort((a,b)=>b.id-a.id);
+  const tObs=S.logs.filter(l=>l.teacher===teacherName).sort((a,b)=>b.id-a.id);
+  const lastDebrief=tDebriefs[0];
+  const lastObs=tObs[0];
+  if(!lastDebrief&&!lastObs){
+    card.innerHTML=`<div style="font-size:12px;color:var(--txt2);">No previous observations or debriefs for this teacher yet — this looks like a first visit.</div>`;
+    card.style.display='block';
+    return;
+  }
+  let html=`<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1d4ed8;margin-bottom:8px;">📋 Quick look back</div>`;
+  if(lastDebrief){
+    if(lastDebrief.change){
+      html+=`<div style="margin-bottom:6px;"><div style="font-size:11px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Last debrief change focus${lastDebrief.date?' · '+lastDebrief.date:''}</div><div style="font-size:13px;color:var(--txt);line-height:1.5;">${esc(lastDebrief.change)}</div></div>`;
+    }
+    if(lastDebrief.goal){
+      html+=`<div style="margin-bottom:6px;"><div style="font-size:11px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Goal</div><div style="font-size:13px;color:var(--txt);line-height:1.5;">${esc(lastDebrief.goal)}</div></div>`;
+    }
+    const focusForObs=lastDebrief.change||lastDebrief.skill||'';
+    if(focusForObs){
+      const suggestion=focusForObs.substring(0,60).split(/[.;]/)[0].trim();
+      html+=`<button type="button" class="btn btn-o btn-xs" style="margin-top:4px;" onclick="useLookbackFocus('${esc(suggestion).replace(/'/g,'&#39;')}')">↓ Use as focus area</button>`;
+    }
+  }
+  if(lastObs&&!lastDebrief){
+    html+=`<div style="margin-bottom:6px;"><div style="font-size:11px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Last observation focus${lastObs.date?' · '+lastObs.date:''}</div><div style="font-size:13px;color:var(--txt);">${esc(lastObs.focus||'(no focus area set)')}</div></div>`;
+    if(lastObs.focus)html+=`<button type="button" class="btn btn-o btn-xs" style="margin-top:4px;" onclick="useLookbackFocus('${esc(lastObs.focus).replace(/'/g,'&#39;')}')">↓ Use as focus area</button>`;
+  } else if(lastObs&&lastDebrief){
+    if(lastObs.focus){
+      html+=`<div style="margin-top:8px;padding-top:8px;border-top:1px solid #bfdbfe;"><span style="font-size:11px;color:var(--txt3);">Previously observed: <strong style="color:var(--txt2);">${esc(lastObs.focus)}</strong>${lastObs.date?` · ${lastObs.date}`:''}</span></div>`;
+    }
+  }
+  card.innerHTML=html;
+  card.style.display='block';
+}
+
+function useLookbackFocus(text){
+  sv2('lfocus-obs',text);
+  flash('Focus area set');
+}
+
+function saveObs(){
+  const teacher=gi('lt-obs').value,notes=gv('lnotes-obs');if(!teacher||!notes){alert('Please select a teacher and add notes.');return;}
+  S.logs.push({teacher,date:dateFromISO(gv('ld-obs'))||'No date',focus:gv('lfocus-obs'),link:gv('llink-obs'),notes,id:Date.now()});
+  gi('lt-obs').value='';
+  ['ld-obs','lfocus-obs','llink-obs','lnotes-obs'].forEach(cv);closeNewLog();
+  save();renderLog();renderLogStats();renderTeachers();renderDash();flash('Observation saved!');
+}
+
+function saveInteraction(){
+  const teacher=gi('lt-int').value,notes=gv('lint-notes');if(!teacher){alert('Please select a teacher.');return;}
+  const types=Array.from(document.querySelectorAll('#lint-type-checks input[name="lint-type"]:checked')).map(cb=>cb.value);
+  if(!types.length){alert('Please select at least one interaction type.');return;}
+  // Reset teacher select after save so it doesn't persist
+  gi('lt-int').value='';
+  S.interactions.push({teacher,date:dateFromISO(gv('ld-int'))||'No date',type:types.join(', '),types,duration:gv('lint-dur'),location:gv('lint-loc'),notes,id:Date.now()});
+  ['ld-int','lint-dur','lint-loc','lint-notes'].forEach(cv);
+  document.querySelectorAll('input[name="lint-type"]').forEach(cb=>cb.checked=false);
+  closeNewLog();
+  save();renderLog();renderLogStats();renderTeachers();renderDash();flash('Interaction saved!');
+}
+
+function renderLog(){
+  const el=gi('llist');
+  const tf=gi('lfilter')?gi('lfilter').value:'';
+  const sf=gi('lschool-filter')?gi('lschool-filter').value:'';
+  const typeFilter=gi('ltype-filter')?gi('ltype-filter').value:'';
+  const sort=gi('lsort')?gi('lsort').value:'newest';
+  const teacherMatch=(name)=>{
+    if(tf&&name!==tf)return false;
+    if(sf){const t=S.teachers.find(x=>x.name===name);if(t&&t.school!==sf)return false;}
+    return true;
+  };
+
+  // Build a unified list — observations are tagged as type "Observation"
+  let items=[];
+  if(!typeFilter||typeFilter==='Observation'){
+    items=items.concat(S.logs.filter(l=>teacherMatch(l.teacher)).map(l=>({...l,_type:'obs',type:'Observation'})));
+  }
+  // Match interactions: filter by typeFilter being in their types array (or matching the type string for older entries)
+  const intMatch=(i)=>{
+    if(!typeFilter)return true;
+    if(i.types&&Array.isArray(i.types))return i.types.includes(typeFilter);
+    if(i.type&&i.type.split(',').map(s=>s.trim()).includes(typeFilter))return true;
+    return false;
+  };
+  items=items.concat(S.interactions.filter(i=>teacherMatch(i.teacher)&&intMatch(i)).map(i=>({...i,_type:'int'})));
+
+  // Sort
+  if(sort==='oldest') items.sort((a,b)=>a.id-b.id);
+  else if(sort==='teacher') items.sort((a,b)=>a.teacher.localeCompare(b.teacher));
+  else if(sort==='nodebrief'){
+    items=items.filter(e=>e._type==='obs'&&!S.debriefs.find(d=>d.obsId===e.id));
+    items.sort((a,b)=>b.id-a.id);
+  } else items.sort((a,b)=>b.id-a.id);
+
+  if(!items.length){el.innerHTML='<div class="empty">No entries found.</div>';return;}
+
+  el.innerHTML=items.map(e=>{
+    if(e._type==='obs'){
+      const linked=S.debriefs.find(d=>d.obsId===e.id);
+      const debriefBtn=linked
+        ?`<span class="debrief-linked-pill" onclick="event.stopPropagation();openDebrief(${linked.id})">🔗 Debrief planned</span>`
+        :`<button class="btn btn-o btn-xs" onclick="event.stopPropagation();goDebriefFromLog(${e.id})">Plan debrief ↗</button>`;
+      return `
+      <div class="le" style="cursor:pointer;" onclick="openObsModal(${e.id})">
+        <div class="le-meta">${avi(e.teacher,26,'var(--green)')}<span style="font-size:13px;font-weight:600;">${e.teacher}</span>
+          <span class="log-type-badge lt-obs">Observation</span>
+          ${e.focus?`<span class="badge b-x">${e.focus}</span>`:''}
+          ${debriefBtn}
+          <span style="margin-left:auto;font-size:11px;color:var(--txt3);">${e.date}</span>
+        </div>
+        <div style="font-size:13px;color:var(--txt2);line-height:1.6;">${renderNotesWithTs(e.notes.substring(0,150))}${e.notes.length>150?'…':''}</div>
+        ${e.link?`<div style="margin-top:5px;"><a href="${e.link}" target="_blank" style="font-size:12px;color:var(--blue);" onclick="event.stopPropagation();">Lesson link ↗</a></div>`:''}
+      </div>`;
+    }
+    // Interaction — render each type as its own badge
+    const typeList=e.types&&Array.isArray(e.types)?e.types:(e.type?e.type.split(',').map(s=>s.trim()):['Other']);
+    const typeBadges=typeList.map(t=>`<span class="log-type-badge lt-${t.toLowerCase().replace(/[\s/]+/g,'-')}">${t}</span>`).join(' ');
+    return `
+      <div class="le" style="cursor:pointer;" onclick="openIntModal(${e.id})">
+        <div class="le-meta">${avi(e.teacher,26,'var(--green)')}<span style="font-size:13px;font-weight:600;">${e.teacher}</span>
+          ${typeBadges}
+          ${e.duration?`<span class="badge b-x">${e.duration}m</span>`:''}
+          <span style="margin-left:auto;font-size:11px;color:var(--txt3);">${e.date}</span>
+        </div>
+        ${e.location?`<div style="font-size:12px;color:var(--txt3);margin-bottom:4px;">📍 ${e.location}</div>`:''}
+        ${e.notes?`<div style="font-size:13px;color:var(--txt2);line-height:1.6;">${esc(e.notes.substring(0,150))}${e.notes.length>150?'…':''}</div>`:''}
+      </div>`;
+  }).join('');
+  renderLogStats();
+}
+
+function clearLogFilters(){
+  ['ltype-filter','lfilter','lschool-filter'].forEach(id=>{const el=gi(id);if(el)el.value='';});
+  renderLog();
+}
+
+function renderLogStats(){
+  const el=gi('log-stats');if(!el)return;
+  const tf=gi('lfilter')?gi('lfilter').value:'';
+  const sf=gi('lschool-filter')?gi('lschool-filter').value:'';
+  const typeFilter=gi('ltype-filter')?gi('ltype-filter').value:'';
+  const teacherMatch=(name)=>{
+    if(tf&&name!==tf)return false;
+    if(sf){const t=S.teachers.find(x=>x.name===name);if(t&&t.school!==sf)return false;}
+    return true;
+  };
+  const intMatch=(i)=>{
+    if(!typeFilter)return true;
+    if(i.types&&Array.isArray(i.types))return i.types.includes(typeFilter);
+    if(i.type&&i.type.split(',').map(s=>s.trim()).includes(typeFilter))return true;
+    return false;
+  };
+  const fObs=(!typeFilter||typeFilter==='Observation')?S.logs.filter(l=>teacherMatch(l.teacher)):[];
+  const fInt=S.interactions.filter(i=>teacherMatch(i.teacher)&&intMatch(i));
+  const totalObs=fObs.length;
+  const totalInt=fInt.length;
+  const totalMin=fInt.reduce((a,i)=>a+(parseInt(i.duration)||0),0);
+
+  // Filter context label + clear button
+  const filterParts=[];
+  if(typeFilter)filterParts.push(typeFilter);
+  if(tf)filterParts.push(tf);
+  if(sf)filterParts.push(sf);
+  const ctx=filterParts.length?` <span style="font-size:11px;color:var(--txt3);font-weight:400;">filtered by ${filterParts.join(' · ')}</span>`:'';
+  const clearBtn=filterParts.length?`<button onclick="clearLogFilters()" style="background:var(--bg);border:1px solid var(--bdr2);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;color:var(--txt2);text-transform:none;letter-spacing:0;flex-shrink:0;">← Back to all</button>`:'';
+
+  let html=`<div style="width:100%;display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">${clearBtn}<span>Visible totals${ctx}</span></div>`;
+
+  if(typeFilter==='Observation'){
+    html+=`<div style="display:flex;gap:10px;flex-wrap:wrap;width:100%;">
+      <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;min-width:140px;"><div style="font-size:20px;font-weight:600;">${totalObs}</div><div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;">Observations</div></div>
+    </div>`;
+  } else if(typeFilter){
+    // Single interaction type filter — show count + minutes for that type only
+    // Guarantee 0 minutes when there are 0 entries
+    const safeMin=totalInt===0?0:totalMin;
+    html+=`<div style="display:flex;gap:10px;flex-wrap:wrap;width:100%;">
+      <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;min-width:140px;"><div style="font-size:20px;font-weight:600;">${totalInt}</div><div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;">${typeFilter} entries</div></div>
+      <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;min-width:140px;"><div style="font-size:20px;font-weight:600;">${safeMin}m</div><div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;">Time on ${typeFilter}</div></div>
+    </div>`;
+  } else {
+    // No type filter — show full overview + type breakdown
+    html+=`<div style="display:flex;gap:10px;flex-wrap:wrap;width:100%;">
+      <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;flex:1;min-width:120px;"><div style="font-size:20px;font-weight:600;">${totalObs}</div><div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;">Observations</div></div>
+      <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;flex:1;min-width:120px;"><div style="font-size:20px;font-weight:600;">${totalInt}</div><div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;">Interactions</div></div>
+      <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;flex:1;min-width:120px;"><div style="font-size:20px;font-weight:600;">${totalMin}m</div><div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;">Total time</div></div>
+    </div>`;
+
+    // By-type breakdown — only when no specific type filter active
+    const typeStats={};
+    fInt.forEach(i=>{
+      const types=i.types&&Array.isArray(i.types)?i.types:(i.type?i.type.split(',').map(s=>s.trim()):['Other']);
+      types.forEach(t=>{
+        if(!typeStats[t])typeStats[t]={count:0,min:0};
+        typeStats[t].count++;
+        typeStats[t].min+=(parseInt(i.duration)||0);
+      });
+    });
+    const typeKeys=Object.keys(typeStats).sort((a,b)=>typeStats[b].count-typeStats[a].count);
+    if(typeKeys.length){
+      html+=`<div style="width:100%;font-size:12px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;">Time by interaction type <span style="font-size:11px;color:var(--txt3);font-weight:400;text-transform:none;letter-spacing:0;">— click a type to filter</span></div>`;
+      html+=`<div style="display:flex;gap:8px;flex-wrap:wrap;width:100%;">`;
+      html+=typeKeys.map(t=>{
+        const cls=`lt-${t.toLowerCase().replace(/[\s/]+/g,'-')}`;
+        const safeMin=typeStats[t].count===0?0:typeStats[t].min;
+        return `<div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="gi('ltype-filter').value='${t}';renderLog();">
+          <span class="log-type-badge ${cls}">${t}</span>
+          <span style="font-size:14px;font-weight:600;">${typeStats[t].count}</span>
+          <span style="font-size:11px;color:var(--txt3);">· ${safeMin}m</span>
+        </div>`;
+      }).join('');
+      html+=`</div>`;
+    }
+  }
+
+  el.innerHTML=html;
+}
+
+function openObsModal(id){
+  const l=S.logs.find(x=>x.id===id);if(!l)return;
+  const linkedDebrief=S.debriefs.find(d=>d.obsId===id);
+  const debriefSection=linkedDebrief?`
+    <div style="background:var(--pl);border:1px solid #ddd6fe;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--purple);margin-bottom:8px;">🔗 Linked debrief</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:0;">
+          ${linkedDebrief.date?`<div style="font-size:12px;color:var(--purple);">${linkedDebrief.date}${linkedDebrief.lesson?' · '+linkedDebrief.lesson:''}</div>`:''}
+          ${linkedDebrief.change?`<div style="font-size:13px;color:var(--txt);margin-top:3px;">${linkedDebrief.change.substring(0,100)}${linkedDebrief.change.length>100?'…':''}</div>`:'<div style="font-size:13px;color:var(--txt3);font-style:italic;">Debrief started — tap to continue planning</div>'}
+        </div>
+        <button class="btn btn-sm" style="background:var(--purple);color:#fff;flex-shrink:0;" onclick="cm('obs-modal');openDebrief(${linkedDebrief.id})">View / continue debrief →</button>
+      </div>
+    </div>`:`
+    <div style="background:#f1efe8;border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <span style="font-size:13px;color:var(--txt2);">No debrief planned yet for this observation.</span>
+      <button class="btn btn-o btn-sm" style="flex-shrink:0;" onclick="cm('obs-modal');goDebriefFromLog(${l.id})">Plan debrief ↗</button>
+    </div>`;
+  gi('obs-content').innerHTML=`
+    <div style="font-size:16px;font-weight:700;margin-bottom:3px;">${l.teacher}</div>
+    <div style="font-size:13px;color:var(--txt3);margin-bottom:14px;">${l.date}${l.focus?' · '+l.focus:''}</div>
+    ${debriefSection}
+    ${l.link?`<div style="margin-bottom:10px;"><a href="${l.link}" target="_blank" class="btn btn-o btn-sm" style="text-decoration:none;">View lesson ↗</a></div>`:''}
+    <div style="font-size:13px;color:var(--txt);line-height:1.75;background:var(--bg);padding:12px;border-radius:8px;margin-bottom:14px;">${renderNotesWithTs(l.notes)}</div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">Edit</div>
+    <div class="fr2"><div><label>Date</label><input type="date" id="oe-date" value="${dateToISO(l.date)}"></div><div><label>Focus</label><input type="text" id="oe-focus" value="${esc(l.focus||'')}"></div></div>
+    <div class="fr"><label>Lesson link</label><input type="url" id="oe-link" value="${esc(l.link||'')}"></div>
+    <div class="fr"><label>Notes</label><div class="notes-area-wrap"><button class="ts-btn" onclick="insertTs('oe-notes')" type="button">⏱ Insert time</button><textarea id="oe-notes" style="min-height:120px;padding-top:32px;">${esc(l.notes)}</textarea></div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-p btn-sm" onclick="saveObsEdit(${l.id})">Save changes</button>
+      <button class="btn btn-o btn-sm" onclick="exportObsGDoc(${l.id})">Export to Google Doc</button>
+      <button class="btn-d" onclick="if(confirm('Delete?')){S.logs=S.logs.filter(x=>x.id!==${l.id});save();renderLog();renderLogStats();renderTeachers();renderDash();cm('obs-modal');}">Delete</button>
+    </div>
+    <div id="obs-save-msg" style="font-size:12px;color:var(--green);margin-top:8px;display:none;"></div>`;
+  gi('obs-modal').classList.add('open');
+}
+
+function openIntModal(id){
+  const i=S.interactions.find(x=>x.id===id);if(!i)return;
+  const allTypes=['Observation','Debrief','Co-planning','Real-time coaching','Meeting/Check-in','PLC','Walkthrough','Email','PD','Other'];
+  const curTypes=i.types&&Array.isArray(i.types)?i.types:(i.type?i.type.split(',').map(s=>s.trim()):[]);
+  const typeBadges=curTypes.length?curTypes.map(t=>`<span class="log-type-badge lt-${t.toLowerCase().replace(/[\s/]+/g,'-')}">${t}</span>`).join(' '):'<span class="log-type-badge lt-other">Interaction</span>';
+  gi('int-content').innerHTML=`
+    <div style="font-size:16px;font-weight:700;margin-bottom:3px;">${i.teacher}</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+      ${typeBadges}
+      ${i.duration?`<span class="badge b-x">${i.duration} min</span>`:''}
+      <span style="font-size:13px;color:var(--txt3);">${i.date}</span>
+      ${i.location?`<span style="font-size:13px;color:var(--txt3);">· ${i.location}</span>`:''}
+    </div>
+    ${i.notes?`<div style="font-size:13px;color:var(--txt);line-height:1.75;background:var(--bg);padding:12px;border-radius:8px;margin-bottom:14px;">${esc(i.notes)}</div>`:''}
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">Edit</div>
+    <div class="fr"><label>Date</label><input type="date" id="ie-date" value="${dateToISO(i.date)}"></div>
+    <div class="fr">
+      <label>Type(s) — select one or more</label>
+      <div class="type-checks" id="ie-type-checks">
+        ${allTypes.map(t=>`<label class="type-check-item"><input type="checkbox" name="ie-type" value="${t}"${curTypes.includes(t)?' checked':''}> ${t}</label>`).join('')}
+      </div>
+    </div>
+    <div class="fr2">
+      <div>
+        <label>Duration (min)</label>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+          <input type="number" id="ie-dur" value="${i.duration||''}" min="0" style="max-width:110px;">
+          <div style="display:flex;gap:5px;flex-wrap:wrap;">
+            ${[5,10,15,30,45,60].map(m=>`<button type="button" class="dur-chip" onclick="setDuration('ie-dur',${m})">${m}m</button>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div><label>Location</label><input type="text" id="ie-loc" value="${esc(i.location||'')}"></div>
+    </div>
+    <div class="fr"><label>Notes</label><textarea id="ie-notes" rows="3">${esc(i.notes||'')}</textarea></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-p btn-sm" onclick="saveIntEdit(${i.id})">Save changes</button>
+      <button class="btn-d" onclick="if(confirm('Delete?')){S.interactions=S.interactions.filter(x=>x.id!==${i.id});save();renderLog();renderLogStats();renderTeachers();renderDash();cm('int-modal');}">Delete</button>
+    </div>
+    <div id="int-save-msg" style="font-size:12px;color:var(--green);margin-top:8px;display:none;"></div>`;
+  gi('int-modal').classList.add('open');
+}
+
+function saveObsEdit(id){
+  const l=S.logs.find(x=>x.id===id);if(!l)return;
+  l.date=dateFromISO(gv('oe-date'))||l.date;l.focus=gv('oe-focus');l.link=gv('oe-link');
+  const n=gi('oe-notes');if(n)l.notes=n.value.trim()||l.notes;
+  save();renderLog();renderTeachers();renderDash();
+  const msg=gi('obs-save-msg');msg.textContent='✓ Saved!';msg.style.display='block';setTimeout(()=>msg.style.display='none',2000);
+}
+function saveIntEdit(id){
+  const i=S.interactions.find(x=>x.id===id);if(!i)return;
+  const types=Array.from(document.querySelectorAll('#ie-type-checks input[name="ie-type"]:checked')).map(cb=>cb.value);
+  if(!types.length){alert('Please select at least one type.');return;}
+  i.date=dateFromISO(gv('ie-date'))||i.date;i.types=types;i.type=types.join(', ');i.duration=gv('ie-dur');i.location=gv('ie-loc');
+  const n=gi('ie-notes');if(n)i.notes=n.value.trim();
+  save();renderLog();renderLogStats();renderTeachers();renderDash();
+  cm('int-modal');
+  flash('✓ Interaction saved!');
+}
+
+function exportObsGDoc(id){
+  const l=S.logs.find(x=>x.id===id);if(!l)return;
+  const text=`OBSERVATION NOTES — ${l.teacher}\nDate: ${l.date}${l.focus?' · '+l.focus:''}\n${l.link?'Lesson: '+l.link+'\n':''}\n${l.notes}`;
+  navigator.clipboard.writeText(text).catch(()=>{});
+  window.open(`https://docs.google.com/document/create?title=${encodeURIComponent('Obs - '+l.teacher+' - '+l.date)}`,'_blank');
+  const msg=gi('obs-save-msg');if(msg){msg.innerHTML='✓ Google Doc opened — press <strong>Ctrl/Cmd+V</strong> to paste.';msg.style.display='block';}
+}
+
+function goDebriefFromLog(id){
+  const l=S.logs.find(x=>x.id===id);if(!l)return;
+  // Close any open modals (obs viewer or teacher profile)
+  cm('obs-modal');cm('profile-modal');
+  // If this obs already has a linked debrief, open it directly
+  const existing=S.debriefs.find(d=>d.obsId===id);
+  if(existing){
+    openDebrief(existing.id);
+    return;
+  }
+  pendingObsId=id;
+  nav('debrief');
+  setTimeout(()=>{
+    const s=gi('dt');for(let o of s.options)if(o.value===l.teacher){o.selected=true;break;}
+    const banner=gi('obs-banner');
+    banner.innerHTML=`<div class="obs-banner"><div class="obs-banner-label">📋 Observation notes — ${l.teacher} · ${l.date}${l.focus?' · '+l.focus:''}</div><div style="font-size:13px;color:var(--txt);line-height:1.7;white-space:pre-wrap;margin-top:4px;">${l.notes}</div>${l.link?`<div style="margin-top:6px;"><a href="${l.link}" target="_blank" style="font-size:12px;color:var(--blue);">View lesson ↗</a></div>`:''}</div>`;
+    banner.style.display='block';banner.scrollIntoView({behavior:'smooth'});
+  },80);
+}
+
+// ── WORKSPACES ──
+function openNewWorkspace(){
+  gi('workspace-content').innerHTML=`
+    <div style="font-size:15px;font-weight:600;margin-bottom:14px;">New workspace</div>
+    <div class="fr"><label>Workspace name</label><input type="text" id="ws-name" placeholder="e.g. PLC Resources, Planning Materials, Meeting Notes..."></div>
+    <div class="fr"><label>Description (optional)</label><input type="text" id="ws-desc" placeholder="What's in this workspace?"></div>
+    <div class="fr"><label>Color</label>
+      <div style="display:flex;gap:8px;margin-top:4px;" id="ws-colors">
+        ${['var(--green)','var(--blue)','var(--purple)','var(--amber)','var(--rose)','#0891b2'].map((c,i)=>`<div onclick="selectWsColor(this,'${c}')" style="width:24px;height:24px;border-radius:50%;background:${c};cursor:pointer;border:2px solid transparent;" data-color="${c}"></div>`).join('')}
+      </div>
+    </div>
+    <div style="font-size:13px;font-weight:500;margin-bottom:8px;">Links <span style="color:var(--txt3);font-weight:400;">(add after creating)</span></div>
+    <div style="display:flex;gap:7px;"><button class="btn btn-p btn-sm" onclick="createWorkspace()">Create workspace</button><button class="btn btn-o btn-sm" onclick="cm('workspace-modal')">Cancel</button></div>`;
+  gi('workspace-modal').classList.add('open');
+}
+
+let wsColor='var(--green)';
+function selectWsColor(el,c){
+  wsColor=c;
+  gi('ws-colors').querySelectorAll('div').forEach(d=>d.style.borderColor='transparent');
+  el.style.borderColor='#1a1a18';
+}
+
+function createWorkspace(){
+  const name=gv('ws-name');if(!name)return;
+  S.workspaces.push({id:Date.now(),title:name,description:gv('ws-desc'),color:wsColor,links:[]});
+  save();renderWorkspaces();cm('workspace-modal');flash('Workspace created!');
+}
+
+function openWorkspace(id){
+  curWsId=id;
+  const ws=S.workspaces.find(x=>x.id===id);if(!ws)return;
+  gi('workspace-content').innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <div style="width:14px;height:14px;border-radius:50%;background:${ws.color};flex-shrink:0;"></div>
+      <div style="font-size:15px;font-weight:600;flex:1;">${ws.title}</div>
+      <button class="btn-d" onclick="if(confirm('Delete workspace?')){S.workspaces=S.workspaces.filter(x=>x.id!==${id});save();renderWorkspaces();cm('workspace-modal');}">Delete</button>
+    </div>
+    ${ws.description?`<div style="font-size:13px;color:var(--txt2);margin-bottom:14px;">${ws.description}</div>`:''}
+    <div id="ws-links-list">${renderWsLinks(ws)}</div>
+    <div class="divider"></div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">Add link</div>
+    <div class="fr2"><div><label>Name</label><input type="text" id="wsl-name" placeholder="e.g. PLC Agenda"></div><div><label>URL</label><input type="url" id="wsl-url" placeholder="https://docs.google.com/..."></div></div>
+    <div class="fr"><label>Notes (optional)</label><input type="text" id="wsl-notes" placeholder="Brief description"></div>
+    <div style="display:flex;gap:7px;margin-bottom:12px;"><button class="btn btn-p btn-sm" onclick="addWsLink(${id})">Add link</button></div>
+    <div class="divider"></div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Add to Google Classroom</div>
+    <div style="font-size:12px;color:var(--txt3);margin-bottom:8px;">Share this workspace's links with your students or teachers via Google Classroom.</div>
+    <button class="btn btn-o btn-sm" onclick="shareToClassroom(${id})">📚 Open in Google Classroom ↗</button>`;
+  gi('workspace-modal').classList.add('open');
+}
+
+function renderWsLinks(ws){
+  if(!ws.links.length) return '<div style="font-size:13px;color:var(--txt3);padding:8px 0;">No links yet.</div>';
+  return ws.links.map((l,i)=>`
+    <div class="workspace-link-row">
+      <div style="flex:1;min-width:0;">
+        <a href="${l.url}" target="_blank" style="font-size:13px;font-weight:500;color:var(--blue);text-decoration:none;">${l.name}</a>
+        ${l.notes?`<div style="font-size:11px;color:var(--txt3);">${l.notes}</div>`:''}
+      </div>
+      <a href="${l.url}" target="_blank" class="btn btn-o btn-xs" style="text-decoration:none;flex-shrink:0;">Open ↗</a>
+      <button class="btn-d" onclick="removeWsLink(${ws.id},${i})">×</button>
+    </div>`).join('');
+}
+
+function addWsLink(wsId){
+  const ws=S.workspaces.find(x=>x.id===wsId);if(!ws)return;
+  const name=gv('wsl-name'),url=gv('wsl-url');if(!name||!url)return;
+  ws.links.push({name,url,notes:gv('wsl-notes')});
+  save();renderWorkspaces();
+  gi('ws-links-list').innerHTML=renderWsLinks(ws);
+  ['wsl-name','wsl-url','wsl-notes'].forEach(cv);
+  flash('Link added!');
+}
+
+function removeWsLink(wsId,idx){
+  const ws=S.workspaces.find(x=>x.id===wsId);if(!ws)return;
+  ws.links.splice(idx,1);save();renderWorkspaces();
+  gi('ws-links-list').innerHTML=renderWsLinks(ws);
+}
+
+function shareToClassroom(wsId){
+  const ws=S.workspaces.find(x=>x.id===wsId);if(!ws)return;
+  if(!ws.links.length){flash('Add some links first!');return;}
+  // Open Google Classroom with the first link; for multiple links user can repeat
+  const first=ws.links[0];
+  const url=`https://classroom.google.com/share?url=${encodeURIComponent(first.url)}&title=${encodeURIComponent(ws.title+': '+first.name)}`;
+  window.open(url,'_blank');
+  if(ws.links.length>1)flash('Tip: repeat for each link — Classroom shares one at a time.');
+}
+
+function renderWorkspaces(){
+  const el=gi('workspaces-list');if(!el)return;
+  if(!S.workspaces.length){el.innerHTML='<div style="font-size:13px;color:var(--txt3);padding:8px 0;">No workspaces yet.</div>';return;}
+  el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">
+    ${S.workspaces.map(ws=>`
+      <div class="workspace-tile" style="border-left:4px solid ${ws.color};display:flex;flex-direction:column;max-height:280px;">
+        <div class="workspace-tile-header" style="margin-bottom:6px;">
+          <div class="workspace-tile-title">${ws.title}</div>
+          <span style="font-size:11px;color:var(--txt3);">${ws.links.length} link${ws.links.length===1?'':'s'}</span>
+        </div>
+        ${ws.description?`<div style="font-size:12px;color:var(--txt2);margin-bottom:8px;">${ws.description}</div>`:''}
+        <div style="flex:1;overflow-y:auto;border-top:1px solid var(--bdr);padding-top:6px;">
+          ${ws.links.length?ws.links.map(l=>`<div style="padding:5px 2px;border-bottom:1px solid var(--bdr);"><a href="${l.url}" target="_blank" style="font-size:13px;color:var(--blue);text-decoration:none;font-weight:500;display:block;">${l.name}</a>${l.notes?`<div style="font-size:11px;color:var(--txt3);">${l.notes}</div>`:''}</div>`).join(''):'<div style="font-size:12px;color:var(--txt3);padding:6px 0;font-style:italic;">No links yet — click Manage to add some.</div>'}
+        </div>
+        <div style="display:flex;gap:5px;margin-top:10px;padding-top:8px;border-top:1px solid var(--bdr);">
+          <button class="btn btn-o btn-xs" onclick="quickAddWsLink(${ws.id})" style="flex:1;">+ Add link</button>
+          <button class="btn btn-o btn-xs" onclick="openWorkspace(${ws.id})" style="flex:1;">⚙ Manage</button>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function quickAddWsLink(wsId){
+  const ws=S.workspaces.find(x=>x.id===wsId);if(!ws)return;
+  const name=prompt('Link name (e.g. "PLC Agenda"):');if(!name)return;
+  const url=prompt('Link URL (full https://… address):');if(!url)return;
+  ws.links.push({name:name.trim(),url:url.trim(),notes:''});
+  save();renderWorkspaces();renderResources();renderDash();
+  flash('Link added!');
+}
+
+// ── DEBRIEFS ──
+function saveDebrief(){
+  const teacher=gi('dt').value;if(!teacher){alert('Please select a teacher.');return;}
+  // If started from an observation, check for existing linked debrief
+  if(pendingObsId){
+    const exists=S.debriefs.find(d=>d.obsId===pendingObsId);
+    if(exists){alert('A debrief is already linked to this observation. Open it from the observation to continue editing it.');return;}
+  }
+  S.debriefs.push({teacher,date:dateFromISO(gv('dd')),lesson:gv('dlesson'),
+    obsId:pendingObsId||null,
+    praise:gv('d-praise'),q1:gv('d-q1'),q2:gv('d-q2'),q3:gv('d-q3'),qdata:gv('d-qdata'),
+    change:gv('d-change'),data:gv('d-data'),skill:gv('d-skill'),support:gv('d-support'),
+    rtc:gi('d-rtc').checked,ready:gv('d-ready'),
+    g1:gv('d-g1'),g2:gv('d-g2'),g3:gv('d-g3'),goal:gv('d-goal'),
+    next:gv('d-next'),notes:gv('d-notes'),id:Date.now()});
+  pendingObsId=null;
+  save();renderDebriefs();clearDebrief();renderDash();flash('Debrief saved!');
+}
+function renderDebriefs(){
+  const el=gi('dlist');if(!el)return;
+  if(!S.debriefs.length){el.innerHTML='<div class="empty">No debriefs yet.</div>';return;}
+  el.innerHTML=S.debriefs.slice().reverse().map(d=>`
+    <div class="le" style="cursor:pointer;" onclick="openDebrief(${d.id})">
+      <div class="le-meta">${avi(d.teacher,24,'var(--green)')}<span style="font-size:13px;font-weight:600;">${d.teacher}</span>${d.rtc?`<span class="badge b-a" style="font-size:10px;">RTC</span>`:''}<span style="margin-left:auto;font-size:11px;color:var(--txt3);">${d.date||'No date'}</span></div>
+      ${d.lesson?`<div style="font-size:12px;color:var(--txt3);">${d.lesson}</div>`:''}
+      ${d.change?`<div style="font-size:13px;color:var(--txt2);">${d.change.substring(0,80)}${d.change.length>80?'…':''}</div>`:''}
+      <div style="margin-top:5px;font-size:12px;color:var(--green);font-weight:500;">View / edit →</div>
+    </div>`).join('');
+}
+function dvF(label,val,field){return `<div class="dv-section"><div class="dv-label">${label}</div><div class="dv-content"><textarea class="dv-edit" data-field="${field}">${esc(val||'')}</textarea></div></div>`;}
+function toggleObsPanel(){
+  const body=gi('obs-panel-body');
+  const arrow=gi('obs-panel-arrow');
+  const open=body.style.display!=='none';
+  body.style.display=open?'none':'block';
+  if(arrow)arrow.textContent=open?'▸':'▾';
+}
+
+function openDebrief(id){
+  curDebriefId=id;const d=S.debriefs.find(x=>x.id===id);if(!d)return;
+  // Find linked observation
+  const linkedObs=d.obsId?S.logs.find(l=>l.id===d.obsId):null;
+  const obsPanelHtml=linkedObs?`
+    <div class="obs-panel">
+      <div class="obs-panel-header" onclick="toggleObsPanel()">
+        <div class="obs-panel-label">
+          <span id="obs-panel-arrow">▸</span>
+          📋 Observation — ${linkedObs.teacher} · ${linkedObs.date}${linkedObs.focus?' · '+linkedObs.focus:''}
+        </div>
+        <span style="font-size:11px;color:#1d4ed8;">tap to expand</span>
+      </div>
+      <div id="obs-panel-body" style="display:none;" class="obs-panel-body">
+        ${linkedObs.link?`<div style="margin-bottom:8px;"><a href="${linkedObs.link}" target="_blank" style="font-size:12px;color:var(--blue);">View lesson ↗</a></div>`:''}
+        <div class="notes-text">${renderNotesWithTs(linkedObs.notes)}</div>
+      </div>
+    </div>`:'';
+  gi('dv-content').innerHTML=`
+    ${obsPanelHtml}
+    <div style="font-size:17px;font-weight:700;margin-bottom:3px;">${d.teacher} — Debrief</div>
+    <div style="font-size:13px;color:var(--txt3);margin-bottom:18px;">${d.date||'No date'}${d.lesson?' · '+d.lesson:''}${d.rtc?' · <span class="badge b-a">Real-time coaching</span>':''}${linkedObs?` · <span style="font-size:11px;color:var(--purple);">🔗 Linked to obs ${linkedObs.date}</span>`:''}</div>
+    ${dvF('<span class="badge b-g">Praise</span>',d.praise,'praise')}
+    ${dvF('<span class="badge b-r">Q1</span>',d.q1,'q1')}${dvF('Q2',d.q2,'q2')}${dvF('Q3',d.q3,'q3')}
+    ${dvF('Data for conversation',d.qdata,'qdata')}
+    ${dvF('<span class="badge b-a">Name the change</span>',d.change,'change')}
+    ${dvF('Data driving this',d.data,'data')}
+    ${dvF('<span class="badge b-b">Skills to develop</span>',d.skill,'skill')}
+    ${dvF("How you'll support",d.support,'support')}
+    ${dvF('Readiness indicator',d.ready,'ready')}
+    <div class="dv-section"><div class="dv-label"><span class="badge b-p">Goal</span></div>
+      <div class="dv-grid" style="margin-bottom:8px;">
+        <div class="gb"><div class="gb-label">For students</div><textarea class="dv-edit" data-field="g1">${esc(d.g1||'')}</textarea></div>
+        <div class="gb"><div class="gb-label">For teacher</div><textarea class="dv-edit" data-field="g2">${esc(d.g2||'')}</textarea></div>
+        <div class="gb"><div class="gb-label">Measurable</div><textarea class="dv-edit" data-field="g3">${esc(d.g3||'')}</textarea></div>
+      </div>
+      <div class="dv-content"><textarea class="dv-edit" data-field="goal">${esc(d.goal||'')}</textarea></div></div>
+    ${dvF('<span class="badge b-x">Next steps</span>',d.next,'next')}
+    ${dvF('✎ Debrief notes',d.notes,'notes')}`;
+  gi('dv-del-btn').onclick=()=>{if(!confirm('Delete?'))return;S.debriefs=S.debriefs.filter(x=>x.id!==id);save();renderDebriefs();renderDash();cm('dv-modal');};
+  gi('dv-msg').style.display='none';gi('dv-modal').classList.add('open');
+}
+function saveEditedDebrief(){
+  const d=S.debriefs.find(x=>x.id===curDebriefId);if(!d)return;
+  gi('dv-content').querySelectorAll('.dv-edit').forEach(ta=>{const f=ta.dataset.field;if(f)d[f]=ta.value;});
+  save();renderDebriefs();gi('dv-msg').textContent='✓ Changes saved.';gi('dv-msg').style.display='block';setTimeout(()=>gi('dv-msg').style.display='none',2000);
+}
+function buildDebriefText(d){
+  const linkedObs=d.obsId?S.logs.find(l=>l.id===d.obsId):null;
+  const obsSection=linkedObs?[
+    `═══════════════════════════════════════════`,
+    `OBSERVATION NOTES`,
+    `═══════════════════════════════════════════`,
+    `Teacher: ${linkedObs.teacher}`,
+    `Date: ${linkedObs.date||''}${linkedObs.focus?'   Focus: '+linkedObs.focus:''}`,
+    linkedObs.link?`Lesson link: ${linkedObs.link}`:'',
+    ``,
+    linkedObs.notes||'',
+    ``,
+    `═══════════════════════════════════════════`,
+    ``
+  ].filter(line=>line!==null):[];
+  const debriefSection=[
+    `═══════════════════════════════════════════`,
+    `DEBRIEF PLAN — ${d.teacher}`,
+    `═══════════════════════════════════════════`,
+    `Date: ${d.date||''}   Lesson: ${d.lesson||''}`,``,
+    `PRAISE`,d.praise||'',``,
+    `TARGETED QUESTIONS`,`Q1: `+(d.q1||''),`Q2: `+(d.q2||''),`Q3: `+(d.q3||''),``,
+    `Data for conversation: `+(d.qdata||''),``,
+    `NAME THE CHANGE`,d.change||'',`Data driving this: `+(d.data||''),``,
+    `TRANSFER THE SKILL`,`Skills: `+(d.skill||''),`Support: `+(d.support||''),`RTC: `+(d.rtc?'Yes':'No'),`Readiness: `+(d.ready||''),``,
+    `GOAL`,`Students: `+(d.g1||''),`Teacher: `+(d.g2||''),`Measurable: `+(d.g3||''),`Statement: `+(d.goal||''),``,
+    `NEXT STEPS`,d.next||'',``,
+    `DEBRIEF NOTES`,d.notes||''
+  ];
+  return [...obsSection,...debriefSection].join('\n');
+}
+function exportDebriefGDoc(){
+  const d=S.debriefs.find(x=>x.id===curDebriefId);if(!d)return;
+  gi('dv-content').querySelectorAll('.dv-edit').forEach(ta=>{const f=ta.dataset.field;if(f)d[f]=ta.value;});save();
+  navigator.clipboard.writeText(buildDebriefText(d)).catch(()=>{});
+  const linkedObs=d.obsId?S.logs.find(l=>l.id===d.obsId):null;
+  window.open(`https://docs.google.com/document/create?title=${encodeURIComponent('Debrief - '+d.teacher+' - '+(d.date||''))}`,'_blank');
+  const includesObs=linkedObs?' (with observation notes)':'';
+  gi('dv-msg').innerHTML=`✓ Google Doc opened${includesObs} — press <strong>Ctrl/Cmd+V</strong> to paste.`;gi('dv-msg').style.display='block';
+}
+function printDebrief(){
+  const d=S.debriefs.find(x=>x.id===curDebriefId);if(!d)return;
+  gi('dv-content').querySelectorAll('.dv-edit').forEach(ta=>{const f=ta.dataset.field;if(f)d[f]=ta.value;});
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>Debrief - ${d.teacher}</title><style>body{font-family:Georgia,serif;max-width:680px;margin:40px auto;color:#222;line-height:1.7;font-size:14px;}h1{font-size:20px;margin-bottom:4px;}h2{font-size:12px;margin:18px 0 5px;border-bottom:1px solid #ccc;padding-bottom:3px;text-transform:uppercase;letter-spacing:.06em;color:#888;}p{margin-bottom:8px;}.meta{color:#888;font-size:13px;margin-bottom:24px;}.gg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}.gbox{background:#f9f8f4;padding:10px;border-radius:6px;}.lbl{font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:2px;}@media print{body{margin:20px;}}</style></head><body><h1>Debrief Plan — ${d.teacher}</h1><div class="meta">${d.date||''}${d.lesson?' · '+d.lesson:''}</div><h2>Praise</h2><p>${(d.praise||'').replace(/\n/g,'<br>')}</p><h2>Questions</h2>${d.q1?`<p>Q1: ${d.q1}</p>`:''}${d.q2?`<p>Q2: ${d.q2}</p>`:''}${d.q3?`<p>Q3: ${d.q3}</p>`:''}<p>Data: ${d.qdata||''}</p><h2>Name the change</h2><p>${(d.change||'').replace(/\n/g,'<br>')}</p><h2>Transfer the skill</h2><p>${(d.skill||'').replace(/\n/g,'<br>')}</p><p>${(d.support||'').replace(/\n/g,'<br>')}</p><h2>Goal</h2><div class="gg"><div class="gbox"><div class="lbl">Students</div><p>${d.g1||''}</p></div><div class="gbox"><div class="lbl">Teacher</div><p>${d.g2||''}</p></div><div class="gbox"><div class="lbl">Measurable</div><p>${d.g3||''}</p></div></div><p>${(d.goal||'').replace(/\n/g,'<br>')}</p><h2>Next steps</h2><p>${d.next||''}</p>${d.notes?`<h2>Debrief notes</h2><p>${d.notes.replace(/\n/g,'<br>')}</p>`:''}</body></html>`);
+  w.document.close();w.print();
+}
+function clearDebrief(){
+  ['dd','dlesson','d-praise','d-q1','d-q2','d-q3','d-qdata','d-change','d-data','d-skill','d-support','d-ready','d-g1','d-g2','d-g3','d-goal','d-next','d-notes'].forEach(cv);
+  gi('dt').value='';gi('d-rtc').checked=false;gi('obs-banner').style.display='none';pendingObsId=null;
+}
+function startLive(){
+  const d=S.debriefs.find(x=>x.id===curDebriefId);if(!d)return;
+  cm('dv-modal');timerSec=0;timerOn=false;
+  gi('live-timer').textContent='00:00';gi('live-tog').textContent='Start';
+  gi('live-title').textContent=`${d.teacher} — Live Debrief`;
+  sv2('live-notes',d.notes||'');
+  const steps=[{l:'Praise',v:d.praise},{l:'Q1',v:d.q1},{l:'Q2',v:d.q2},{l:'Q3',v:d.q3},{l:'Data',v:d.qdata},{l:'Name the change',v:d.change},{l:'Skills to develop',v:d.skill},{l:"How you'll support",v:d.support},{l:'Readiness',v:d.ready},{l:'Goal statement',v:d.goal},{l:'Next steps',v:d.next}].filter(s=>s.v);
+  gi('live-steps').innerHTML=steps.map((s,i)=>`<div class="step-card${i===0?' cur':''}" onclick="document.querySelectorAll('#live-steps .step-card').forEach((e,j)=>e.classList.toggle('cur',j===${i}))"><div class="sn">${s.l}</div><div style="font-size:13px;color:var(--txt);line-height:1.6;">${s.v}</div></div>`).join('');
+  gi('live-modal').classList.add('open');
+}
+function toggleTimer(){if(timerOn){clearInterval(timerInt);timerOn=false;gi('live-tog').textContent='Resume';}else{timerOn=true;gi('live-tog').textContent='Pause';timerInt=setInterval(()=>{timerSec++;const m=Math.floor(timerSec/60).toString().padStart(2,'0'),s=(timerSec%60).toString().padStart(2,'0');gi('live-timer').textContent=`${m}:${s}`;},1000);}}
+function resetTimer(){clearInterval(timerInt);timerOn=false;timerSec=0;gi('live-timer').textContent='00:00';gi('live-tog').textContent='Start';}
+function stopLive(){clearInterval(timerInt);timerOn=false;cm('live-modal');}
+function endLiveDebrief(){
+  const d=S.debriefs.find(x=>x.id===curDebriefId);if(!d)return;
+  // Stop timer and capture duration
+  clearInterval(timerInt);timerOn=false;
+  const durMin=Math.max(1,Math.round(timerSec/60));
+  // Save any unsaved notes from the live notes box first
+  const liveNotes=gv('live-notes');if(liveNotes)d.notes=liveNotes;
+  // Create interaction entry
+  const today=new Date();
+  const dateStr=today.toLocaleDateString('en-US',{month:'long',day:'numeric'});
+  S.interactions.push({
+    teacher:d.teacher,
+    date:d.date||dateStr,
+    type:'Debrief',
+    types:['Debrief'],
+    duration:durMin,
+    location:d.lesson||'',
+    notes:`Debrief conversation${d.change?' — Focus: '+d.change.substring(0,80):''}${liveNotes?'\n\nNotes: '+liveNotes:''}`,
+    debriefId:d.id,
+    id:Date.now()
+  });
+  save();
+  cm('live-modal');
+  renderTeachers();renderDash();
+  flash(`Debrief ended — ${durMin} min logged as interaction!`);
+}
+function saveLiveNotes(){const d=S.debriefs.find(x=>x.id===curDebriefId);if(d){d.notes=gv('live-notes');save();flash('Notes saved!');}}
+
+// ── RESOURCES ──
+function addResource(){
+  const name=gv('rn'),url=gv('rurl');if(!name||!url)return;
+  S.resources.push({name,url,cat:gi('rcat').value,tag:gv('rtag'),notes:gv('rnotes'),teacher:gi('rtsel').value,id:Date.now()});
+  ['rn','rurl','rnotes','rtag'].forEach(cv);gi('rfm').style.display='none';
+  save();renderResources();refreshDDs();renderDash();
+}
+const catIcon={'PD / professional learning':'📚','Lesson resources':'📐','Assessment tools':'📋','Curriculum / standards':'📎','Tech tools':'🔧','Student materials':'📄','Other':'🔗'};
+function renderResources(){
+  const el=gi('rlist');
+  const search=(gv('rsearch')||'').toLowerCase(),cf=gi('rfilter').value,tf=gi('rtagfilter').value;
+  // Combine saved resources + workspace links (deduplicated by URL)
+  const wsLinks=[];
+  S.workspaces.forEach(ws=>{
+    ws.links.forEach(l=>{
+      if(!S.resources.find(r=>r.url===l.url))
+        wsLinks.push({name:l.name,url:l.url,cat:'Other',tag:ws.title,notes:`From workspace: ${ws.title}`,teacher:'',id:`ws-${ws.id}-${l.url}`,_fromWs:true});
+    });
+  });
+  const allRes=[...S.resources,...wsLinks];
+  const list=allRes.filter(r=>{
+    const ms=!search||r.name.toLowerCase().includes(search)||(r.notes||'').toLowerCase().includes(search)||(r.tag||'').toLowerCase().includes(search);
+    return ms&&(!cf||r.cat===cf)&&(!tf||r.tag===tf);
+  });
+  if(!list.length){el.innerHTML='<div class="empty">No resources found.</div>';return;}
+  const byTag={};list.forEach(r=>{const k=r.tag||r.cat||'Other';if(!byTag[k])byTag[k]=[];byTag[k].push(r);});
+  el.innerHTML=Object.keys(byTag).sort().map(tag=>`<div style="margin-bottom:18px;"><div class="sec-cat">${tag}</div>${byTag[tag].map(r=>`<div class="rc"><div style="font-size:14px;">${catIcon[r.cat]||'🔗'}</div><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:600;">${r.name}</div><div style="font-size:11px;color:var(--txt3);">${r.cat}${r.notes?' · '+r.notes:''}${r.teacher?' · '+r.teacher:''}</div></div><div style="display:flex;gap:5px;align-items:center;flex-shrink:0;"><a href="${r.url}" target="_blank" class="btn btn-o btn-xs" style="text-decoration:none;">Open ↗</a><button class="btn btn-o btn-xs" onclick="shareToClassroomUrl('${encodeURIComponent(r.url)}','${encodeURIComponent(r.name)}')">+ Classroom</button>${!r._fromWs?`<button class="btn btn-o btn-xs" onclick="openShare(${JSON.stringify(r.id)})">Share</button><button class="btn-d" onclick="S.resources=S.resources.filter(x=>x.id!==${r.id});save();renderResources();renderDash();">×</button>`:`<span style="font-size:11px;color:var(--txt3);padding:2px 6px;">from workspace</span>`}</div></div>`).join('')}</div>`).join('');
+}
+function shareToClassroomUrl(encodedUrl,encodedName){
+  window.open(`https://classroom.google.com/share?url=${encodedUrl}&title=${encodedName}`,'_blank');
+}
+function openShare(id){
+  const r=S.resources.find(x=>x.id===id);if(!r)return;curShareRes=r;
+  gi('share-info').innerHTML=`<div style="font-size:13px;font-weight:600;">${r.name}</div><div style="font-size:12px;color:var(--txt3);margin-top:2px;">${r.cat}${r.notes?' · '+r.notes:''}</div>`;
+  gi('share-url-s').textContent=r.url.length>55?r.url.substring(0,55)+'...':r.url;
+  const t=S.teachers.find(x=>x.name===r.teacher);gi('share-email-h').textContent=t?.email?`To: ${t.email}`:'Opens your email app';
+  gi('share-modal').classList.add('open');
+}
+function copyLink(){if(!curShareRes)return;navigator.clipboard.writeText(curShareRes.url).then(()=>flash('Link copied!'));}
+function emailRes(){if(!curShareRes)return;const r=curShareRes;const t=S.teachers.find(x=>x.name===r.teacher);window.open(`mailto:${t?.email||''}?subject=${encodeURIComponent('Resource: '+r.name)}&body=${encodeURIComponent('Hi,\n\nI wanted to share:\n\n'+r.name+'\n'+r.url+'\n\n'+(r.notes||''))}`);}
+function openRes(){if(curShareRes)window.open(curShareRes.url,'_blank');}
+
+// ── INIT ──
+renderDash();
+</script>
+</body>
+</html>
