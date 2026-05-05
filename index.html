@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Math Coach Hub</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack.min.css">
+<script src="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack-all.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -80,10 +82,26 @@ textarea{resize:vertical;}
 .profile-header{background:linear-gradient(135deg,var(--gl),#fff);border:1px solid var(--bdr);border-radius:14px;padding:20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;}
 .stat-pill{background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;flex:1;min-width:70px;}
 .stat-pill-val{font-size:22px;font-weight:600;}.stat-pill-label{font-size:11px;color:var(--txt3);font-weight:500;text-transform:uppercase;letter-spacing:.04em;}
-/* Dashboard grid */
-.dash-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;align-items:start;}
-.widget{background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:16px;box-shadow:var(--sh);position:relative;}
-.widget.w2{grid-column:span 2;}.widget.w3{grid-column:span 3;}.widget.w4{grid-column:span 4;}.widget.w5{grid-column:span 5;}.widget.w6{grid-column:span 6;}.widget.w7{grid-column:span 7;}.widget.w8{grid-column:span 8;}.widget.w9{grid-column:span 9;}.widget.w12{grid-column:span 12;}
+/* Dashboard grid (powered by Gridstack) */
+.grid-stack{margin:0 -8px;}
+.grid-stack > .grid-stack-item > .grid-stack-item-content{
+  background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:16px;
+  box-shadow:var(--sh);overflow:auto;display:flex;flex-direction:column;
+}
+.grid-stack-item.gs-resizing > .grid-stack-item-content,
+.grid-stack-item.ui-draggable-dragging > .grid-stack-item-content{
+  border-color:var(--green);box-shadow:0 4px 16px rgba(29,158,117,0.18);
+}
+/* Override default Gridstack handles to match our style */
+.grid-stack > .grid-stack-item > .ui-resizable-se{
+  background:transparent;width:18px;height:18px;
+}
+.grid-stack > .grid-stack-item > .ui-resizable-se::after{
+  content:'';position:absolute;bottom:4px;right:4px;width:10px;height:10px;
+  background:linear-gradient(135deg,transparent 0%,transparent 45%,var(--bdr2) 45%,var(--bdr2) 55%,transparent 55%,transparent 70%,var(--bdr2) 70%,var(--bdr2) 80%,transparent 80%);
+  opacity:.45;
+}
+.grid-stack > .grid-stack-item:hover > .ui-resizable-se::after{opacity:1;}
 .widget-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--txt3);margin-bottom:10px;}
 /* Widget three-dot menu */
 .widget-dots-btn{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;font-size:18px;color:var(--txt3);line-height:1;padding:2px 4px;border-radius:6px;z-index:5;}
@@ -91,12 +109,6 @@ textarea{resize:vertical;}
 .widget-menu{position:absolute;top:32px;right:10px;background:var(--sur);border:1px solid var(--bdr);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:50;min-width:160px;}
 .widget-menu-item{padding:8px 14px;font-size:13px;cursor:pointer;color:var(--txt);border-radius:6px;}
 .widget-menu-item:hover{background:var(--bg);}
-/* drag cursor */
-.widget{cursor:grab;}.widget:active{cursor:grabbing;}
-/* corner resize handle */
-.widget-resize-handle{position:absolute;bottom:0;right:0;width:18px;height:18px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 0%,transparent 45%,var(--bdr2) 45%,var(--bdr2) 55%,transparent 55%,transparent 70%,var(--bdr2) 70%,var(--bdr2) 80%,transparent 80%);border-bottom-right-radius:14px;opacity:.45;transition:opacity .15s;}
-.widget:hover .widget-resize-handle{opacity:1;}
-.widget-resize-handle:hover{opacity:1;background:linear-gradient(135deg,transparent 0%,transparent 45%,var(--green) 45%,var(--green) 55%,transparent 55%,transparent 70%,var(--green) 70%,var(--green) 80%,transparent 80%);}
 /* Obs notes timestamps */
 .notes-area-wrap{position:relative;}
 .ts-btn{position:absolute;right:8px;top:8px;background:var(--sur);border:1px solid var(--bdr2);border-radius:6px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit;color:var(--txt2);font-weight:500;z-index:2;}
@@ -264,7 +276,7 @@ textarea{resize:vertical;}
     <span>📊 Sample data is loaded — explore freely, then clear it when you're ready.</span>
     <button class="btn btn-sm btn-o" style="border-color:#92400e;color:#92400e;" onclick="clearSampleData()">Clear sample data</button>
   </div>
-  <div class="dash-grid" id="dash-grid"></div>
+  <div class="grid-stack" id="dash-grid"></div>
 </div>
 
 <!-- ══ TEACHERS ══ -->
@@ -474,14 +486,31 @@ let S={teachers:[],resources:[],workspaces:[],logs:[],interactions:[],debriefs:[
 let curDebriefId=null,curShareRes=null,curWsId=null,pendingObsId=null;
 let timerInt=null,timerSec=0,timerOn=false;
 let dashWidgets=[
-  {id:'stats',label:'Stats',on:false,cols:12},
-  {id:'actions',label:'Quick Actions',on:true,cols:3},
-  {id:'recent',label:'Recent Activity',on:true,cols:4},
-  {id:'calendar',label:'Google Calendar',on:true,cols:5}
+  {id:'stats',label:'Stats',on:false,x:0,y:0,w:12,h:2},
+  {id:'actions',label:'Quick Actions',on:true,x:0,y:0,w:3,h:5},
+  {id:'calendar',label:'Coaching Schedule',on:true,x:3,y:0,w:5,h:5}
 ];
 let sampleLoaded=false;
 
 try{const sv=localStorage.getItem('mch_v9');if(sv){const p=JSON.parse(sv);S=p.S||S;dashWidgets=p.dashWidgets||dashWidgets;}}catch(e){}
+// Remove deprecated widgets from saved state
+dashWidgets=dashWidgets.filter(w=>w.id!=='recent');
+// Migrate from old `cols`-only format to Gridstack x/y/w/h
+let _migX=0;
+dashWidgets.forEach(w=>{
+  if(w.cols!==undefined&&w.w===undefined){
+    w.w=w.cols;w.h=w.id==='stats'?2:5;
+    if(_migX+w.w>12){_migX=0;}
+    w.x=_migX;w.y=0;
+    _migX+=w.w;
+    delete w.cols;
+  }
+  // Ensure all fields exist
+  if(w.w===undefined)w.w=4;
+  if(w.h===undefined)w.h=5;
+  if(w.x===undefined)w.x=0;
+  if(w.y===undefined)w.y=0;
+});
 
 function save(){try{localStorage.setItem('mch_v9',JSON.stringify({S,dashWidgets}));}catch(e){}}
 function gi(id){return document.getElementById(id);}
@@ -580,87 +609,99 @@ function refreshSchoolFilters(){
   });
 }
 
-// ── DASHBOARD ──
-let dragSrcIdx=null;
+// ── DASHBOARD (Gridstack-powered) ──
+let _grid=null;
 
 function renderDash(){
-  const grid=gi('dash-grid');
-  grid.innerHTML='';
-  // Close any open widget menus on outside click
-  dashWidgets.filter(w=>w.on).forEach((w,idx)=>{
-    const div=document.createElement('div');
-    div.className=`widget w${w.cols}`;
-    div.id=`widget-${w.id}`;
-    div.setAttribute('draggable','true');
-    div.innerHTML=
-      `<div class="widget-dots-btn" onclick="toggleWidgetMenu('wmenu-${w.id}',event)" title="Widget options">⋯</div>
-      <div class="widget-menu" id="wmenu-${w.id}" style="display:none;">
-        <div class="widget-menu-item" onclick="hideWidget('${w.id}')">Hide widget</div>
-        <div style="padding:4px 10px;font-size:11px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;border-top:1px solid var(--bdr);margin-top:2px;">Move</div>
-        <div style="display:flex;gap:4px;padding:4px 10px 8px;">
-          ${idx>0?`<button onclick="moveWidget('${w.id}',-1)" style="padding:2px 8px;border-radius:5px;border:1px solid var(--bdr2);background:var(--sur);font-size:11px;cursor:pointer;font-family:inherit;">← Left</button>`:''}
-          ${idx<dashWidgets.filter(x=>x.on).length-1?`<button onclick="moveWidget('${w.id}',1)" style="padding:2px 8px;border-radius:5px;border:1px solid var(--bdr2);background:var(--sur);font-size:11px;cursor:pointer;font-family:inherit;">Right →</button>`:''}
-        </div>
-        <div style="padding:6px 10px 8px;font-size:11px;color:var(--txt3);border-top:1px solid var(--bdr);">💡 Tip: drag the bottom-right corner to resize</div>
-      </div>
-      ${buildWidget(w)}
-      <div class="widget-resize-handle" title="Drag to resize"></div>`;
-    // Drag-to-reorder events
-    div.addEventListener('dragstart',e=>{
-      // Don't initiate drag if grabbing the resize handle
-      if(e.target.classList.contains('widget-resize-handle')){e.preventDefault();return;}
-      dragSrcIdx=dashWidgets.filter(x=>x.on).indexOf(w);e.dataTransfer.effectAllowed='move';div.style.opacity='0.4';
+  const gridEl=gi('dash-grid');
+  if(!gridEl)return;
+
+  // Tear down any existing grid instance
+  if(_grid){
+    try{_grid.destroy(false);}catch(e){}
+    _grid=null;
+  }
+  gridEl.innerHTML='';
+  gridEl.classList.add('grid-stack');
+
+  // If Gridstack didn't load, fall back to a simple stacked layout
+  if(typeof GridStack==='undefined'){
+    gridEl.classList.remove('grid-stack');
+    gridEl.style.display='flex';gridEl.style.flexDirection='column';gridEl.style.gap='14px';
+    dashWidgets.filter(w=>w.on).forEach(w=>{
+      const div=document.createElement('div');
+      div.style.cssText='background:var(--sur);border:1px solid var(--bdr);border-radius:14px;padding:16px;box-shadow:var(--sh);position:relative;';
+      div.innerHTML=buildWidgetWithMenu(w);
+      gridEl.appendChild(div);
     });
-    div.addEventListener('dragend',()=>{div.style.opacity='';});
-    div.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='move';div.style.outline='2px solid var(--green)';});
-    div.addEventListener('dragleave',()=>{div.style.outline='';});
-    div.addEventListener('drop',e=>{
-      e.preventDefault();div.style.outline='';
-      const onWidgets=dashWidgets.filter(x=>x.on);
-      const targetIdx=onWidgets.indexOf(w);
-      if(dragSrcIdx===null||dragSrcIdx===targetIdx)return;
-      const allSrc=dashWidgets.indexOf(onWidgets[dragSrcIdx]);
-      const allTarget=dashWidgets.indexOf(onWidgets[targetIdx]);
-      const [moved]=dashWidgets.splice(allSrc,1);
-      dashWidgets.splice(allTarget,0,moved);
-      dragSrcIdx=null;save();renderDash();
-    });
-    // Corner resize
-    const handle=div.querySelector('.widget-resize-handle');
-    handle.addEventListener('mousedown',e=>{
-      e.preventDefault();e.stopPropagation();
-      div.setAttribute('draggable','false'); // disable drag while resizing
-      const startX=e.clientX;
-      const gridRect=grid.getBoundingClientRect();
-      const colWidth=gridRect.width/12;
-      const startCols=w.cols;
-      div.style.outline='2px solid var(--green)';
-      function onMove(ev){
-        const dx=ev.clientX-startX;
-        const colDelta=Math.round(dx/colWidth);
-        const newCols=Math.max(2,Math.min(12,startCols+colDelta));
-        if(newCols!==w.cols){
-          w.cols=newCols;
-          div.className=`widget w${newCols}`;
-        }
-      }
-      function onUp(){
-        document.removeEventListener('mousemove',onMove);
-        document.removeEventListener('mouseup',onUp);
-        div.style.outline='';
-        div.setAttribute('draggable','true');
-        save();
-      }
-      document.addEventListener('mousemove',onMove);
-      document.addEventListener('mouseup',onUp);
-    });
-    grid.appendChild(div);
+    attachDashHandlers();
+    loadCalWidget();
+    return;
+  }
+
+  // Render each widget into a Gridstack item
+  dashWidgets.filter(w=>w.on).forEach(w=>{
+    const item=document.createElement('div');
+    item.className='grid-stack-item';
+    item.setAttribute('gs-id',w.id);
+    item.setAttribute('gs-x',w.x);
+    item.setAttribute('gs-y',w.y);
+    item.setAttribute('gs-w',w.w);
+    item.setAttribute('gs-h',w.h);
+    item.setAttribute('gs-min-w','2');
+    item.setAttribute('gs-min-h','2');
+    const content=document.createElement('div');
+    content.className='grid-stack-item-content';
+    content.id=`widget-${w.id}`;
+    content.innerHTML=buildWidgetWithMenu(w);
+    item.appendChild(content);
+    gridEl.appendChild(item);
   });
-  document.addEventListener('click',e=>{
-    if(!e.target.classList.contains('widget-dots-btn'))
-      document.querySelectorAll('.widget-menu').forEach(m=>m.style.display='none');
+
+  // Initialize Gridstack
+  _grid=GridStack.init({
+    column:12,
+    cellHeight:60,
+    margin:8,
+    float:false,
+    animate:true,
+    handle:'.widget-drag-handle',
+    resizable:{handles:'e, se, s, sw, w'},
+    minRow:1
+  },gridEl);
+
+  // Save layout when user drags or resizes
+  _grid.on('change',(event,items)=>{
+    items.forEach(node=>{
+      const w=dashWidgets.find(x=>x.id===node.id);
+      if(w){w.x=node.x;w.y=node.y;w.w=node.w;w.h=node.h;}
+    });
+    save();
   });
+
+  attachDashHandlers();
   loadCalWidget();
+}
+
+function buildWidgetWithMenu(w){
+  return `<div class="widget-drag-handle" style="position:absolute;top:0;left:0;right:32px;height:30px;cursor:move;z-index:1;"></div>
+    <div class="widget-dots-btn" onclick="toggleWidgetMenu('wmenu-${w.id}',event)" title="Widget options">⋯</div>
+    <div class="widget-menu" id="wmenu-${w.id}" style="display:none;">
+      <div class="widget-menu-item" onclick="hideWidget('${w.id}')">Hide widget</div>
+      <div style="padding:6px 10px 8px;font-size:11px;color:var(--txt3);border-top:1px solid var(--bdr);">💡 Drag any edge or corner to resize. Drag the top of the widget to move.</div>
+    </div>
+    ${buildWidget(w)}`;
+}
+
+function attachDashHandlers(){
+  // Outside-click closes any open menus (only attach once)
+  if(!window._dashMenuHandlerAttached){
+    document.addEventListener('click',e=>{
+      if(!e.target.classList.contains('widget-dots-btn'))
+        document.querySelectorAll('.widget-menu').forEach(m=>m.style.display='none');
+    });
+    window._dashMenuHandlerAttached=true;
+  }
 }
 
 function toggleWidgetMenu(id,e){
@@ -675,17 +716,7 @@ function hideWidget(id){
   flash('Widget hidden — use ⚙ Customize to bring it back');
 }
 
-function moveWidget(id,dir){
-  const onWidgets=dashWidgets.filter(x=>x.on);
-  const curOnIdx=onWidgets.findIndex(x=>x.id===id);
-  const newOnIdx=curOnIdx+dir;
-  if(newOnIdx<0||newOnIdx>=onWidgets.length)return;
-  const allCur=dashWidgets.indexOf(onWidgets[curOnIdx]);
-  const allTarget=dashWidgets.indexOf(onWidgets[newOnIdx]);
-  const [moved]=dashWidgets.splice(allCur,1);
-  dashWidgets.splice(allTarget,0,moved);
-  save();renderDash();
-}
+function moveWidget(){/* no-op — Gridstack handles all moves now */}
 
 function openCustomizeMenu(){
   // Build the customize panel: existing widgets with toggles + workspace pinning
@@ -734,14 +765,15 @@ function doPinWorkspace(){
   const ws=S.workspaces.find(x=>x.id===wsId);if(!ws)return;
   const wid=`ws-${wsId}`;
   if(dashWidgets.find(w=>w.id===wid)){flash('Already pinned!');return;}
-  dashWidgets.push({id:wid,label:ws.title,on:true,cols:4,wsId});
+  // Find the lowest empty y so the new widget appears below existing ones
+  const maxY=Math.max(0,...dashWidgets.filter(w=>w.on).map(w=>w.y+w.h));
+  dashWidgets.push({id:wid,label:ws.title,on:true,x:0,y:maxY,w:4,h:5,wsId});
   save();openCustomizeMenu();renderDash();flash(`"${ws.title}" pinned to dashboard!`);
 }
 
 function buildWidget(w){
   if(w.id==='stats') return buildStatsWidget();
   if(w.id==='actions') return buildActionsWidget();
-  if(w.id==='recent') return buildRecentWidget();
   if(w.id==='calendar') return buildCalWidget();
   if(w.id.startsWith('ws-')) return buildWsWidget(w);
   return `<div class="widget-label">${w.label}</div>`;
@@ -782,51 +814,71 @@ function buildActionsWidget(){
   </div>`;
 }
 
-function buildRecentWidget(){
-  const allRecent=[
+function buildCalWidget(){
+  // Build a coaching schedule widget — Today + This week
+  // Each entry is clickable → opens the existing detail modal
+  const all=[
     ...S.logs.map(l=>({...l,_type:'obs'})),
     ...S.interactions.map(i=>({...i,_type:'int'}))
-  ].sort((a,b)=>b.id-a.id).slice(0,6);
-  if(!allRecent.length) return `<div class="widget-label">Recent activity</div><div class="empty" style="padding:16px 0;">Nothing logged yet</div>`;
-  return `<div class="widget-label">Recent activity</div>`+allRecent.map(e=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr);cursor:pointer;" onclick="${e._type==='obs'?`openObsModal(${e.id})`:`openIntModal(${e.id})`}">
-      ${avi(e.teacher,24,'var(--green)')}
+  ];
+  // Parse dates so we can filter by range
+  const now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const sevenDaysAgo=new Date(today);sevenDaysAgo.setDate(today.getDate()-7);
+  const parseDate=(str)=>{
+    if(!str||str==='No date')return null;
+    // Handle "April 24" (assume current year) and "April 24, 2026"
+    const d=new Date(str+(str.match(/\d{4}/)?'':', '+now.getFullYear()));
+    return isNaN(d)?null:new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  };
+  const withDates=all.map(e=>({...e,_d:parseDate(e.date)})).filter(e=>e._d);
+  const todayItems=withDates.filter(e=>e._d.getTime()===today.getTime()).sort((a,b)=>b.id-a.id);
+  const weekItems=withDates.filter(e=>e._d.getTime()<today.getTime()&&e._d>=sevenDaysAgo).sort((a,b)=>b._d-a._d||b.id-a.id);
+
+  const renderEntry=(e)=>{
+    const isObs=e._type==='obs';
+    const types=isObs?['Observation']:(e.types&&Array.isArray(e.types)?e.types:(e.type?e.type.split(',').map(s=>s.trim()):['Other']));
+    const badges=types.slice(0,2).map(t=>`<span class="log-type-badge lt-${t.toLowerCase().replace(/[\s/]+/g,'-')}" style="font-size:10px;padding:1px 6px;">${t}</span>`).join(' ');
+    const openFn=isObs?`openObsModal(${e.id})`:`openIntModal(${e.id})`;
+    return `<div style="padding:6px 8px;border-radius:7px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .1s;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background=''" onclick="${openFn}">
       <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;font-weight:500;">${e.teacher}</div>
-        <div style="font-size:12px;color:var(--txt3);">${e._type==='obs'?'Observation':(e.type||'Interaction')}${e.focus?' · '+e.focus:''}</div>
+        <div style="font-size:12px;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${e.teacher}</div>
+        <div style="display:flex;gap:5px;align-items:center;margin-top:2px;flex-wrap:wrap;">${badges}${e.duration?`<span style="font-size:10px;color:var(--txt3);">${e.duration}m</span>`:''}</div>
       </div>
-      <span style="font-size:11px;color:var(--txt3);">${e.date||''}</span>
-    </div>`).join('');
-}
-
-function buildCalWidget(){
-  const url=localStorage.getItem('mch_cal_url');
-  if(url){
-    return `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div class="widget-label" style="margin-bottom:0;">Google Calendar</div><button class="btn-ghost btn-sm btn" style="font-size:11px;" onclick="showCalSetup()">⚙ Re-link</button></div>
-    <div style="border-radius:8px;overflow:hidden;border:1px solid var(--bdr);">
-      <iframe id="cal-iframe" src="${addCalParams(url)}" style="width:100%;height:420px;display:block;border:none;"></iframe>
+      <span style="font-size:10px;color:var(--txt3);flex-shrink:0;">${e.date}</span>
     </div>`;
+  };
+
+  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;">
+    <div class="widget-label" style="margin-bottom:0;">Coaching schedule</div>
+    <a href="https://calendar.google.com" target="_blank" style="font-size:11px;color:var(--blue);text-decoration:none;">Open Google Calendar ↗</a>
+  </div>
+  <div style="max-height:340px;overflow-y:auto;">`;
+
+  // Today
+  html+=`<div style="font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">📅 Today</div>`;
+  if(todayItems.length){
+    html+=`<div style="margin-bottom:12px;">${todayItems.map(renderEntry).join('')}</div>`;
+  } else {
+    html+=`<div style="font-size:12px;color:var(--txt3);padding:6px 8px;margin-bottom:12px;font-style:italic;">Nothing logged today.</div>`;
   }
-  return `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><div class="widget-label" style="margin-bottom:0;">Google Calendar</div></div>
-  <div id="cal-setup-inner" class="cal-setup">
-    <div style="font-size:13px;color:var(--txt2);line-height:1.6;">Link your Google Calendar to see it live here.</div>
-    <div class="cal-steps">
-      <div class="cal-step-row"><div class="cal-step-num">1</div><div>Go to <strong>calendar.google.com</strong> → click <strong>⋮</strong> next to your calendar → <strong>Settings and sharing</strong></div></div>
-      <div class="cal-step-row"><div class="cal-step-num">2</div><div>Scroll to <strong>"Integrate calendar"</strong> → find <strong>"Embed code"</strong></div></div>
-      <div class="cal-step-row"><div class="cal-step-num">3</div><div>Copy the URL inside <code style="background:#e8e6df;padding:1px 4px;border-radius:3px;font-size:11px;">src="..."</code></div></div>
-    </div>
-    <input type="url" id="cal-url-input" placeholder="https://calendar.google.com/calendar/embed?src=..." style="width:100%;">
-    <button class="btn btn-p btn-sm" style="width:100%;" onclick="saveCalUrl()">Save calendar</button>
-  </div>`;
+
+  // This week
+  html+=`<div style="font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">📋 This week</div>`;
+  if(weekItems.length){
+    html+=`<div>${weekItems.map(renderEntry).join('')}</div>`;
+  } else {
+    html+=`<div style="font-size:12px;color:var(--txt3);padding:6px 8px;font-style:italic;">No activity this week yet.</div>`;
+  }
+
+  html+=`</div>`;
+  return html;
 }
 
-function addCalParams(url){
-  let u=url;
-  if(!u.includes('showTitle='))u+=(u.includes('?')?'&':'?')+'showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0';
-  return u;
-}
-
-function loadCalWidget(){/* called after render, iframe already in DOM */}
+function changeCalView(){/* no-op, kept for backwards compat with old saved state */}
+function loadCalWidget(){/* no-op now that we render our own data */}
+function saveCalUrl(){/* no-op, kept for backwards compat */}
+function showCalSetup(){/* no-op */}
 
 function saveCalUrl(){
   let url=gv('cal-url-input');
@@ -839,11 +891,7 @@ function saveCalUrl(){
 function showCalSetup(){localStorage.removeItem('mch_cal_url');renderDash();}
 function openGCal(){window.open('https://calendar.google.com','_blank');}
 
-function resizeWidget(id,cols){
-  const w=dashWidgets.find(x=>x.id===id);if(w)w.cols=parseInt(cols);
-  document.querySelectorAll('.widget-menu').forEach(m=>m.style.display='none');
-  save();renderDash();
-}
+function resizeWidget(){/* no-op — Gridstack handles all resizing now */}
 
 // ── SAMPLE DATA ──
 function loadSampleData(){
