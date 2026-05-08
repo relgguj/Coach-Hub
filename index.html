@@ -62,6 +62,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);font
 .theme-card .theme-swatch{width:22px;height:22px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);}
 .theme-card .theme-name{font-size:13px;font-weight:600;margin-bottom:2px;}
 .theme-card .theme-desc{font-size:11px;color:var(--txt3);}
+/* Settings hub items */
+.settings-item{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--bdr);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all .15s;background:var(--sur);}
+.settings-item:hover{border-color:var(--green);background:var(--gl);}
+.settings-item-icon{font-size:22px;flex-shrink:0;}
+.settings-item-title{font-size:14px;font-weight:600;}
+.settings-item-desc{font-size:12px;color:var(--txt3);}
+.settings-item-arrow{font-size:20px;color:var(--txt3);}
+/* Debrief template editor */
+.dt-section-card{background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:12px;margin-bottom:8px;}
+.dt-section-card.hidden-section{opacity:.55;border-style:dashed;}
+.dt-section-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.dt-section-handle{cursor:grab;color:var(--txt3);font-size:18px;flex-shrink:0;user-select:none;padding:0 4px;}
+.dt-section-handle:active{cursor:grabbing;}
+.dt-section-title-input{flex:1;font-weight:600;font-size:14px;}
+.dt-section-actions{display:flex;gap:4px;flex-shrink:0;}
+.dt-section-toggle{padding:3px 8px;font-size:11px;border-radius:5px;border:1px solid var(--bdr2);background:var(--sur);cursor:pointer;font-family:inherit;}
+.dt-section-toggle.on{background:var(--gl);color:var(--green);border-color:var(--green);}
+.dt-field-row{display:flex;gap:6px;align-items:center;margin-bottom:4px;background:var(--bg);padding:6px 8px;border-radius:6px;}
+.dt-field-row input{font-size:12px;padding:4px 6px;}
+.dt-field-row select{font-size:12px;padding:4px 6px;width:auto;flex-shrink:0;}
+.dt-field-row .btn-d{padding:2px 6px;font-size:14px;}
 .nav{display:flex;gap:2px;}
 .nb{padding:5px 13px;border-radius:8px;border:none;background:transparent;font-size:13px;cursor:pointer;color:var(--txt2);font-family:inherit;font-weight:400;}
 .nb.active{background:#f0ede6;color:var(--txt);font-weight:500;}
@@ -323,14 +344,51 @@ textarea{resize:vertical;}
     <button class="nb" onclick="nav('resources')">Resources</button>
     <button class="nb" onclick="nav('log')">Log</button>
   </div>
-  <button class="theme-btn" onclick="openThemePicker()" title="Change theme">🎨</button>
+  <button class="theme-btn" onclick="openSettings()" title="Settings">⚙</button>
 </div>
 
-<!-- Theme picker modal -->
+<!-- Settings hub modal -->
+<div class="modal-bg" id="settings-modal"><div class="modal" style="max-width:560px;"><button class="modal-close" onclick="cm('settings-modal')">×</button>
+  <div style="font-size:18px;font-weight:700;margin-bottom:6px;">Settings</div>
+  <div style="font-size:12px;color:var(--txt2);margin-bottom:18px;">Customize how Coach Hub looks and works for you.</div>
+  <div id="settings-list">
+    <div class="settings-item" onclick="openThemePicker()">
+      <div class="settings-item-icon">🎨</div>
+      <div style="flex:1;">
+        <div class="settings-item-title">Appearance</div>
+        <div class="settings-item-desc">Pick a color theme</div>
+      </div>
+      <div class="settings-item-arrow">›</div>
+    </div>
+    <div class="settings-item" onclick="openDebriefEditor()">
+      <div class="settings-item-icon">📋</div>
+      <div style="flex:1;">
+        <div class="settings-item-title">Debrief planner</div>
+        <div class="settings-item-desc">Customize sections, fields, and order</div>
+      </div>
+      <div class="settings-item-arrow">›</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- Theme picker modal (existing) -->
 <div class="modal-bg" id="theme-modal"><div class="modal modal-sm"><button class="modal-close" onclick="cm('theme-modal')">×</button>
   <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Choose a theme</div>
   <div style="font-size:12px;color:var(--txt2);margin-bottom:14px;">Personalize the look and feel.</div>
   <div id="theme-list" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+</div></div>
+
+<!-- Debrief template editor modal -->
+<div class="modal-bg" id="debrief-editor-modal"><div class="modal" style="max-width:740px;"><button class="modal-close" onclick="cm('debrief-editor-modal')">×</button>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:8px;">
+    <div style="font-size:18px;font-weight:700;">Debrief planner template</div>
+    <div style="display:flex;gap:6px;">
+      <button class="btn btn-o btn-sm" onclick="resetDebriefTemplate()">↺ Reset to defaults</button>
+      <button class="btn btn-p btn-sm" onclick="addDebriefSection()">+ Add section</button>
+    </div>
+  </div>
+  <div style="font-size:12px;color:var(--txt2);margin-bottom:16px;">Reorder, rename, hide, or add sections to match your debrief routine. Changes apply to new debriefs going forward.</div>
+  <div id="debrief-template-list"></div>
 </div></div>
 
 <div class="content">
@@ -378,49 +436,8 @@ textarea{resize:vertical;}
         <div class="fr2"><div><label>Teacher</label><select id="dt"><option value="">Select teacher...</option></select></div><div><label>Date</label><input type="date" id="dd"></div></div>
         <div class="fr"><label>Lesson / class observed</label><input type="text" id="dlesson" placeholder="e.g. 3rd period Algebra · fractions unit"></div>
       </div>
-      <div class="card" style="margin-bottom:10px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-g">Praise</span><span style="font-size:14px;font-weight:600;">What's working</span><div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">Starters: "I noticed that when you… students responded by…" / "Something working really well was…"</div></div></div>
-        <div class="hint">What was working in the lesson and how do you know?</div>
-        <textarea id="d-praise" rows="3" placeholder="Name a specific teacher move + the student evidence that shows it worked..."></textarea>
-      </div>
-      <div class="card" style="margin-bottom:10px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-r">Questions</span><span style="font-size:14px;font-weight:600;">Targeted questions</span><div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">Starters: "What did you notice about…?" / "How did students respond when…?" / "What would you try differently?"</div></div></div>
-        <div class="hint">1–3 open questions to help the teacher recognize the focus area</div>
-        <div class="fr"><textarea id="d-q1" rows="2" placeholder="Q1:"></textarea></div>
-        <div class="fr"><textarea id="d-q2" rows="2" placeholder="Q2:"></textarea></div>
-        <div class="fr" style="margin-bottom:8px;"><textarea id="d-q3" rows="2" placeholder="Q3:"></textarea></div>
-        <div class="hint">What data will you bring?</div>
-        <textarea id="d-qdata" rows="2" placeholder="Scripted teacher talk, student work samples, error analysis..."></textarea>
-      </div>
-      <div class="card" style="margin-bottom:10px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-a">Change</span><span style="font-size:14px;font-weight:600;">Name the change</span><div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">Starters: "One thing with the biggest impact is…" / "The pattern I keep seeing is…"</div></div></div>
-        <div class="fr"><div class="hint">What is the most important thing that needs to change?</div><textarea id="d-change" rows="2" placeholder="Be specific — name the instructional move or student outcome..."></textarea></div>
-        <div class="hint">What data is driving your thinking?</div>
-        <textarea id="d-data" rows="2" placeholder="Evidence from today's observation, student work, assessment data..."></textarea>
-      </div>
-      <div class="card" style="margin-bottom:10px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-b">Skill</span><span style="font-size:14px;font-weight:600;">Transfer the skill</span><div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">Starters: "To make this shift the teacher needs to…" / "I could support this by…"</div></div></div>
-        <div class="fr"><div class="hint">What skills does the teacher need to develop?</div><textarea id="d-skill" rows="2" placeholder="e.g. launching a number talk, using wait time, revoicing..."></textarea></div>
-        <div class="fr"><div class="hint">How will you support that development?</div><textarea id="d-support" rows="2" placeholder="Co-planning, modeling, side-by-side observation, video analysis..."></textarea></div>
-        <div class="fr" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="d-rtc" style="width:auto;accent-color:var(--green);"><label for="d-rtc" style="display:inline;cursor:pointer;margin:0;">Real-time coaching is a viable strategy here</label></div>
-        <div class="hint">How will the teacher demonstrate readiness?</div>
-        <textarea id="d-ready" rows="2" placeholder="e.g. Teacher articulates the change, role-plays the move..."></textarea>
-      </div>
-      <div class="card" style="margin-bottom:10px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-p">Goal</span><span style="font-size:14px;font-weight:600;">Draft a goal</span><div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">A strong goal is Meaningful for students, Motivating for the teacher, and Measurable for you.</div></div></div>
-        <div class="goal-box" style="margin-bottom:10px;"><div class="gb"><div class="gb-label">Meaningful for students</div><textarea id="d-g1" placeholder="How does this connect to student outcomes?"></textarea></div><div class="gb"><div class="gb-label">Motivating for teacher</div><textarea id="d-g2" placeholder="Why will the teacher care?"></textarea></div><div class="gb"><div class="gb-label">Measurable for you</div><textarea id="d-g3" placeholder="What evidence shows progress?"></textarea></div></div>
-        <label>Goal statement</label>
-        <textarea id="d-goal" rows="2" placeholder="By [date], [teacher] will _______ so that students _______. We'll know it's working when _______."></textarea>
-      </div>
-      <div class="card" style="margin-bottom:10px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span class="badge b-x">Next</span><span style="font-size:14px;font-weight:600;">Plan for next steps</span></div>
-        <div class="hint">How will you check progress?</div>
-        <textarea id="d-next" rows="2" placeholder="Follow-up observation in 2 weeks, review exit tickets together..."></textarea>
-      </div>
-      <div class="card" style="margin-bottom:12px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span>✎</span><span style="font-size:14px;font-weight:600;">Debrief notes</span></div>
-        <textarea id="d-notes" rows="4" placeholder="What did the teacher say? What shifted? What surprised you?"></textarea>
-      </div>
+      <!-- Dynamic sections rendered from debrief template -->
+      <div id="debrief-form-sections"></div>
       <div style="display:flex;gap:8px;"><button class="btn btn-p" onclick="saveDebrief()">Save debrief</button><button class="btn btn-o" onclick="clearDebrief()">Clear form</button></div>
   </div>
 </div>
@@ -637,6 +654,150 @@ let _savedTheme=localStorage.getItem('mch_theme');
 if(_savedTheme==='midnight')_savedTheme='forest';
 applyTheme(_savedTheme);
 
+function openSettings(){gi('settings-modal').classList.add('open');}
+
+// ── DEBRIEF TEMPLATE SYSTEM ──
+// Each section: {id, label, prompt, fields:[{key,label,type,placeholder}], hidden:bool}
+// type: 'text' | 'textarea' | 'check'
+// `key` is the data field name on debrief records — must be stable across template edits
+const DEFAULT_DEBRIEF_TEMPLATE=[
+  {id:'praise',label:'Praise',prompt:'What did the teacher do well? Be specific and observable.',fields:[
+    {key:'praise',label:'Specific praise',type:'textarea',placeholder:'I noticed... · Students were... · You used...'}
+  ]},
+  {id:'questions',label:'Targeted questions',prompt:'Open questions to invite reflection.',fields:[
+    {key:'q1',label:'Question 1',type:'text',placeholder:'What did you notice when...'},
+    {key:'q2',label:'Question 2',type:'text',placeholder:'How did students respond when...'},
+    {key:'q3',label:'Question 3',type:'text',placeholder:'What surprised you...'},
+    {key:'qdata',label:'Data to bring to the conversation',type:'textarea',placeholder:'e.g., student work samples, observation notes, video clip'}
+  ]},
+  {id:'change',label:'Name the change',prompt:'What specifically needs to shift?',fields:[
+    {key:'change',label:'The change',type:'textarea',placeholder:'Move from X to Y so that students can...'},
+    {key:'data',label:'Data driving this',type:'textarea',placeholder:'Evidence from the observation, student work, etc.'}
+  ]},
+  {id:'skill',label:'Transfer the skill',prompt:'How will the teacher build this capability?',fields:[
+    {key:'skill',label:'Skills to develop',type:'text',placeholder:'e.g., revoicing, anticipating misconceptions'},
+    {key:'support',label:'Support I will provide',type:'textarea',placeholder:'co-teach, model, observation, resources...'},
+    {key:'rtc',label:'Ready for real-time coaching?',type:'check'},
+    {key:'ready',label:'How will we know they are ready?',type:'text',placeholder:'Teacher can articulate... / role-play shows...'}
+  ]},
+  {id:'goal',label:'Goal',prompt:'A 3-part goal: meaningful for students, motivating for teacher, measurable for coach.',fields:[
+    {key:'g1',label:'For students',type:'text',placeholder:'What changes for students?'},
+    {key:'g2',label:'For teacher',type:'text',placeholder:'What changes for the teacher?'},
+    {key:'g3',label:'Measurable',type:'text',placeholder:'Count, frequency, or quality marker'},
+    {key:'goal',label:'Goal statement',type:'textarea',placeholder:'By [date], teacher will [action]. We will know it is working when...'}
+  ]},
+  {id:'next',label:'Next steps',prompt:'What happens after this debrief?',fields:[
+    {key:'next',label:'Next steps',type:'textarea',placeholder:'Follow-up observation, co-plan, resource share, etc.'}
+  ]},
+  {id:'notes',label:'Debrief notes',prompt:'Anything else worth capturing.',fields:[
+    {key:'notes',label:'Notes',type:'textarea',placeholder:''}
+  ]}
+];
+
+function loadDebriefTemplate(){
+  const saved=localStorage.getItem('mch_debrief_template');
+  if(saved){try{const p=JSON.parse(saved);if(Array.isArray(p)&&p.length)return p;}catch(e){}}
+  return JSON.parse(JSON.stringify(DEFAULT_DEBRIEF_TEMPLATE));
+}
+let debriefTemplate=loadDebriefTemplate();
+function saveDebriefTemplate(){localStorage.setItem('mch_debrief_template',JSON.stringify(debriefTemplate));}
+
+function openDebriefEditor(){
+  cm('settings-modal');
+  renderDebriefEditor();
+  gi('debrief-editor-modal').classList.add('open');
+}
+
+function renderDebriefEditor(){
+  const list=gi('debrief-template-list');if(!list)return;
+  if(!debriefTemplate.length){
+    list.innerHTML='<div style="text-align:center;padding:30px;color:var(--txt3);font-size:13px;">No sections. Click "+ Add section" to start, or "↺ Reset to defaults".</div>';
+    return;
+  }
+  list.innerHTML=debriefTemplate.map((s,i)=>{
+    const hiddenCls=s.hidden?' hidden-section':'';
+    return `<div class="dt-section-card${hiddenCls}" draggable="true" data-idx="${i}"
+        ondragstart="dtDragStart(event,${i})"
+        ondragover="event.preventDefault();this.style.borderColor='var(--green)'"
+        ondragleave="this.style.borderColor=''"
+        ondrop="dtDrop(event,${i});this.style.borderColor=''">
+      <div class="dt-section-header">
+        <span class="dt-section-handle" title="Drag to reorder">⋮⋮</span>
+        <input type="text" class="dt-section-title-input" value="${esc(s.label)}" oninput="dtUpdateSection(${i},'label',this.value)" placeholder="Section label">
+        <div class="dt-section-actions">
+          <button class="dt-section-toggle ${s.hidden?'':'on'}" onclick="dtToggleSection(${i})" title="${s.hidden?'Hidden — click to show':'Shown — click to hide'}">${s.hidden?'Hidden':'Shown'}</button>
+          <button class="btn-d" onclick="dtDeleteSection(${i})" title="Delete this section">×</button>
+        </div>
+      </div>
+      <input type="text" placeholder="Optional helper text shown above the fields" value="${esc(s.prompt||'')}" oninput="dtUpdateSection(${i},'prompt',this.value)" style="font-size:12px;margin-bottom:8px;">
+      <div style="font-size:11px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;">Fields</div>
+      <div>
+        ${(s.fields||[]).map((f,fi)=>`<div class="dt-field-row">
+          <input type="text" placeholder="Field label" value="${esc(f.label)}" oninput="dtUpdateField(${i},${fi},'label',this.value)" style="flex:1;">
+          <select onchange="dtUpdateField(${i},${fi},'type',this.value)">
+            <option value="text"${f.type==='text'?' selected':''}>Short text</option>
+            <option value="textarea"${f.type==='textarea'?' selected':''}>Long text</option>
+            <option value="check"${f.type==='check'?' selected':''}>Yes/No</option>
+          </select>
+          <input type="text" placeholder="Placeholder (optional)" value="${esc(f.placeholder||'')}" oninput="dtUpdateField(${i},${fi},'placeholder',this.value)" style="flex:1;">
+          <button class="btn-d" onclick="dtDeleteField(${i},${fi})" title="Remove field">×</button>
+        </div>`).join('')}
+      </div>
+      <button class="btn btn-o btn-xs" onclick="dtAddField(${i})" style="margin-top:6px;">+ Add field</button>
+    </div>`;
+  }).join('');
+}
+
+let dtDragSrcIdx=null;
+function dtDragStart(e,idx){dtDragSrcIdx=idx;e.dataTransfer.effectAllowed='move';}
+function dtDrop(e,targetIdx){
+  e.preventDefault();
+  if(dtDragSrcIdx===null||dtDragSrcIdx===targetIdx)return;
+  const [moved]=debriefTemplate.splice(dtDragSrcIdx,1);
+  debriefTemplate.splice(targetIdx,0,moved);
+  dtDragSrcIdx=null;
+  saveDebriefTemplate();renderDebriefEditor();renderDebriefForm();
+}
+
+function dtUpdateSection(i,key,val){if(debriefTemplate[i]){debriefTemplate[i][key]=val;saveDebriefTemplate();renderDebriefForm();}}
+function dtToggleSection(i){if(debriefTemplate[i]){debriefTemplate[i].hidden=!debriefTemplate[i].hidden;saveDebriefTemplate();renderDebriefEditor();renderDebriefForm();}}
+function dtDeleteSection(i){
+  if(!confirm(`Delete section "${debriefTemplate[i].label}"? This won't affect existing debriefs.`))return;
+  debriefTemplate.splice(i,1);
+  saveDebriefTemplate();renderDebriefEditor();renderDebriefForm();
+}
+function dtUpdateField(i,fi,key,val){
+  if(debriefTemplate[i]&&debriefTemplate[i].fields[fi]){
+    debriefTemplate[i].fields[fi][key]=val;
+    saveDebriefTemplate();renderDebriefForm();
+  }
+}
+function dtAddField(i){
+  if(!debriefTemplate[i])return;
+  if(!debriefTemplate[i].fields)debriefTemplate[i].fields=[];
+  // Generate a unique key
+  const baseKey=`f_${Date.now().toString(36)}`;
+  debriefTemplate[i].fields.push({key:baseKey,label:'New field',type:'textarea',placeholder:''});
+  saveDebriefTemplate();renderDebriefEditor();renderDebriefForm();
+}
+function dtDeleteField(i,fi){
+  if(!debriefTemplate[i]||!debriefTemplate[i].fields[fi])return;
+  if(!confirm('Remove this field?'))return;
+  debriefTemplate[i].fields.splice(fi,1);
+  saveDebriefTemplate();renderDebriefEditor();renderDebriefForm();
+}
+function addDebriefSection(){
+  const baseKey=`s_${Date.now().toString(36)}`;
+  debriefTemplate.push({id:baseKey,label:'New section',prompt:'',fields:[{key:`${baseKey}_main`,label:'Notes',type:'textarea',placeholder:''}],hidden:false});
+  saveDebriefTemplate();renderDebriefEditor();renderDebriefForm();
+}
+function resetDebriefTemplate(){
+  if(!confirm('Reset the debrief template back to the default sections? Your existing debriefs will not be affected.'))return;
+  debriefTemplate=JSON.parse(JSON.stringify(DEFAULT_DEBRIEF_TEMPLATE));
+  saveDebriefTemplate();renderDebriefEditor();renderDebriefForm();
+  flash('Template reset to defaults');
+}
+
 function flash(msg){const e=gi('flash');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
 function cm(id){gi(id).classList.remove('open');}
 function initials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
@@ -684,7 +845,7 @@ function nav(id){
   gi(id).classList.add('active');
   ['home','teachers','debrief','resources','log'].forEach((x,i)=>document.querySelectorAll('.nb')[i].classList.toggle('active',x===id));
   if(id==='home')renderDash();
-  if(id==='debrief'){refreshDDs();renderDebriefs();gi('obs-banner').style.display='none';if(gi('dd')&&!gi('dd').value)sv2('dd',todayISO());}
+  if(id==='debrief'){refreshDDs();renderDebriefs();renderDebriefForm();gi('obs-banner').style.display='none';if(gi('dd')&&!gi('dd').value)sv2('dd',todayISO());}
   if(id==='log'){refreshDDs();['ltype-filter','lfilter','lschool-filter','lsort'].forEach(f=>{const el=gi(f);if(el)el.value=el.tagName==='SELECT'?(el.options[0]?el.options[0].value:''):'';});renderLog();renderLogStats();}
   if(id==='resources'){refreshDDs();renderResources();renderWorkspaces();}
   if(id==='teachers'){refreshSchoolFilters();renderTeachers();}
@@ -2023,22 +2184,83 @@ function saveQuickLink(wsId){
 }
 
 // ── DEBRIEFS ──
+function renderDebriefForm(){
+  const container=gi('debrief-form-sections');if(!container)return;
+  // Save current values so they don't get wiped during re-render
+  const cur={};
+  document.querySelectorAll('#debrief-form-sections .dyn-field').forEach(el=>{
+    const k=el.dataset.fieldKey;
+    if(!k)return;
+    if(el.type==='checkbox')cur[k]=el.checked;
+    else cur[k]=el.value;
+  });
+  // Render visible sections
+  const sections=debriefTemplate.filter(s=>!s.hidden);
+  if(!sections.length){
+    container.innerHTML='<div class="card" style="text-align:center;padding:30px;color:var(--txt3);">All sections are hidden. Open Settings → Debrief planner to show some.</div>';
+    return;
+  }
+  container.innerHTML=sections.map(s=>`
+    <div class="card" style="margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <span style="font-size:14px;font-weight:600;">${esc(s.label||'')}</span>
+      </div>
+      ${s.prompt?`<div class="hint">${esc(s.prompt)}</div>`:''}
+      ${(s.fields||[]).map(f=>renderDynamicField(f,cur)).join('')}
+    </div>
+  `).join('');
+}
+
+function renderDynamicField(f,cur){
+  const key=esc(f.key||'');
+  const val=cur[f.key]!==undefined?cur[f.key]:'';
+  const ph=esc(f.placeholder||'');
+  const lbl=esc(f.label||'');
+  if(f.type==='check'){
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <input type="checkbox" class="dyn-field" data-field-key="${key}" id="dyn-${key}" ${val?'checked':''} style="width:auto;accent-color:var(--green);">
+      <label for="dyn-${key}" style="display:inline;cursor:pointer;margin:0;font-weight:400;">${lbl}</label>
+    </div>`;
+  }
+  if(f.type==='text'){
+    return `<div class="fr">${lbl?`<label>${lbl}</label>`:''}<input type="text" class="dyn-field" data-field-key="${key}" placeholder="${ph}" value="${esc(String(val))}"></div>`;
+  }
+  // textarea (default)
+  return `<div class="fr">${lbl?`<label>${lbl}</label>`:''}<textarea class="dyn-field" data-field-key="${key}" rows="3" placeholder="${ph}">${esc(String(val))}</textarea></div>`;
+}
+
 function saveDebrief(){
   const teacher=gi('dt').value;if(!teacher){alert('Please select a teacher.');return;}
-  // If started from an observation, check for existing linked debrief
   if(pendingObsId){
     const exists=S.debriefs.find(d=>d.obsId===pendingObsId);
     if(exists){alert('A debrief is already linked to this observation. Open it from the observation to continue editing it.');return;}
   }
-  S.debriefs.push({teacher,date:dateFromISO(gv('dd')),lesson:gv('dlesson'),
+  // Collect all values from the dynamic fields
+  const debriefData={
+    teacher,
+    date:dateFromISO(gv('dd')),
+    lesson:gv('dlesson'),
     obsId:pendingObsId||null,
-    praise:gv('d-praise'),q1:gv('d-q1'),q2:gv('d-q2'),q3:gv('d-q3'),qdata:gv('d-qdata'),
-    change:gv('d-change'),data:gv('d-data'),skill:gv('d-skill'),support:gv('d-support'),
-    rtc:gi('d-rtc').checked,ready:gv('d-ready'),
-    g1:gv('d-g1'),g2:gv('d-g2'),g3:gv('d-g3'),goal:gv('d-goal'),
-    next:gv('d-next'),notes:gv('d-notes'),id:Date.now()});
+    id:Date.now()
+  };
+  document.querySelectorAll('#debrief-form-sections .dyn-field').forEach(el=>{
+    const k=el.dataset.fieldKey;if(!k)return;
+    if(el.type==='checkbox')debriefData[k]=el.checked;
+    else debriefData[k]=el.value;
+  });
+  S.debriefs.push(debriefData);
   pendingObsId=null;
   save();renderDebriefs();clearDebrief();renderDash();flash('Debrief saved!');
+}
+
+function clearDebrief(){
+  ['dd','dlesson'].forEach(cv);
+  gi('dt').value='';gi('obs-banner').style.display='none';pendingObsId=null;
+  // Clear all dynamic fields
+  document.querySelectorAll('#debrief-form-sections .dyn-field').forEach(el=>{
+    if(el.type==='checkbox')el.checked=false;
+    else el.value='';
+  });
 }
 function renderDebriefs(){
   const el=gi('dlist');if(!el)return;
@@ -2062,7 +2284,6 @@ function toggleObsPanel(){
 
 function openDebrief(id){
   curDebriefId=id;const d=S.debriefs.find(x=>x.id===id);if(!d)return;
-  // Find linked observation
   const linkedObs=d.obsId?S.logs.find(l=>l.id===d.obsId):null;
   const obsPanelHtml=linkedObs?`
     <div class="obs-panel">
@@ -2078,27 +2299,40 @@ function openDebrief(id){
         <div class="notes-text">${renderNotesWithTs(linkedObs.notes)}</div>
       </div>
     </div>`:'';
+
+  // Render sections from the user's current template, including all fields the debrief has data for
+  const renderedKeys=new Set(['teacher','date','lesson','obsId','id','rtc']);
+  const sectionsHtml=debriefTemplate.filter(s=>!s.hidden).map(s=>{
+    const fieldsHtml=(s.fields||[]).map(f=>{
+      renderedKeys.add(f.key);
+      const v=d[f.key];
+      if(f.type==='check'){
+        return `<div class="dv-section"><div class="dv-label">${esc(f.label)}</div><div class="dv-content">${v?'✓ Yes':'—'}</div></div>`;
+      }
+      // Use textarea for editing, just like before
+      return `<div class="dv-section"><div class="dv-label">${esc(f.label)}</div><div class="dv-content"><textarea class="dv-edit" data-field="${esc(f.key)}">${esc(String(v||''))}</textarea></div></div>`;
+    }).join('');
+    return `<div style="margin-bottom:14px;">
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px;">${esc(s.label)}</div>
+      ${fieldsHtml}
+    </div>`;
+  }).join('');
+
+  // Also surface any "orphan" fields stored on the debrief that aren't in the current template
+  // (e.g. fields the user removed from the template, or older debriefs from a previous template version)
+  const orphanFields=Object.keys(d).filter(k=>!renderedKeys.has(k)&&d[k]!==null&&d[k]!==''&&d[k]!==false);
+  const orphanHtml=orphanFields.length?`
+    <div style="margin-bottom:14px;padding:10px;background:var(--bg);border-radius:8px;border:1px dashed var(--bdr2);">
+      <div style="font-size:11px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Other saved fields</div>
+      ${orphanFields.map(k=>`<div class="dv-section"><div class="dv-label">${esc(k)}</div><div class="dv-content"><textarea class="dv-edit" data-field="${esc(k)}">${esc(String(d[k]||''))}</textarea></div></div>`).join('')}
+    </div>`:'';
+
   gi('dv-content').innerHTML=`
     ${obsPanelHtml}
     <div style="font-size:17px;font-weight:700;margin-bottom:3px;">${d.teacher} — Debrief</div>
     <div style="font-size:13px;color:var(--txt3);margin-bottom:18px;">${d.date||'No date'}${d.lesson?' · '+d.lesson:''}${d.rtc?' · <span class="badge b-a">Real-time coaching</span>':''}${linkedObs?` · <span style="font-size:11px;color:var(--purple);">🔗 Linked to obs ${linkedObs.date}</span>`:''}</div>
-    ${dvF('<span class="badge b-g">Praise</span>',d.praise,'praise')}
-    ${dvF('<span class="badge b-r">Q1</span>',d.q1,'q1')}${dvF('Q2',d.q2,'q2')}${dvF('Q3',d.q3,'q3')}
-    ${dvF('Data for conversation',d.qdata,'qdata')}
-    ${dvF('<span class="badge b-a">Name the change</span>',d.change,'change')}
-    ${dvF('Data driving this',d.data,'data')}
-    ${dvF('<span class="badge b-b">Skills to develop</span>',d.skill,'skill')}
-    ${dvF("How you'll support",d.support,'support')}
-    ${dvF('Readiness indicator',d.ready,'ready')}
-    <div class="dv-section"><div class="dv-label"><span class="badge b-p">Goal</span></div>
-      <div class="dv-grid" style="margin-bottom:8px;">
-        <div class="gb"><div class="gb-label">For students</div><textarea class="dv-edit" data-field="g1">${esc(d.g1||'')}</textarea></div>
-        <div class="gb"><div class="gb-label">For teacher</div><textarea class="dv-edit" data-field="g2">${esc(d.g2||'')}</textarea></div>
-        <div class="gb"><div class="gb-label">Measurable</div><textarea class="dv-edit" data-field="g3">${esc(d.g3||'')}</textarea></div>
-      </div>
-      <div class="dv-content"><textarea class="dv-edit" data-field="goal">${esc(d.goal||'')}</textarea></div></div>
-    ${dvF('<span class="badge b-x">Next steps</span>',d.next,'next')}
-    ${dvF('✎ Debrief notes',d.notes,'notes')}`;
+    ${sectionsHtml}
+    ${orphanHtml}`;
   gi('dv-del-btn').onclick=()=>{if(!confirm('Delete?'))return;S.debriefs=S.debriefs.filter(x=>x.id!==id);save();renderDebriefs();renderDash();cm('dv-modal');};
   gi('dv-msg').style.display='none';gi('dv-modal').classList.add('open');
 }
@@ -2122,21 +2356,35 @@ function buildDebriefText(d){
     `═══════════════════════════════════════════`,
     ``
   ].filter(line=>line!==null):[];
-  const debriefSection=[
+
+  const lines=[
     `═══════════════════════════════════════════`,
     `DEBRIEF PLAN — ${d.teacher}`,
     `═══════════════════════════════════════════`,
-    `Date: ${d.date||''}   Lesson: ${d.lesson||''}`,``,
-    `PRAISE`,d.praise||'',``,
-    `TARGETED QUESTIONS`,`Q1: `+(d.q1||''),`Q2: `+(d.q2||''),`Q3: `+(d.q3||''),``,
-    `Data for conversation: `+(d.qdata||''),``,
-    `NAME THE CHANGE`,d.change||'',`Data driving this: `+(d.data||''),``,
-    `TRANSFER THE SKILL`,`Skills: `+(d.skill||''),`Support: `+(d.support||''),`RTC: `+(d.rtc?'Yes':'No'),`Readiness: `+(d.ready||''),``,
-    `GOAL`,`Students: `+(d.g1||''),`Teacher: `+(d.g2||''),`Measurable: `+(d.g3||''),`Statement: `+(d.goal||''),``,
-    `NEXT STEPS`,d.next||'',``,
-    `DEBRIEF NOTES`,d.notes||''
+    `Date: ${d.date||''}   Lesson: ${d.lesson||''}`,
+    ``
   ];
-  return [...obsSection,...debriefSection].join('\n');
+  const renderedKeys=new Set(['teacher','date','lesson','obsId','id']);
+  debriefTemplate.filter(s=>!s.hidden).forEach(s=>{
+    let sectionHasContent=false;
+    const sectionLines=[s.label.toUpperCase()];
+    (s.fields||[]).forEach(f=>{
+      renderedKeys.add(f.key);
+      const v=d[f.key];
+      if(v===undefined||v===null||v==='')return;
+      sectionHasContent=true;
+      if(f.type==='check')sectionLines.push(`${f.label}: ${v?'Yes':'No'}`);
+      else sectionLines.push(`${f.label}: ${v}`);
+    });
+    if(sectionHasContent){lines.push(...sectionLines,'');}
+  });
+  // Orphan fields (data on the debrief that no current template field covers)
+  const orphans=Object.keys(d).filter(k=>!renderedKeys.has(k)&&d[k]!==null&&d[k]!==''&&d[k]!==false&&typeof d[k]!=='object');
+  if(orphans.length){
+    lines.push(`OTHER FIELDS`);
+    orphans.forEach(k=>lines.push(`${k}: ${d[k]}`));
+  }
+  return [...obsSection,...lines].join('\n');
 }
 function exportDebriefGDoc(){
   const d=S.debriefs.find(x=>x.id===curDebriefId);if(!d)return;
@@ -2150,13 +2398,32 @@ function exportDebriefGDoc(){
 function printDebrief(){
   const d=S.debriefs.find(x=>x.id===curDebriefId);if(!d)return;
   gi('dv-content').querySelectorAll('.dv-edit').forEach(ta=>{const f=ta.dataset.field;if(f)d[f]=ta.value;});
+  // Build template-driven sections
+  let bodyHtml='';
+  const renderedKeys=new Set(['teacher','date','lesson','obsId','id']);
+  debriefTemplate.filter(s=>!s.hidden).forEach(section=>{
+    let sectionContent='';
+    (section.fields||[]).forEach(f=>{
+      renderedKeys.add(f.key);
+      const v=d[f.key];
+      if(v===undefined||v===null||v==='')return;
+      if(f.type==='check'){
+        if(v)sectionContent+=`<p><strong>${esc(f.label)}:</strong> Yes</p>`;
+      } else {
+        sectionContent+=`<p><strong>${esc(f.label)}:</strong> ${esc(String(v)).replace(/\n/g,'<br>')}</p>`;
+      }
+    });
+    if(sectionContent)bodyHtml+=`<h2>${esc(section.label)}</h2>${sectionContent}`;
+  });
+  // Orphan fields
+  const orphans=Object.keys(d).filter(k=>!renderedKeys.has(k)&&d[k]!==null&&d[k]!==''&&d[k]!==false&&typeof d[k]!=='object');
+  if(orphans.length){
+    bodyHtml+=`<h2>Other</h2>`;
+    orphans.forEach(k=>{bodyHtml+=`<p><strong>${esc(k)}:</strong> ${esc(String(d[k])).replace(/\n/g,'<br>')}</p>`;});
+  }
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><title>Debrief - ${d.teacher}</title><style>body{font-family:Georgia,serif;max-width:680px;margin:40px auto;color:#222;line-height:1.7;font-size:14px;}h1{font-size:20px;margin-bottom:4px;}h2{font-size:12px;margin:18px 0 5px;border-bottom:1px solid #ccc;padding-bottom:3px;text-transform:uppercase;letter-spacing:.06em;color:#888;}p{margin-bottom:8px;}.meta{color:#888;font-size:13px;margin-bottom:24px;}.gg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}.gbox{background:#f9f8f4;padding:10px;border-radius:6px;}.lbl{font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:2px;}@media print{body{margin:20px;}}</style></head><body><h1>Debrief Plan — ${d.teacher}</h1><div class="meta">${d.date||''}${d.lesson?' · '+d.lesson:''}</div><h2>Praise</h2><p>${(d.praise||'').replace(/\n/g,'<br>')}</p><h2>Questions</h2>${d.q1?`<p>Q1: ${d.q1}</p>`:''}${d.q2?`<p>Q2: ${d.q2}</p>`:''}${d.q3?`<p>Q3: ${d.q3}</p>`:''}<p>Data: ${d.qdata||''}</p><h2>Name the change</h2><p>${(d.change||'').replace(/\n/g,'<br>')}</p><h2>Transfer the skill</h2><p>${(d.skill||'').replace(/\n/g,'<br>')}</p><p>${(d.support||'').replace(/\n/g,'<br>')}</p><h2>Goal</h2><div class="gg"><div class="gbox"><div class="lbl">Students</div><p>${d.g1||''}</p></div><div class="gbox"><div class="lbl">Teacher</div><p>${d.g2||''}</p></div><div class="gbox"><div class="lbl">Measurable</div><p>${d.g3||''}</p></div></div><p>${(d.goal||'').replace(/\n/g,'<br>')}</p><h2>Next steps</h2><p>${d.next||''}</p>${d.notes?`<h2>Debrief notes</h2><p>${d.notes.replace(/\n/g,'<br>')}</p>`:''}</body></html>`);
+  w.document.write(`<!DOCTYPE html><html><head><title>Debrief - ${esc(d.teacher)}</title><style>body{font-family:Georgia,serif;max-width:680px;margin:40px auto;color:#222;line-height:1.7;font-size:14px;}h1{font-size:20px;margin-bottom:4px;}h2{font-size:12px;margin:18px 0 5px;border-bottom:1px solid #ccc;padding-bottom:3px;text-transform:uppercase;letter-spacing:.06em;color:#888;}p{margin-bottom:8px;}.meta{color:#888;font-size:13px;margin-bottom:24px;}@media print{body{margin:20px;}}</style></head><body><h1>Debrief Plan — ${esc(d.teacher)}</h1><div class="meta">${esc(d.date||'')}${d.lesson?' · '+esc(d.lesson):''}</div>${bodyHtml}</body></html>`);
   w.document.close();w.print();
-}
-function clearDebrief(){
-  ['dd','dlesson','d-praise','d-q1','d-q2','d-q3','d-qdata','d-change','d-data','d-skill','d-support','d-ready','d-g1','d-g2','d-g3','d-goal','d-next','d-notes'].forEach(cv);
-  gi('dt').value='';gi('d-rtc').checked=false;gi('obs-banner').style.display='none';pendingObsId=null;
 }
 function startLive(){
   const d=S.debriefs.find(x=>x.id===curDebriefId);if(!d)return;
@@ -2164,8 +2431,17 @@ function startLive(){
   gi('live-timer').textContent='00:00';gi('live-tog').textContent='Start';
   gi('live-title').textContent=`${d.teacher} — Live Debrief`;
   sv2('live-notes',d.notes||'');
-  const steps=[{l:'Praise',v:d.praise},{l:'Q1',v:d.q1},{l:'Q2',v:d.q2},{l:'Q3',v:d.q3},{l:'Data',v:d.qdata},{l:'Name the change',v:d.change},{l:'Skills to develop',v:d.skill},{l:"How you'll support",v:d.support},{l:'Readiness',v:d.ready},{l:'Goal statement',v:d.goal},{l:'Next steps',v:d.next}].filter(s=>s.v);
-  gi('live-steps').innerHTML=steps.map((s,i)=>`<div class="step-card${i===0?' cur':''}" onclick="document.querySelectorAll('#live-steps .step-card').forEach((e,j)=>e.classList.toggle('cur',j===${i}))"><div class="sn">${s.l}</div><div style="font-size:13px;color:var(--txt);line-height:1.6;">${s.v}</div></div>`).join('');
+  // Build steps from current template, including only non-empty fields
+  const steps=[];
+  debriefTemplate.filter(s=>!s.hidden).forEach(section=>{
+    (section.fields||[]).forEach(f=>{
+      const v=d[f.key];
+      if(v===undefined||v===null||v==='')return;
+      if(f.type==='check'&&!v)return;
+      steps.push({l:f.label,v:f.type==='check'?'✓ Yes':String(v)});
+    });
+  });
+  gi('live-steps').innerHTML=steps.map((s,i)=>`<div class="step-card${i===0?' cur':''}" onclick="document.querySelectorAll('#live-steps .step-card').forEach((e,j)=>e.classList.toggle('cur',j===${i}))"><div class="sn">${esc(s.l)}</div><div style="font-size:13px;color:var(--txt);line-height:1.6;">${esc(s.v)}</div></div>`).join('');
   gi('live-modal').classList.add('open');
 }
 function toggleTimer(){if(timerOn){clearInterval(timerInt);timerOn=false;gi('live-tog').textContent='Resume';}else{timerOn=true;gi('live-tog').textContent='Pause';timerInt=setInterval(()=>{timerSec++;const m=Math.floor(timerSec/60).toString().padStart(2,'0'),s=(timerSec%60).toString().padStart(2,'0');gi('live-timer').textContent=`${m}:${s}`;},1000);}}
@@ -2275,6 +2551,7 @@ function openRes(){if(curShareRes)window.open(curShareRes.url,'_blank');}
 
 // ── INIT ──
 renderDash();
+renderDebriefForm();
 </script>
 </body>
 </html>
