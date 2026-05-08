@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math Coach Hub</title>
+<title>Coach Hub</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack.min.css">
 <script src="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack-all.js"></script>
 <style>
@@ -20,11 +20,48 @@
   --txt:#1a1a18;--txt2:#6b6a64;--txt3:#a8a79f;
   --sh:0 1px 3px rgba(0,0,0,0.08);
 }
+/* THEME: Ocean (cool blue accent) */
+body.theme-ocean{
+  --green:#0ea5e9;--gl:#e0f2fe;--gd:#075985;
+  --bg:#f4f7fa;
+}
+/* THEME: Sunset (warm orange/coral accent) */
+body.theme-sunset{
+  --green:#ea580c;--gl:#fff7ed;--gd:#9a3412;
+  --bg:#fdf8f4;
+}
+/* THEME: Lavender (calm purple accent) */
+body.theme-lavender{
+  --green:#8b5cf6;--gl:#f5f3ff;--gd:#5b21b6;
+  --bg:#faf8fc;
+}
+/* THEME: Rose (warm pink accent) */
+body.theme-rose{
+  --green:#e11d48;--gl:#fff1f2;--gd:#9f1239;
+  --bg:#fdf6f7;
+}
+/* THEME: Midnight (true dark mode) */
+body.theme-midnight{
+  --green:#34d399;--gl:#0d3a2c;--gd:#6ee7b7;
+  --bg:#0f1419;--sur:#1a1f26;--bdr:#2a3038;--bdr2:#3a4048;
+  --txt:#e8e8e3;--txt2:#a8a89f;--txt3:#6b6a64;
+  --sh:0 1px 3px rgba(0,0,0,0.4);
+  --bl:#0c2541;--al:#3d2c0f;--pl:#2a1f44;--il:#1f1f44;--rl:#3d1518;
+}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;}
 .topbar{background:var(--sur);border-bottom:1px solid var(--bdr);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh);}
 .logo{font-size:15px;font-weight:600;display:flex;align-items:center;gap:9px;}
 .logo-mark{width:28px;height:28px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;}
 .logo-mark svg{width:15px;height:15px;}
+.theme-btn{background:transparent;border:1px solid var(--bdr);border-radius:8px;padding:5px 9px;font-size:14px;cursor:pointer;transition:all .15s;font-family:inherit;}
+.theme-btn:hover{background:var(--gl);border-color:var(--green);}
+.theme-card{padding:14px;border:2px solid var(--bdr);border-radius:10px;cursor:pointer;text-align:left;transition:all .15s;background:var(--sur);font-family:inherit;color:var(--txt);}
+.theme-card:hover{border-color:var(--bdr2);}
+.theme-card.active{border-color:var(--green);box-shadow:0 0 0 3px var(--gl);}
+.theme-card .theme-swatches{display:flex;gap:5px;margin-bottom:8px;}
+.theme-card .theme-swatch{width:22px;height:22px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);}
+.theme-card .theme-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+.theme-card .theme-desc{font-size:11px;color:var(--txt3);}
 .nav{display:flex;gap:2px;}
 .nb{padding:5px 13px;border-radius:8px;border:none;background:transparent;font-size:13px;cursor:pointer;color:var(--txt2);font-family:inherit;font-weight:400;}
 .nb.active{background:#f0ede6;color:var(--txt);font-weight:500;}
@@ -119,18 +156,22 @@ textarea{resize:vertical;}
 .ts-mark:hover .ts-bubble{display:block;}
 /* Interaction log */
 .log-type-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500;}
-.lt-obs{background:var(--gl);color:var(--gd);}
-.lt-meeting{background:var(--bl);color:#1d4ed8;}
-.lt-email{background:#f0fdf4;color:#166534;}
-.lt-hallway{background:var(--al);color:#92400e;}
-.lt-coplanning{background:var(--pl);color:var(--purple);}
-.lt-plc{background:var(--il);color:var(--indigo);}
+/* Interaction type badges — class name is derived from the type name (lowercase, spaces & slashes → dashes) */
+.lt-observation{background:#dcfce7;color:#15803d;}
 .lt-debrief{background:#fce7f3;color:#9f1239;}
+.lt-co-planning{background:#f5f3ff;color:#7c3aed;}
 .lt-real-time-coaching{background:#fef3c7;color:#92400e;}
+.lt-meeting-check-in{background:#eff6ff;color:#1d4ed8;}
+.lt-plc{background:#eef2ff;color:#4f46e5;}
 .lt-walkthrough{background:#e0f2fe;color:#075985;}
-.lt-pd{background:#dcfce7;color:#166534;}
-.lt-meeting-check-in{background:var(--bl);color:#1d4ed8;}
+.lt-email{background:#f0fdf4;color:#166534;}
+.lt-pd{background:#fef2f2;color:#b91c1c;}
 .lt-other{background:#f1efe8;color:#5f5e5a;}
+/* Legacy class names kept for backwards-compat with older saved data */
+.lt-obs{background:#dcfce7;color:#15803d;}
+.lt-meeting{background:#eff6ff;color:#1d4ed8;}
+.lt-hallway{background:#fef3c7;color:#92400e;}
+.lt-coplanning{background:#f5f3ff;color:#7c3aed;}
 /* Type checkbox group */
 .type-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;padding:10px;}
 .type-check-item{display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;padding:3px 4px;border-radius:5px;}
@@ -179,7 +220,7 @@ textarea{resize:vertical;}
 .le{padding:12px 14px;background:var(--sur);border:1px solid var(--bdr);border-radius:10px;margin-bottom:8px;transition:border-color .12s;}
 .le:hover{border-color:var(--green);}
 .le-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
-.rc{padding:9px 12px;background:var(--sur);border:1px solid var(--bdr);border-radius:10px;margin-bottom:5px;display:flex;align-items:center;gap:10px;}
+.rc{padding:9px 12px;background:var(--sur);border:1px solid var(--bdr);border-radius:10px;margin-bottom:5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 /* Tabs */
 .tabs{display:inline-flex;gap:2px;background:#f0ede6;padding:3px;border-radius:8px;margin-bottom:14px;}
 .tab{padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:none;background:transparent;font-family:inherit;color:var(--txt2);}
@@ -225,6 +266,24 @@ textarea{resize:vertical;}
 </div>
 <div class="modal-bg" id="obs-modal"><div class="modal modal-sm"><button class="modal-close" onclick="cm('obs-modal')">×</button><div id="obs-content"></div></div></div>
 <div class="modal-bg" id="int-modal"><div class="modal modal-sm"><button class="modal-close" onclick="cm('int-modal')">×</button><div id="int-content"></div></div></div>
+
+<!-- Multi-teacher picker for logging an interaction with several teachers at once -->
+<div class="modal-bg" id="multi-teacher-modal"><div class="modal modal-sm"><button class="modal-close" onclick="cancelMultiTeacherPicker()">×</button>
+  <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Select teachers</div>
+  <div style="font-size:12px;color:var(--txt2);margin-bottom:14px;">One interaction will be saved for each teacher you select — useful for PD, PLC, or whole-staff meetings.</div>
+  <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+    <button class="btn btn-o btn-xs" onclick="multiTeacherSelectAll()">Select all</button>
+    <button class="btn btn-o btn-xs" onclick="multiTeacherSelectNone()">Clear</button>
+    <select id="multi-teacher-school-filter" onchange="renderMultiTeacherList()" style="max-width:200px;font-size:12px;width:auto;flex:1;">
+      <option value="">All schools</option>
+    </select>
+  </div>
+  <div id="multi-teacher-list" style="max-height:340px;overflow-y:auto;border:1px solid var(--bdr);border-radius:8px;padding:6px;background:var(--bg);"></div>
+  <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:14px;">
+    <button class="btn btn-o btn-sm" onclick="cancelMultiTeacherPicker()">Cancel</button>
+    <button class="btn btn-p btn-sm" onclick="confirmMultiTeacherPicker()">Done</button>
+  </div>
+</div></div>
 <div class="modal-bg" id="share-modal">
   <div class="modal modal-sm"><button class="modal-close" onclick="cm('share-modal')">×</button>
     <div style="font-size:15px;font-weight:600;margin-bottom:12px;">Share resource</div>
@@ -248,10 +307,15 @@ textarea{resize:vertical;}
     <div id="workspace-content"></div>
   </div>
 </div>
+<div class="modal-bg" id="quick-link-modal">
+  <div class="modal modal-sm"><button class="modal-close" onclick="cm('quick-link-modal')">×</button>
+    <div id="quick-link-content"></div>
+  </div>
+</div>
 
 <!-- ── TOPBAR ── -->
 <div class="topbar">
-  <div class="logo"><div class="logo-mark"><svg viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Math Coach Hub</div>
+  <div class="logo"><div class="logo-mark"><svg viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Coach Hub</div>
   <div class="nav">
     <button class="nb active" onclick="nav('home')">Home</button>
     <button class="nb" onclick="nav('teachers')">Teachers</button>
@@ -259,7 +323,15 @@ textarea{resize:vertical;}
     <button class="nb" onclick="nav('resources')">Resources</button>
     <button class="nb" onclick="nav('log')">Log</button>
   </div>
+  <button class="theme-btn" onclick="openThemePicker()" title="Change theme">🎨</button>
 </div>
+
+<!-- Theme picker modal -->
+<div class="modal-bg" id="theme-modal"><div class="modal modal-sm"><button class="modal-close" onclick="cm('theme-modal')">×</button>
+  <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Choose a theme</div>
+  <div style="font-size:12px;color:var(--txt2);margin-bottom:14px;">Personalize the look and feel.</div>
+  <div id="theme-list" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+</div></div>
 
 <div class="content">
 
@@ -356,7 +428,11 @@ textarea{resize:vertical;}
 <!-- ══ RESOURCES ══ -->
 <div id="resources" class="sec">
   <div class="sh"><h2>Resource library</h2>
-    <div style="display:flex;gap:8px;">
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div class="tabs" style="margin-bottom:0;">
+        <button class="tab active" id="res-view-active" onclick="setResourceView('active')">Active</button>
+        <button class="tab" id="res-view-archived" onclick="setResourceView('archived')">📦 Archived</button>
+      </div>
       <button class="btn btn-o btn-sm" onclick="openNewWorkspace()">+ New workspace</button>
       <button class="btn btn-p btn-sm" onclick="toggleForm('rfm')">+ Add resource</button>
     </div>
@@ -386,6 +462,7 @@ textarea{resize:vertical;}
     <div style="display:flex;gap:8px;">
       <button class="btn btn-p btn-sm" id="btn-new-obs" onclick="openNewLog('observation')">+ Log observation</button>
       <button class="btn btn-o btn-sm" id="btn-new-int" onclick="openNewLog('interaction')">+ Log interaction</button>
+      <button class="btn btn-o btn-sm" onclick="exportLogCSV()" title="Download visible log entries as a CSV file">⬇ Export</button>
     </div>
   </div>
 
@@ -411,7 +488,13 @@ textarea{resize:vertical;}
         <div style="font-size:14px;font-weight:600;">Log interaction</div>
         <button class="btn-ghost btn-sm btn" onclick="closeNewLog()">✕ Cancel</button>
       </div>
-      <div class="fr2"><div><label>Teacher</label><select id="lt-int"><option value="">Select teacher...</option></select></div><div><label>Date</label><input type="date" id="ld-int"></div></div>
+      <div class="fr2"><div><label>Teacher</label><select id="lt-int" onchange="onIntTeacherChange(this.value)"><option value="">Select teacher...</option><option value="__multi__">👥 Multiple teachers...</option></select></div><div><label>Date</label><input type="date" id="ld-int"></div></div>
+      <!-- Multi-teacher chips display, hidden by default -->
+      <div id="lt-int-multi-display" style="display:none;background:var(--gl);border:1px solid #bfdbfe;border-radius:10px;padding:9px 12px;margin-bottom:11px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:6px;">👥 Logging for these teachers</div>
+        <div id="lt-int-multi-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;"></div>
+        <button type="button" class="btn btn-o btn-xs" onclick="openMultiTeacherPicker()">✎ Edit selection</button>
+      </div>
       <div class="fr">
         <label>Type(s) — select one or more</label>
         <div class="type-checks" id="lint-type-checks">
@@ -484,6 +567,7 @@ textarea{resize:vertical;}
 // ── STATE ──
 let S={teachers:[],resources:[],workspaces:[],logs:[],interactions:[],debriefs:[]};
 let curDebriefId=null,curShareRes=null,curWsId=null,pendingObsId=null;
+let resourceView='active';
 let timerInt=null,timerSec=0,timerOn=false;
 let dashWidgets=[
   {id:'stats',label:'Stats',on:false,x:0,y:0,w:12,h:2},
@@ -517,6 +601,42 @@ function gi(id){return document.getElementById(id);}
 function gv(id){const e=gi(id);return e?e.value.trim():'';}
 function sv2(id,v){const e=gi(id);if(e)e.value=v||'';}
 function cv(id){sv2(id,'');}
+// ── THEMES ──
+const THEMES=[
+  {id:'forest',name:'Forest',desc:'Calm green (default)',swatches:['#1D9E75','#e8f7f1','#f7f6f2']},
+  {id:'ocean',name:'Ocean',desc:'Cool sky blue',swatches:['#0ea5e9','#e0f2fe','#f4f7fa']},
+  {id:'sunset',name:'Sunset',desc:'Warm orange',swatches:['#ea580c','#fff7ed','#fdf8f4']},
+  {id:'lavender',name:'Lavender',desc:'Soft purple',swatches:['#8b5cf6','#f5f3ff','#faf8fc']},
+  {id:'rose',name:'Rose',desc:'Warm pink',swatches:['#e11d48','#fff1f2','#fdf6f7']}
+];
+
+function applyTheme(id){
+  // Remove all theme classes
+  THEMES.forEach(t=>document.body.classList.remove(`theme-${t.id}`));
+  // 'forest' is the default :root values, no class needed
+  if(id&&id!=='forest')document.body.classList.add(`theme-${id}`);
+  localStorage.setItem('mch_theme',id||'forest');
+}
+
+function openThemePicker(){
+  const cur=localStorage.getItem('mch_theme')||'forest';
+  gi('theme-list').innerHTML=THEMES.map(t=>`
+    <button class="theme-card ${cur===t.id?'active':''}" onclick="applyTheme('${t.id}');openThemePicker();">
+      <div class="theme-swatches">
+        ${t.swatches.map(s=>`<div class="theme-swatch" style="background:${s};"></div>`).join('')}
+      </div>
+      <div class="theme-name">${t.name}</div>
+      <div class="theme-desc">${t.desc}</div>
+    </button>
+  `).join('');
+  gi('theme-modal').classList.add('open');
+}
+
+// Apply saved theme on page load (fallback to forest if user had midnight saved)
+let _savedTheme=localStorage.getItem('mch_theme');
+if(_savedTheme==='midnight')_savedTheme='forest';
+applyTheme(_savedTheme);
+
 function flash(msg){const e=gi('flash');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
 function cm(id){gi(id).classList.remove('open');}
 function initials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
@@ -585,6 +705,7 @@ function refreshDDs(){
   [['dt','Select teacher...'],['lt-obs','Select teacher...'],['lt-int','Select teacher...']].forEach(([id,ph])=>{
     const el=gi(id);if(!el)return;const cur=el.value;
     el.innerHTML=`<option value="">${ph}</option>`;
+    if(id==='lt-int')el.innerHTML+=`<option value="__multi__">👥 Multiple teachers...</option>`;
     S.teachers.forEach(t=>{const o=document.createElement('option');o.value=t.name;o.textContent=t.name+(t.school?' ('+t.school+')':'');el.appendChild(o);});
     if(cur)el.value=cur;
   });
@@ -727,7 +848,7 @@ function openCustomizeMenu(){
       ${w.id.startsWith('ws-')?`<button class="btn-d" onclick="removeWidget('${w.id}')">Remove</button>`:`<span style="font-size:11px;color:var(--txt3);">built-in</span>`}
     </div>`).join('');
   const pinnedIds=dashWidgets.filter(w=>w.id.startsWith('ws-')).map(w=>w.wsId);
-  const availableWs=S.workspaces.filter(ws=>!pinnedIds.includes(ws.id));
+  const availableWs=S.workspaces.filter(ws=>!ws.archived&&!pinnedIds.includes(ws.id));
   const pinSection=availableWs.length
     ? `<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr);">
         <div style="font-size:13px;font-weight:600;margin-bottom:6px;">Pin a workspace to the dashboard</div>
@@ -1126,6 +1247,9 @@ function openNewLog(type){
   if(type==='observation')sv2('ld-obs',t);else sv2('ld-int',t);
   // Reset lookback card
   const lc=gi('lookback-card');if(lc){lc.style.display='none';lc.innerHTML='';}
+  // Reset multi-teacher state
+  multiSelectedTeachers=[];
+  const mtd=gi('lt-int-multi-display');if(mtd)mtd.style.display='none';
   gi('log-list-area').style.display='none';
   if(type==='observation'){
     gi('lfm-obs').style.display='block';
@@ -1193,17 +1317,110 @@ function saveObs(){
   save();renderLog();renderLogStats();renderTeachers();renderDash();flash('Observation saved!');
 }
 
+// Tracks selected teachers when "Multiple teachers" is chosen on the new-interaction form
+let multiSelectedTeachers=[];
+
+function onIntTeacherChange(val){
+  if(val==='__multi__'){
+    openMultiTeacherPicker();
+  } else {
+    // Single-teacher mode — clear any prior multi-selection display
+    multiSelectedTeachers=[];
+    gi('lt-int-multi-display').style.display='none';
+  }
+}
+
+function openMultiTeacherPicker(){
+  // Populate school filter
+  const schools=[...new Set(S.teachers.map(t=>t.school).filter(Boolean))].sort();
+  const sfEl=gi('multi-teacher-school-filter');
+  if(sfEl){const cur=sfEl.value;sfEl.innerHTML='<option value="">All schools</option>';schools.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;sfEl.appendChild(o);});sfEl.value=cur||'';}
+  renderMultiTeacherList();
+  gi('multi-teacher-modal').classList.add('open');
+}
+
+function renderMultiTeacherList(){
+  const sf=gi('multi-teacher-school-filter')?gi('multi-teacher-school-filter').value:'';
+  const list=S.teachers.filter(t=>!sf||t.school===sf);
+  if(!list.length){gi('multi-teacher-list').innerHTML='<div style="font-size:13px;color:var(--txt3);padding:14px;text-align:center;">No teachers match.</div>';return;}
+  // Group by school
+  const bySchool={};list.forEach(t=>{const k=t.school||'(no school)';if(!bySchool[k])bySchool[k]=[];bySchool[k].push(t);});
+  gi('multi-teacher-list').innerHTML=Object.keys(bySchool).sort().map(school=>`
+    <div style="margin-bottom:8px;">
+      <div style="font-size:11px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;padding:4px 6px;">${school}</div>
+      ${bySchool[school].map(t=>`
+        <label style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:13px;" onmouseover="this.style.background='var(--sur)'" onmouseout="this.style.background=''">
+          <input type="checkbox" class="multi-teacher-check" value="${esc(t.name)}" ${multiSelectedTeachers.includes(t.name)?'checked':''} style="width:auto;margin:0;accent-color:var(--green);">
+          <span>${t.name}</span>
+          ${t.grade?`<span style="font-size:11px;color:var(--txt3);">${t.grade}</span>`:''}
+        </label>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function multiTeacherSelectAll(){
+  document.querySelectorAll('.multi-teacher-check').forEach(cb=>cb.checked=true);
+}
+function multiTeacherSelectNone(){
+  document.querySelectorAll('.multi-teacher-check').forEach(cb=>cb.checked=false);
+}
+
+function confirmMultiTeacherPicker(){
+  multiSelectedTeachers=Array.from(document.querySelectorAll('.multi-teacher-check:checked')).map(cb=>cb.value);
+  if(!multiSelectedTeachers.length){
+    alert('Select at least one teacher, or click Cancel.');return;
+  }
+  // Show chip display
+  const display=gi('lt-int-multi-display');
+  const chips=multiSelectedTeachers.map(name=>`<span style="background:var(--sur);border:1px solid var(--bdr2);padding:3px 8px;border-radius:99px;font-size:12px;">${name}</span>`).join('');
+  gi('lt-int-multi-chips').innerHTML=chips;
+  display.style.display='block';
+  cm('multi-teacher-modal');
+}
+
+function cancelMultiTeacherPicker(){
+  cm('multi-teacher-modal');
+  // If user cancels and had no prior selection, reset the dropdown
+  if(!multiSelectedTeachers.length){
+    gi('lt-int').value='';
+    gi('lt-int-multi-display').style.display='none';
+  }
+}
+
 function saveInteraction(){
-  const teacher=gi('lt-int').value,notes=gv('lint-notes');if(!teacher){alert('Please select a teacher.');return;}
+  const sel=gi('lt-int').value;
+  const isMulti=sel==='__multi__'&&multiSelectedTeachers.length>0;
+  const teacher=sel;
+  const notes=gv('lint-notes');
+  if(!teacher){alert('Please select a teacher.');return;}
+  if(isMulti&&!multiSelectedTeachers.length){alert('No teachers selected. Click "Edit selection" to choose teachers.');return;}
   const types=Array.from(document.querySelectorAll('#lint-type-checks input[name="lint-type"]:checked')).map(cb=>cb.value);
   if(!types.length){alert('Please select at least one interaction type.');return;}
-  // Reset teacher select after save so it doesn't persist
+
+  const date=dateFromISO(gv('ld-int'))||'No date';
+  const duration=gv('lint-dur');
+  const location=gv('lint-loc');
+  const baseId=Date.now();
+  const groupId=isMulti?baseId:null;
+
+  if(isMulti){
+    multiSelectedTeachers.forEach((name,i)=>{
+      S.interactions.push({teacher:name,date,type:types.join(', '),types,duration,location,notes,id:baseId+i,groupId});
+    });
+    flash(`✓ Logged for ${multiSelectedTeachers.length} teachers!`);
+  } else {
+    S.interactions.push({teacher,date,type:types.join(', '),types,duration,location,notes,id:baseId});
+    flash('Interaction saved!');
+  }
+  // Reset
   gi('lt-int').value='';
-  S.interactions.push({teacher,date:dateFromISO(gv('ld-int'))||'No date',type:types.join(', '),types,duration:gv('lint-dur'),location:gv('lint-loc'),notes,id:Date.now()});
+  multiSelectedTeachers=[];
+  gi('lt-int-multi-display').style.display='none';
   ['ld-int','lint-dur','lint-loc','lint-notes'].forEach(cv);
   document.querySelectorAll('input[name="lint-type"]').forEach(cb=>cb.checked=false);
   closeNewLog();
-  save();renderLog();renderLogStats();renderTeachers();renderDash();flash('Interaction saved!');
+  save();renderLog();renderLogStats();renderTeachers();renderDash();
 }
 
 function renderLog(){
@@ -1280,6 +1497,85 @@ function renderLog(){
 function clearLogFilters(){
   ['ltype-filter','lfilter','lschool-filter'].forEach(id=>{const el=gi(id);if(el)el.value='';});
   renderLog();
+}
+
+function exportLogCSV(){
+  const tf=gi('lfilter')?gi('lfilter').value:'';
+  const sf=gi('lschool-filter')?gi('lschool-filter').value:'';
+  const typeFilter=gi('ltype-filter')?gi('ltype-filter').value:'';
+  const sort=gi('lsort')?gi('lsort').value:'newest';
+  const teacherMatch=(name)=>{
+    if(tf&&name!==tf)return false;
+    if(sf){const t=S.teachers.find(x=>x.name===name);if(t&&t.school!==sf)return false;}
+    return true;
+  };
+  const intMatch=(i)=>{
+    if(!typeFilter)return true;
+    if(i.types&&Array.isArray(i.types))return i.types.includes(typeFilter);
+    if(i.type&&i.type.split(',').map(s=>s.trim()).includes(typeFilter))return true;
+    return false;
+  };
+
+  let items=[];
+  if(!typeFilter||typeFilter==='Observation'){
+    items=items.concat(S.logs.filter(l=>teacherMatch(l.teacher)).map(l=>({...l,_type:'obs'})));
+  }
+  items=items.concat(S.interactions.filter(i=>teacherMatch(i.teacher)&&intMatch(i)).map(i=>({...i,_type:'int'})));
+
+  if(sort==='oldest') items.sort((a,b)=>a.id-b.id);
+  else if(sort==='teacher') items.sort((a,b)=>a.teacher.localeCompare(b.teacher));
+  else if(sort==='nodebrief'){
+    items=items.filter(e=>e._type==='obs'&&!S.debriefs.find(d=>d.obsId===e.id));
+    items.sort((a,b)=>b.id-a.id);
+  } else items.sort((a,b)=>b.id-a.id);
+
+  if(!items.length){flash('No entries to export.');return;}
+
+  // Build CSV
+  const csvEscape=(v)=>{
+    if(v===null||v===undefined)return '';
+    const s=String(v).replace(/\r?\n/g,' ').replace(/"/g,'""');
+    return `"${s}"`;
+  };
+  const headers=['Date','Type(s)','Teacher','School','Grade','Duration (min)','Focus area','Location','Notes','Has linked debrief'];
+  const rows=[headers.map(csvEscape).join(',')];
+
+  items.forEach(e=>{
+    const teacher=S.teachers.find(t=>t.name===e.teacher);
+    const school=teacher?.school||'';
+    const grade=teacher?.grade||'';
+    let typeStr='';
+    if(e._type==='obs'){
+      typeStr='Observation';
+    } else {
+      typeStr=e.types&&Array.isArray(e.types)?e.types.join('; '):(e.type||'Other');
+    }
+    const focusOrTypeNotes=e._type==='obs'?(e.focus||''):'';
+    const duration=e._type==='int'?(e.duration||''):'';
+    const location=e._type==='int'?(e.location||''):'';
+    const notes=e.notes||'';
+    const hasDebrief=e._type==='obs'?(S.debriefs.find(d=>d.obsId===e.id)?'Yes':'No'):'';
+    const row=[e.date||'',typeStr,e.teacher||'',school,grade,duration,focusOrTypeNotes,location,notes,hasDebrief];
+    rows.push(row.map(csvEscape).join(','));
+  });
+
+  const csv=rows.join('\n');
+  // Trigger download
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  // Build a descriptive filename based on filters
+  const parts=['coach-hub-log'];
+  if(typeFilter)parts.push(typeFilter.toLowerCase().replace(/[\s/]+/g,'-'));
+  if(tf)parts.push(tf.toLowerCase().replace(/\s+/g,'-'));
+  if(sf)parts.push(sf.toLowerCase().replace(/\s+/g,'-'));
+  const today=new Date().toISOString().split('T')[0];
+  parts.push(today);
+  a.download=`${parts.join('_')}.csv`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  flash(`Exported ${items.length} entries to CSV`);
 }
 
 function renderLogStats(){
@@ -1517,16 +1813,23 @@ function createWorkspace(){
   const name=gv('ws-name');if(!name)return;
   S.workspaces.push({id:Date.now(),title:name,description:gv('ws-desc'),color:wsColor,links:[]});
   save();renderWorkspaces();cm('workspace-modal');flash('Workspace created!');
+  // If the Customize dashboard menu is open, refresh it so the new workspace shows up
+  if(gi('dash-settings-modal')&&gi('dash-settings-modal').classList.contains('open')){
+    openCustomizeMenu();
+  }
 }
 
 function openWorkspace(id){
   curWsId=id;
   const ws=S.workspaces.find(x=>x.id===id);if(!ws)return;
+  const archiveBtn=ws.archived
+    ? `<button class="btn btn-o btn-sm" style="border-color:var(--green);color:var(--green);" onclick="restoreWorkspace(${id});cm('workspace-modal');">↩ Restore</button><button class="btn-d" onclick="if(confirm('Permanently delete this workspace? This cannot be undone.')){S.workspaces=S.workspaces.filter(x=>x.id!==${id});save();renderWorkspaces();cm('workspace-modal');}">🗑 Delete permanently</button>`
+    : `<button class="btn btn-o btn-sm" onclick="archiveWorkspace(${id});cm('workspace-modal');">📦 Archive</button>`;
   gi('workspace-content').innerHTML=`
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
       <div style="width:14px;height:14px;border-radius:50%;background:${ws.color};flex-shrink:0;"></div>
       <div style="font-size:15px;font-weight:600;flex:1;">${ws.title}</div>
-      <button class="btn-d" onclick="if(confirm('Delete workspace?')){S.workspaces=S.workspaces.filter(x=>x.id!==${id});save();renderWorkspaces();cm('workspace-modal');}">Delete</button>
+      ${archiveBtn}
     </div>
     ${ws.description?`<div style="font-size:13px;color:var(--txt2);margin-bottom:14px;">${ws.description}</div>`:''}
     <div id="ws-links-list">${renderWsLinks(ws)}</div>
@@ -1544,15 +1847,57 @@ function openWorkspace(id){
 
 function renderWsLinks(ws){
   if(!ws.links.length) return '<div style="font-size:13px;color:var(--txt3);padding:8px 0;">No links yet.</div>';
-  return ws.links.map((l,i)=>`
-    <div class="workspace-link-row">
+  return ws.links.map((l,i)=>{
+    // If this link is being edited, show inline edit form
+    if(l._editing){
+      return `<div class="workspace-link-row" style="flex-direction:column;align-items:stretch;gap:6px;background:var(--bg);padding:10px;border-radius:8px;border:1px solid var(--bdr2);">
+        <div class="fr2" style="margin-bottom:0;"><div><label style="font-size:11px;">Name</label><input type="text" id="wsl-edit-name-${i}" value="${esc(l.name)}"></div><div><label style="font-size:11px;">URL</label><input type="url" id="wsl-edit-url-${i}" value="${esc(l.url)}"></div></div>
+        <div class="fr" style="margin-bottom:0;"><label style="font-size:11px;">Notes</label><input type="text" id="wsl-edit-notes-${i}" value="${esc(l.notes||'')}"></div>
+        <div style="display:flex;gap:6px;justify-content:flex-end;">
+          <button class="btn btn-o btn-xs" onclick="cancelWsLinkEdit(${ws.id},${i})">Cancel</button>
+          <button class="btn btn-p btn-xs" onclick="saveWsLinkEdit(${ws.id},${i})">Save</button>
+        </div>
+      </div>`;
+    }
+    return `<div class="workspace-link-row">
       <div style="flex:1;min-width:0;">
         <a href="${l.url}" target="_blank" style="font-size:13px;font-weight:500;color:var(--blue);text-decoration:none;">${l.name}</a>
         ${l.notes?`<div style="font-size:11px;color:var(--txt3);">${l.notes}</div>`:''}
       </div>
-      <a href="${l.url}" target="_blank" class="btn btn-o btn-xs" style="text-decoration:none;flex-shrink:0;">Open ↗</a>
+      <button class="btn btn-o btn-xs" onclick="copyWsLink('${encodeURIComponent(l.url)}')" title="Copy link to clipboard">🔗 Copy</button>
+      <button class="btn btn-o btn-xs" onclick="startWsLinkEdit(${ws.id},${i})" title="Edit this link">✎</button>
       <button class="btn-d" onclick="removeWsLink(${ws.id},${i})">×</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+}
+
+function startWsLinkEdit(wsId,idx){
+  const ws=S.workspaces.find(x=>x.id===wsId);if(!ws||!ws.links[idx])return;
+  // Clear any other edits in progress
+  ws.links.forEach(l=>delete l._editing);
+  ws.links[idx]._editing=true;
+  gi('ws-links-list').innerHTML=renderWsLinks(ws);
+}
+function cancelWsLinkEdit(wsId,idx){
+  const ws=S.workspaces.find(x=>x.id===wsId);if(!ws||!ws.links[idx])return;
+  delete ws.links[idx]._editing;
+  gi('ws-links-list').innerHTML=renderWsLinks(ws);
+}
+function saveWsLinkEdit(wsId,idx){
+  const ws=S.workspaces.find(x=>x.id===wsId);if(!ws||!ws.links[idx])return;
+  const newName=gv(`wsl-edit-name-${idx}`),newUrl=gv(`wsl-edit-url-${idx}`),newNotes=gv(`wsl-edit-notes-${idx}`);
+  if(!newName||!newUrl){alert('Name and URL are required.');return;}
+  ws.links[idx].name=newName;
+  ws.links[idx].url=newUrl;
+  ws.links[idx].notes=newNotes;
+  delete ws.links[idx]._editing;
+  save();renderWorkspaces();renderResources();renderDash();
+  gi('ws-links-list').innerHTML=renderWsLinks(ws);
+  flash('Link updated!');
+}
+function copyWsLink(encodedUrl){
+  const url=decodeURIComponent(encodedUrl);
+  navigator.clipboard.writeText(url).then(()=>flash('🔗 Link copied!')).catch(()=>flash('Copy failed — try right-clicking the link instead'));
 }
 
 function addWsLink(wsId){
@@ -1583,32 +1928,97 @@ function shareToClassroom(wsId){
 
 function renderWorkspaces(){
   const el=gi('workspaces-list');if(!el)return;
-  if(!S.workspaces.length){el.innerHTML='<div style="font-size:13px;color:var(--txt3);padding:8px 0;">No workspaces yet.</div>';return;}
+  const isArchived=resourceView==='archived';
+  const list=S.workspaces.filter(ws=>!!ws.archived===isArchived);
+  if(!list.length){
+    el.innerHTML=`<div style="font-size:13px;color:var(--txt3);padding:8px 0;">${isArchived?'No archived workspaces.':'No workspaces yet.'}</div>`;
+    return;
+  }
   el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">
-    ${S.workspaces.map(ws=>`
-      <div class="workspace-tile" style="border-left:4px solid ${ws.color};display:flex;flex-direction:column;max-height:280px;">
+    ${list.map(ws=>{
+      const actionBtns=isArchived
+        ? `<button class="btn btn-o btn-xs" onclick="restoreWorkspace(${ws.id})" style="flex:1;border-color:var(--green);color:var(--green);">↩ Restore</button><button class="btn-d" onclick="if(confirm('Permanently delete this workspace? This cannot be undone.')){S.workspaces=S.workspaces.filter(x=>x.id!==${ws.id});save();renderWorkspaces();renderResources();renderDash();}" style="flex:1;">🗑 Delete</button>`
+        : `<button class="btn btn-o btn-xs" onclick="quickAddWsLink(${ws.id})" style="flex:1;">+ Add link</button><button class="btn btn-o btn-xs" onclick="openWorkspace(${ws.id})" style="flex:1;">⚙ Manage</button>`;
+      return `<div class="workspace-tile" style="border-left:4px solid ${ws.color};display:flex;flex-direction:column;max-height:280px;">
         <div class="workspace-tile-header" style="margin-bottom:6px;">
           <div class="workspace-tile-title">${ws.title}</div>
           <span style="font-size:11px;color:var(--txt3);">${ws.links.length} link${ws.links.length===1?'':'s'}</span>
         </div>
         ${ws.description?`<div style="font-size:12px;color:var(--txt2);margin-bottom:8px;">${ws.description}</div>`:''}
         <div style="flex:1;overflow-y:auto;border-top:1px solid var(--bdr);padding-top:6px;">
-          ${ws.links.length?ws.links.map(l=>`<div style="padding:5px 2px;border-bottom:1px solid var(--bdr);"><a href="${l.url}" target="_blank" style="font-size:13px;color:var(--blue);text-decoration:none;font-weight:500;display:block;">${l.name}</a>${l.notes?`<div style="font-size:11px;color:var(--txt3);">${l.notes}</div>`:''}</div>`).join(''):'<div style="font-size:12px;color:var(--txt3);padding:6px 0;font-style:italic;">No links yet — click Manage to add some.</div>'}
+          ${ws.links.length?ws.links.map(l=>`<div style="padding:6px 2px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:6px;"><div style="flex:1;min-width:0;"><a href="${l.url}" target="_blank" style="font-size:13px;color:var(--blue);text-decoration:none;font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${l.name}</a>${l.notes?`<div style="font-size:11px;color:var(--txt3);">${l.notes}</div>`:''}</div><button class="btn btn-o btn-xs" style="flex-shrink:0;padding:2px 6px;font-size:10px;" onclick="copyWsLink('${encodeURIComponent(l.url)}')" title="Copy link">🔗</button></div>`).join(''):'<div style="font-size:12px;color:var(--txt3);padding:6px 0;font-style:italic;">No links yet.</div>'}
         </div>
         <div style="display:flex;gap:5px;margin-top:10px;padding-top:8px;border-top:1px solid var(--bdr);">
-          <button class="btn btn-o btn-xs" onclick="quickAddWsLink(${ws.id})" style="flex:1;">+ Add link</button>
-          <button class="btn btn-o btn-xs" onclick="openWorkspace(${ws.id})" style="flex:1;">⚙ Manage</button>
+          ${actionBtns}
         </div>
-      </div>`).join('')}
+      </div>`;
+    }).join('')}
   </div>`;
+}
+
+function archiveWorkspace(id){
+  const ws=S.workspaces.find(x=>x.id===id);if(!ws)return;
+  ws.archived=true;
+  save();renderWorkspaces();renderResources();renderDash();
+  flash('📦 Workspace archived');
+}
+function restoreWorkspace(id){
+  const ws=S.workspaces.find(x=>x.id===id);if(!ws)return;
+  ws.archived=false;
+  save();renderWorkspaces();renderResources();renderDash();
+  flash('↩ Workspace restored');
+}
+
+function shareWorkspace(wsId){
+  const ws=S.workspaces.find(x=>x.id===wsId);if(!ws)return;
+  if(!ws.links.length){alert('This workspace has no links to share yet.');return;}
+  // Compose an email body listing every link with name + URL + notes
+  const subject=`Resources: ${ws.title}`;
+  const lines=[`Hi,`,``,`Sharing the "${ws.title}" workspace with you:`,``];
+  if(ws.description)lines.push(ws.description,'');
+  ws.links.forEach(l=>{
+    lines.push(`• ${l.name}`);
+    lines.push(`  ${l.url}`);
+    if(l.notes)lines.push(`  ${l.notes}`);
+    lines.push('');
+  });
+  lines.push(`Sent from Coach Hub.`);
+  const body=lines.join('\n');
+  const mailto=`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  // Also copy a clean version to clipboard as a fallback
+  navigator.clipboard.writeText(body).catch(()=>{});
+  window.location.href=mailto;
+  flash('📤 Email opened — workspace also copied to clipboard');
 }
 
 function quickAddWsLink(wsId){
   const ws=S.workspaces.find(x=>x.id===wsId);if(!ws)return;
-  const name=prompt('Link name (e.g. "PLC Agenda"):');if(!name)return;
-  const url=prompt('Link URL (full https://… address):');if(!url)return;
-  ws.links.push({name:name.trim(),url:url.trim(),notes:''});
-  save();renderWorkspaces();renderResources();renderDash();
+  gi('quick-link-content').innerHTML=`
+    <div style="font-size:15px;font-weight:600;margin-bottom:4px;">Add link to "${esc(ws.title)}"</div>
+    <div style="font-size:12px;color:var(--txt3);margin-bottom:14px;">Both fields required.</div>
+    <div class="fr"><label>Link name</label><input type="text" id="ql-name" placeholder='e.g. "PLC Agenda"' autofocus></div>
+    <div class="fr"><label>Link URL</label><input type="url" id="ql-url" placeholder="https://docs.google.com/..."></div>
+    <div class="fr"><label>Notes (optional)</label><input type="text" id="ql-notes" placeholder="Brief description"></div>
+    <div style="display:flex;gap:7px;justify-content:flex-end;">
+      <button class="btn btn-o btn-sm" onclick="cm('quick-link-modal')">Cancel</button>
+      <button class="btn btn-p btn-sm" onclick="saveQuickLink(${wsId})">Add link</button>
+    </div>`;
+  gi('quick-link-modal').classList.add('open');
+  // Submit on Enter from any field
+  setTimeout(()=>{
+    const nameInput=gi('ql-name');if(nameInput)nameInput.focus();
+    ['ql-name','ql-url','ql-notes'].forEach(id=>{
+      const el=gi(id);if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveQuickLink(wsId);}});
+    });
+  },50);
+}
+
+function saveQuickLink(wsId){
+  const ws=S.workspaces.find(x=>x.id===wsId);if(!ws)return;
+  const name=gv('ql-name'),url=gv('ql-url'),notes=gv('ql-notes');
+  if(!name||!url){alert('Please fill in both the link name and URL.');return;}
+  ws.links.push({name,url,notes});
+  save();cm('quick-link-modal');renderWorkspaces();renderResources();renderDash();
   flash('Link added!');
 }
 
@@ -1797,25 +2207,57 @@ function addResource(){
   save();renderResources();refreshDDs();renderDash();
 }
 const catIcon={'PD / professional learning':'📚','Lesson resources':'📐','Assessment tools':'📋','Curriculum / standards':'📎','Tech tools':'🔧','Student materials':'📄','Other':'🔗'};
+function setResourceView(view){
+  resourceView=view;
+  gi('res-view-active').classList.toggle('active',view==='active');
+  gi('res-view-archived').classList.toggle('active',view==='archived');
+  // Hide the "Add resource" form when switching to archived view
+  if(view==='archived')gi('rfm').style.display='none';
+  renderResources();renderWorkspaces();
+}
+
 function renderResources(){
   const el=gi('rlist');
   const search=(gv('rsearch')||'').toLowerCase(),cf=gi('rfilter').value,tf=gi('rtagfilter').value;
-  // Combine saved resources + workspace links (deduplicated by URL)
+  const isArchived=resourceView==='archived';
+  // Combine saved resources + workspace links (deduplicated by URL) — workspace links inherit their workspace's archived state
   const wsLinks=[];
-  S.workspaces.forEach(ws=>{
+  S.workspaces.filter(ws=>!!ws.archived===isArchived).forEach(ws=>{
     ws.links.forEach(l=>{
       if(!S.resources.find(r=>r.url===l.url))
         wsLinks.push({name:l.name,url:l.url,cat:'Other',tag:ws.title,notes:`From workspace: ${ws.title}`,teacher:'',id:`ws-${ws.id}-${l.url}`,_fromWs:true});
     });
   });
-  const allRes=[...S.resources,...wsLinks];
+  const matchingResources=S.resources.filter(r=>!!r.archived===isArchived);
+  const allRes=[...matchingResources,...wsLinks];
   const list=allRes.filter(r=>{
     const ms=!search||r.name.toLowerCase().includes(search)||(r.notes||'').toLowerCase().includes(search)||(r.tag||'').toLowerCase().includes(search);
     return ms&&(!cf||r.cat===cf)&&(!tf||r.tag===tf);
   });
-  if(!list.length){el.innerHTML='<div class="empty">No resources found.</div>';return;}
+  if(!list.length){
+    el.innerHTML=isArchived?'<div class="empty">No archived resources.</div>':'<div class="empty">No resources found.</div>';
+    return;
+  }
   const byTag={};list.forEach(r=>{const k=r.tag||r.cat||'Other';if(!byTag[k])byTag[k]=[];byTag[k].push(r);});
-  el.innerHTML=Object.keys(byTag).sort().map(tag=>`<div style="margin-bottom:18px;"><div class="sec-cat">${tag}</div>${byTag[tag].map(r=>`<div class="rc"><div style="font-size:14px;">${catIcon[r.cat]||'🔗'}</div><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:600;">${r.name}</div><div style="font-size:11px;color:var(--txt3);">${r.cat}${r.notes?' · '+r.notes:''}${r.teacher?' · '+r.teacher:''}</div></div><div style="display:flex;gap:5px;align-items:center;flex-shrink:0;"><a href="${r.url}" target="_blank" class="btn btn-o btn-xs" style="text-decoration:none;">Open ↗</a><button class="btn btn-o btn-xs" onclick="shareToClassroomUrl('${encodeURIComponent(r.url)}','${encodeURIComponent(r.name)}')">+ Classroom</button>${!r._fromWs?`<button class="btn btn-o btn-xs" onclick="openShare(${JSON.stringify(r.id)})">Share</button><button class="btn-d" onclick="S.resources=S.resources.filter(x=>x.id!==${r.id});save();renderResources();renderDash();">×</button>`:`<span style="font-size:11px;color:var(--txt3);padding:2px 6px;">from workspace</span>`}</div></div>`).join('')}</div>`).join('');
+  el.innerHTML=Object.keys(byTag).sort().map(tag=>`<div style="margin-bottom:18px;"><div class="sec-cat">${tag}</div>${byTag[tag].map(r=>{
+    const actionBtns=isArchived
+      ? `<button class="btn btn-o btn-xs" onclick="restoreResource(${r.id})" style="border-color:var(--green);color:var(--green);">↩ Restore</button><button class="btn-d" onclick="if(confirm('Permanently delete? This cannot be undone.')){S.resources=S.resources.filter(x=>x.id!==${r.id});save();renderResources();renderDash();}">🗑 Delete</button>`
+      : `<button class="btn btn-o btn-xs" onclick="openShare(${JSON.stringify(r.id)})">Share</button><button class="btn btn-o btn-xs" onclick="archiveResource(${r.id})" title="Move to archive">📦 Archive</button>`;
+    return `<div class="rc"><div style="font-size:14px;">${catIcon[r.cat]||'🔗'}</div><div style="flex:1;min-width:0;"><a href="${r.url}" target="_blank" style="font-size:13px;font-weight:600;color:var(--txt);text-decoration:none;display:block;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--txt)'">${r.name} ↗</a><div style="font-size:11px;color:var(--txt3);">${r.cat}${r.notes?' · '+r.notes:''}${r.teacher?' · '+r.teacher:''}</div></div><div style="display:flex;gap:5px;align-items:center;flex-shrink:0;">${!isArchived?`<button class="btn btn-o btn-xs" onclick="copyWsLink('${encodeURIComponent(r.url)}')" title="Copy link to clipboard">🔗 Copy</button>`:''}${!r._fromWs?actionBtns:`<span style="font-size:11px;color:var(--txt3);padding:2px 6px;">from workspace</span>`}</div></div>`;
+  }).join('')}</div>`).join('');
+}
+
+function archiveResource(id){
+  const r=S.resources.find(x=>x.id===id);if(!r)return;
+  r.archived=true;
+  save();renderResources();renderDash();
+  flash('📦 Resource archived');
+}
+function restoreResource(id){
+  const r=S.resources.find(x=>x.id===id);if(!r)return;
+  r.archived=false;
+  save();renderResources();renderDash();
+  flash('↩ Resource restored');
 }
 function shareToClassroomUrl(encodedUrl,encodedName){
   window.open(`https://classroom.google.com/share?url=${encodedUrl}&title=${encodedName}`,'_blank');
