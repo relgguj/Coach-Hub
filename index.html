@@ -257,14 +257,19 @@ textarea{resize:vertical;}
 </style>
 </head>
 <body>
-
 <div id="auth-section">
-  <h2>Create Account</h2>
+  <h2 id="auth-title">Sign In</h2>
 
   <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
+  <input type="password" id="password" placeholder="Password (min 6 characters)">
 
-  <button id="signup-btn">Sign Up</button>
+  <button id="signin-btn">Sign In</button>
+  <button id="signup-btn" style="display:none;">Create Account</button>
+
+  <p id="auth-toggle">
+    Don't have an account?
+    <a href="#" id="toggle-mode">Sign up here</a>
+  </p>
 
   <p id="auth-message"></p>
 </div>
