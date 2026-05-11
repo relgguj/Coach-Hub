@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coach Hub</title>
+<title>Cadence</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack.min.css">
 <script src="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack-all.js"></script>
 <style>
@@ -50,7 +50,7 @@ body.theme-midnight{
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;}
 .topbar{background:var(--sur);border-bottom:1px solid var(--bdr);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh);}
-.logo{font-size:15px;font-weight:600;display:flex;align-items:center;gap:9px;}
+.logo{font-size:18px;font-weight:600;color:var(--green);letter-spacing:-0.01em;display:flex;align-items:center;gap:9px;}
 .logo-mark{width:28px;height:28px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;}
 .logo-mark svg{width:15px;height:15px;}
 .theme-btn{background:transparent;border:1px solid var(--bdr);border-radius:8px;padding:5px 9px;font-size:14px;cursor:pointer;transition:all .15s;font-family:inherit;}
@@ -169,7 +169,7 @@ textarea{resize:vertical;}
 .widget-menu-item:hover{background:var(--bg);}
 /* Obs notes timestamps */
 .notes-area-wrap{position:relative;}
-.ts-btn{position:absolute;right:8px;top:8px;background:var(--sur);border:1px solid var(--bdr2);border-radius:6px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit;color:var(--txt2);font-weight:500;z-index:2;}
+.ts-btn{position:absolute;left:8px;top:8px;background:var(--sur);border:1px solid var(--bdr2);border-radius:6px;font-size:11px;padding:3px 8px;cursor:pointer;font-family:inherit;color:var(--txt2);font-weight:500;z-index:2;}
 .ts-btn:hover{background:var(--gl);color:var(--green);border-color:var(--green);}
 .ts-mark{display:inline;font-family:'DM Mono',monospace;font-size:11px;color:var(--txt3);cursor:pointer;position:relative;font-weight:500;}
 .ts-mark:hover{color:var(--green);}
@@ -193,11 +193,19 @@ textarea{resize:vertical;}
 .lt-meeting{background:#eff6ff;color:#1d4ed8;}
 .lt-hallway{background:#fef3c7;color:#92400e;}
 .lt-coplanning{background:#f5f3ff;color:#7c3aed;}
-/* Type checkbox group */
+/* Type checkbox group (used inside dropdown) */
 .type-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;padding:10px;}
 .type-check-item{display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;padding:3px 4px;border-radius:5px;}
 .type-check-item:hover{background:var(--sur);}
 .type-check-item input{width:auto;accent-color:var(--green);margin:0;}
+/* Type dropdown wrapper */
+.type-dropdown{position:relative;}
+.type-dropdown-btn{width:100%;display:flex;align-items:center;gap:8px;font-family:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--bdr);border-radius:8px;background:var(--sur);color:var(--txt);cursor:pointer;text-align:left;}
+.type-dropdown-btn:hover{border-color:var(--bdr2);}
+.type-dropdown-btn.open{border-color:var(--green);}
+.type-dropdown-panel{margin-top:6px;}
+.type-summary-chips{display:inline-flex;flex-wrap:wrap;gap:4px;}
+.type-summary-chips .log-type-badge{font-size:10px;padding:1px 6px;}
 /* Duration quick-pick chips */
 .dur-chip{padding:5px 10px;font-size:12px;font-weight:500;border-radius:7px;border:1px solid var(--bdr2);background:var(--sur);color:var(--txt2);cursor:pointer;font-family:inherit;transition:all .12s;}
 .dur-chip:hover{background:var(--gl);color:var(--green);border-color:var(--green);}
@@ -255,11 +263,13 @@ textarea{resize:vertical;}
 <div class="modal-bg" id="profile-modal"><div class="modal" style="max-width:860px;"><button class="modal-close" onclick="cm('profile-modal')">×</button><div id="profile-content"></div></div></div>
 <div class="modal-bg" id="dv-modal">
   <div class="modal"><button class="modal-close" onclick="cm('dv-modal')">×</button>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px;padding-right:30px;">
+      <button class="btn btn-p btn-sm" style="font-weight:600;" onclick="startLive()">▶ Start live debrief</button>
+    </div>
     <div id="dv-content"></div>
     <div class="divider"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button class="btn btn-p btn-sm" onclick="saveEditedDebrief()">Save changes</button>
-      <button class="btn btn-o btn-sm" style="background:var(--gl);color:var(--gd);border-color:var(--green);" onclick="startLive()">▶ Start debrief</button>
       <button class="btn btn-o btn-sm" onclick="exportDebriefGDoc()">Export to Google Doc</button>
       <button class="btn btn-o btn-sm" onclick="printDebrief()">Print</button>
       <button class="btn-d btn-sm btn" id="dv-del-btn">Delete</button>
@@ -336,11 +346,11 @@ textarea{resize:vertical;}
 
 <!-- ── TOPBAR ── -->
 <div class="topbar">
-  <div class="logo"><div class="logo-mark"><svg viewBox="0 0 15 15" fill="none"><path d="M2 7.5L5.5 11L13 4" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Coach Hub</div>
+  <div class="logo">Cadence</div>
   <div class="nav">
     <button class="nb active" onclick="nav('home')">Home</button>
     <button class="nb" onclick="nav('teachers')">Teachers</button>
-    <button class="nb" onclick="nav('debrief')">Debrief planner</button>
+    <button class="nb" onclick="nav('debrief')">Debriefs</button>
     <button class="nb" onclick="nav('resources')">Resources</button>
     <button class="nb" onclick="nav('log')">Log</button>
   </div>
@@ -350,7 +360,7 @@ textarea{resize:vertical;}
 <!-- Settings hub modal -->
 <div class="modal-bg" id="settings-modal"><div class="modal" style="max-width:560px;"><button class="modal-close" onclick="cm('settings-modal')">×</button>
   <div style="font-size:18px;font-weight:700;margin-bottom:6px;">Settings</div>
-  <div style="font-size:12px;color:var(--txt2);margin-bottom:18px;">Customize how Coach Hub looks and works for you.</div>
+  <div style="font-size:12px;color:var(--txt2);margin-bottom:18px;">Customize how Cadence looks and works for you.</div>
   <div id="settings-list">
     <div class="settings-item" onclick="openThemePicker()">
       <div class="settings-item-icon">🎨</div>
@@ -376,6 +386,9 @@ textarea{resize:vertical;}
   <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Choose a theme</div>
   <div style="font-size:12px;color:var(--txt2);margin-bottom:14px;">Personalize the look and feel.</div>
   <div id="theme-list" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+  <div style="display:flex;justify-content:flex-end;margin-top:14px;">
+    <button class="btn btn-p btn-sm" onclick="cm('theme-modal')">Done</button>
+  </div>
 </div></div>
 
 <!-- Debrief template editor modal -->
@@ -429,16 +442,31 @@ textarea{resize:vertical;}
 
 <!-- ══ DEBRIEF PLANNER ══ -->
 <div id="debrief" class="sec">
-  <div class="sh"><h2>Debrief planner</h2></div>
-  <div id="obs-banner" style="display:none;"></div>
-  <div style="max-width:760px;">
-      <div class="card" style="margin-bottom:12px;">
-        <div class="fr2"><div><label>Teacher</label><select id="dt"><option value="">Select teacher...</option></select></div><div><label>Date</label><input type="date" id="dd"></div></div>
-        <div class="fr"><label>Lesson / class observed</label><input type="text" id="dlesson" placeholder="e.g. 3rd period Algebra · fractions unit"></div>
-      </div>
-      <!-- Dynamic sections rendered from debrief template -->
-      <div id="debrief-form-sections"></div>
-      <div style="display:flex;gap:8px;"><button class="btn btn-p" onclick="saveDebrief()">Save debrief</button><button class="btn btn-o" onclick="clearDebrief()">Clear form</button></div>
+  <div class="sh">
+    <h2>Debriefs</h2>
+    <button class="btn btn-p btn-sm" id="btn-new-debrief" onclick="openDebriefForm()">+ Plan a debrief</button>
+  </div>
+
+  <!-- LIST VIEW (default): shows planned debriefs -->
+  <div id="debrief-list-area">
+    <div id="debrief-list-stats" style="font-size:12px;color:var(--txt2);margin-bottom:10px;"></div>
+    <div id="dlist-full"></div>
+  </div>
+
+  <!-- FORM VIEW: hidden by default, shown when user clicks "+ Plan a debrief" or arrives from observation -->
+  <div id="debrief-form-area" style="display:none;">
+    <div id="obs-banner" style="display:none;"></div>
+    <div style="max-width:760px;">
+        <div class="card" style="margin-bottom:12px;">
+          <div class="fr2"><div><label>Teacher</label><select id="dt"><option value="">Select teacher...</option></select></div><div><label>Date</label><input type="date" id="dd"></div></div>
+          <div class="fr"><label>Lesson / class observed</label><input type="text" id="dlesson" placeholder="e.g. 3rd period Algebra · fractions unit"></div>
+        </div>
+        <div id="debrief-form-sections"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-p" onclick="saveDebrief()">Save debrief</button>
+          <button class="btn btn-o" onclick="closeDebriefForm()">Cancel</button>
+        </div>
+    </div>
   </div>
 </div>
 
@@ -446,10 +474,6 @@ textarea{resize:vertical;}
 <div id="resources" class="sec">
   <div class="sh"><h2>Resource library</h2>
     <div style="display:flex;gap:8px;align-items:center;">
-      <div class="tabs" style="margin-bottom:0;">
-        <button class="tab active" id="res-view-active" onclick="setResourceView('active')">Active</button>
-        <button class="tab" id="res-view-archived" onclick="setResourceView('archived')">📦 Archived</button>
-      </div>
       <button class="btn btn-o btn-sm" onclick="openNewWorkspace()">+ New workspace</button>
       <button class="btn btn-p btn-sm" onclick="toggleForm('rfm')">+ Add resource</button>
     </div>
@@ -488,13 +512,16 @@ textarea{resize:vertical;}
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div style="font-size:14px;font-weight:600;">New observation</div>
-        <button class="btn-ghost btn-sm btn" onclick="closeNewLog()">✕ Cancel</button>
+        <button class="btn btn-o btn-sm" onclick="closeNewLog()">← Back to log</button>
       </div>
       <div class="fr2"><div><label>Teacher</label><select id="lt-obs" onchange="showTeacherLookback(this.value)"><option value="">Select teacher...</option></select></div><div><label>Date</label><input type="date" id="ld-obs"></div></div>
       <div id="lookback-card" style="display:none;background:var(--bl);border:1px solid #bfdbfe;border-radius:10px;padding:11px 14px;margin-bottom:11px;"></div>
       <div class="fr2"><div><label>Focus area</label><input type="text" id="lfocus-obs" placeholder="e.g. questioning, pacing, discourse"></div><div><label>Lesson link (optional)</label><input type="url" id="llink-obs" placeholder="https://docs.google.com/..."></div></div>
-      <div class="fr"><label>Observation notes</label><div class="notes-area-wrap"><button class="ts-btn" onclick="insertTs('lnotes-obs')" type="button">⏱ Insert time</button><textarea id="lnotes-obs" style="min-height:160px;padding-top:32px;" placeholder="Tap '⏱ Insert time' to stamp a moment, then type your notes..."></textarea></div></div>
-      <button class="btn btn-p" onclick="saveObs()">Save observation</button>
+      <div class="fr"><label>Observation notes</label><div class="notes-area-wrap"><button class="ts-btn" onclick="insertTs('lnotes-obs')" type="button">⏱ Insert time</button><textarea id="lnotes-obs" style="min-height:160px;padding-top:38px;" placeholder="Tap '⏱ Insert time' to stamp a moment, then type your notes..."></textarea></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-p" onclick="saveObs()">Save observation</button>
+        <button class="btn btn-o" onclick="closeNewLog()">Cancel</button>
+      </div>
     </div>
   </div>
 
@@ -503,7 +530,7 @@ textarea{resize:vertical;}
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div style="font-size:14px;font-weight:600;">Log interaction</div>
-        <button class="btn-ghost btn-sm btn" onclick="closeNewLog()">✕ Cancel</button>
+        <button class="btn btn-o btn-sm" onclick="closeNewLog()">← Back to log</button>
       </div>
       <div class="fr2"><div><label>Teacher</label><select id="lt-int" onchange="onIntTeacherChange(this.value)"><option value="">Select teacher...</option><option value="__multi__">👥 Multiple teachers...</option></select></div><div><label>Date</label><input type="date" id="ld-int"></div></div>
       <!-- Multi-teacher chips display, hidden by default -->
@@ -514,17 +541,25 @@ textarea{resize:vertical;}
       </div>
       <div class="fr">
         <label>Type(s) — select one or more</label>
-        <div class="type-checks" id="lint-type-checks">
-          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Observation"> Observation</label>
-          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Debrief"> Debrief</label>
-          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Co-planning"> Co-planning</label>
-          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Real-time coaching"> Real-time coaching</label>
-          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Meeting/Check-in"> Meeting/Check-in</label>
-          <label class="type-check-item"><input type="checkbox" name="lint-type" value="PLC"> PLC</label>
-          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Walkthrough"> Walkthrough</label>
-          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Email"> Email</label>
-          <label class="type-check-item"><input type="checkbox" name="lint-type" value="PD"> PD</label>
-          <label class="type-check-item"><input type="checkbox" name="lint-type" value="Other"> Other</label>
+        <div class="type-dropdown" id="lint-type-dropdown">
+          <button type="button" class="type-dropdown-btn" onclick="toggleIntTypeDropdown()" id="lint-type-btn">
+            <span id="lint-type-summary" style="color:var(--txt3);">Choose interaction type(s)…</span>
+            <span style="margin-left:auto;color:var(--txt3);">▾</span>
+          </button>
+          <div class="type-dropdown-panel" id="lint-type-panel" style="display:none;">
+            <div class="type-checks" id="lint-type-checks">
+              <label class="type-check-item"><input type="checkbox" name="lint-type" value="Observation" onchange="updateIntTypeSummary()"> Observation</label>
+              <label class="type-check-item"><input type="checkbox" name="lint-type" value="Debrief" onchange="updateIntTypeSummary()"> Debrief</label>
+              <label class="type-check-item"><input type="checkbox" name="lint-type" value="Co-planning" onchange="updateIntTypeSummary()"> Co-planning</label>
+              <label class="type-check-item"><input type="checkbox" name="lint-type" value="Real-time coaching" onchange="updateIntTypeSummary()"> Real-time coaching</label>
+              <label class="type-check-item"><input type="checkbox" name="lint-type" value="Meeting/Check-in" onchange="updateIntTypeSummary()"> Meeting/Check-in</label>
+              <label class="type-check-item"><input type="checkbox" name="lint-type" value="PLC" onchange="updateIntTypeSummary()"> PLC</label>
+              <label class="type-check-item"><input type="checkbox" name="lint-type" value="Walkthrough" onchange="updateIntTypeSummary()"> Walkthrough</label>
+              <label class="type-check-item"><input type="checkbox" name="lint-type" value="Email" onchange="updateIntTypeSummary()"> Email</label>
+              <label class="type-check-item"><input type="checkbox" name="lint-type" value="PD" onchange="updateIntTypeSummary()"> PD</label>
+              <label class="type-check-item"><input type="checkbox" name="lint-type" value="Other" onchange="updateIntTypeSummary()"> Other</label>
+            </div>
+          </div>
         </div>
       </div>
       <div class="fr">
@@ -542,7 +577,10 @@ textarea{resize:vertical;}
         </div>
       </div>
       <div class="fr"><label>Quick notes</label><textarea id="lint-notes" rows="3" placeholder="What was discussed? Any decisions made? Next steps?"></textarea></div>
-      <button class="btn btn-p" onclick="saveInteraction()">Save interaction</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-p" onclick="saveInteraction()">Save interaction</button>
+        <button class="btn btn-o" onclick="closeNewLog()">Cancel</button>
+      </div>
     </div>
   </div>
 
@@ -636,6 +674,7 @@ function applyTheme(id){
 }
 
 function openThemePicker(){
+  cm('settings-modal');
   const cur=localStorage.getItem('mch_theme')||'forest';
   gi('theme-list').innerHTML=THEMES.map(t=>`
     <button class="theme-card ${cur===t.id?'active':''}" onclick="applyTheme('${t.id}');openThemePicker();">
@@ -661,42 +700,72 @@ function openSettings(){gi('settings-modal').classList.add('open');}
 // type: 'text' | 'textarea' | 'check'
 // `key` is the data field name on debrief records — must be stable across template edits
 const DEFAULT_DEBRIEF_TEMPLATE=[
-  {id:'praise',label:'Praise',prompt:'What did the teacher do well? Be specific and observable.',fields:[
-    {key:'praise',label:'Specific praise',type:'textarea',placeholder:'I noticed... · Students were... · You used...'}
+  {id:'praise',label:"What's working",badge:'Praise',badgeColor:'b-g',tip:'Starters: "I noticed that when you… students responded by…" / "Something working really well was…"',prompt:'What was working in the lesson and how do you know?',fields:[
+    {key:'praise',label:'',type:'textarea',placeholder:'Name a specific teacher move + the student evidence that shows it worked...'}
   ]},
-  {id:'questions',label:'Targeted questions',prompt:'Open questions to invite reflection.',fields:[
-    {key:'q1',label:'Question 1',type:'text',placeholder:'What did you notice when...'},
-    {key:'q2',label:'Question 2',type:'text',placeholder:'How did students respond when...'},
-    {key:'q3',label:'Question 3',type:'text',placeholder:'What surprised you...'},
-    {key:'qdata',label:'Data to bring to the conversation',type:'textarea',placeholder:'e.g., student work samples, observation notes, video clip'}
+  {id:'questions',label:'Targeted questions',badge:'Questions',badgeColor:'b-r',tip:'Starters: "What did you notice about…?" / "How did students respond when…?" / "What would you try differently?"',prompt:'1–3 open questions to help the teacher recognize the focus area',fields:[
+    {key:'q1',label:'',type:'textarea',placeholder:'Q1: What did you notice when...'},
+    {key:'q2',label:'',type:'textarea',placeholder:'Q2: How did students respond when...'},
+    {key:'q3',label:'',type:'textarea',placeholder:'Q3: What surprised you...'},
+    {key:'qdata',label:'What data will you bring?',type:'textarea',placeholder:'Scripted teacher talk, student work samples, error analysis...'}
   ]},
-  {id:'change',label:'Name the change',prompt:'What specifically needs to shift?',fields:[
-    {key:'change',label:'The change',type:'textarea',placeholder:'Move from X to Y so that students can...'},
-    {key:'data',label:'Data driving this',type:'textarea',placeholder:'Evidence from the observation, student work, etc.'}
+  {id:'change',label:'Name the change',badge:'Change',badgeColor:'b-a',tip:'Starters: "One thing with the biggest impact is…" / "The pattern I keep seeing is…"',prompt:'What is the most important thing that needs to change?',fields:[
+    {key:'change',label:'',type:'textarea',placeholder:'Be specific — name the instructional move or student outcome...'},
+    {key:'data',label:'What data is driving your thinking?',type:'textarea',placeholder:"Evidence from today's observation, student work, assessment data..."}
   ]},
-  {id:'skill',label:'Transfer the skill',prompt:'How will the teacher build this capability?',fields:[
-    {key:'skill',label:'Skills to develop',type:'text',placeholder:'e.g., revoicing, anticipating misconceptions'},
-    {key:'support',label:'Support I will provide',type:'textarea',placeholder:'co-teach, model, observation, resources...'},
-    {key:'rtc',label:'Ready for real-time coaching?',type:'check'},
-    {key:'ready',label:'How will we know they are ready?',type:'text',placeholder:'Teacher can articulate... / role-play shows...'}
+  {id:'skill',label:'Transfer the skill',badge:'Skill',badgeColor:'b-b',tip:'Starters: "To make this shift the teacher needs to…" / "I could support this by…"',prompt:'What skills does the teacher need to develop?',fields:[
+    {key:'skill',label:'Skills to develop',type:'textarea',placeholder:'e.g. launching a number talk, using wait time, revoicing...'},
+    {key:'support',label:'How will you support that development?',type:'textarea',placeholder:'Co-planning, modeling, side-by-side observation, video analysis...'},
+    {key:'ready',label:'How will the teacher demonstrate readiness?',type:'textarea',placeholder:'e.g. Teacher articulates the change, role-plays the move...'}
   ]},
-  {id:'goal',label:'Goal',prompt:'A 3-part goal: meaningful for students, motivating for teacher, measurable for coach.',fields:[
-    {key:'g1',label:'For students',type:'text',placeholder:'What changes for students?'},
-    {key:'g2',label:'For teacher',type:'text',placeholder:'What changes for the teacher?'},
-    {key:'g3',label:'Measurable',type:'text',placeholder:'Count, frequency, or quality marker'},
-    {key:'goal',label:'Goal statement',type:'textarea',placeholder:'By [date], teacher will [action]. We will know it is working when...'}
+  {id:'goal',label:'Draft a goal',badge:'Goal',badgeColor:'b-p',tip:'A strong goal is Meaningful for students, Motivating for the teacher, and Measurable for you.',prompt:'',layout:'goal-box',fields:[
+    {key:'g1',label:'Meaningful for students',type:'textarea',placeholder:'How does this connect to student outcomes?'},
+    {key:'g2',label:'Motivating for teacher',type:'textarea',placeholder:'Why will the teacher care?'},
+    {key:'g3',label:'Measurable for you',type:'textarea',placeholder:'What evidence shows progress?'},
+    {key:'goal',label:'Goal statement',type:'textarea',placeholder:"By [date], [teacher] will _______ so that students _______. We'll know it's working when _______."}
   ]},
-  {id:'next',label:'Next steps',prompt:'What happens after this debrief?',fields:[
-    {key:'next',label:'Next steps',type:'textarea',placeholder:'Follow-up observation, co-plan, resource share, etc.'}
+  {id:'next',label:'Plan for next steps',badge:'Next',badgeColor:'b-x',prompt:'How will you check progress?',fields:[
+    {key:'next',label:'',type:'textarea',placeholder:'Follow-up observation in 2 weeks, review exit tickets together...'}
   ]},
-  {id:'notes',label:'Debrief notes',prompt:'Anything else worth capturing.',fields:[
-    {key:'notes',label:'Notes',type:'textarea',placeholder:''}
+  {id:'notes',label:'Debrief notes',badge:'✎',prompt:'',fields:[
+    {key:'notes',label:'',type:'textarea',placeholder:'What did the teacher say? What shifted? What surprised you?'}
   ]}
 ];
 
+const DEFAULT_TEMPLATE_VERSION=4;
 function loadDebriefTemplate(){
+  const ver=parseInt(localStorage.getItem('mch_debrief_template_ver')||'1',10);
   const saved=localStorage.getItem('mch_debrief_template');
+  if(saved&&ver<DEFAULT_TEMPLATE_VERSION){
+    try{
+      const p=JSON.parse(saved);
+      // Strip any 'rtc' check field that might be lingering from older versions
+      p.forEach(section=>{
+        if(section.fields){section.fields=section.fields.filter(f=>f.key!=='rtc');}
+      });
+      // Re-add visual props on sections matching default ids
+      p.forEach(section=>{
+        const def=DEFAULT_DEBRIEF_TEMPLATE.find(d=>d.id===section.id);
+        if(def){
+          section.badge=def.badge;
+          section.badgeColor=def.badgeColor;
+          section.tip=def.tip;
+          section.layout=def.layout;
+        }
+      });
+      // v4: Move "praise" section to the top if present
+      const praiseIdx=p.findIndex(s=>s.id==='praise');
+      if(praiseIdx>0){
+        const [praise]=p.splice(praiseIdx,1);
+        p.unshift(praise);
+      }
+      localStorage.setItem('mch_debrief_template_ver',String(DEFAULT_TEMPLATE_VERSION));
+      localStorage.setItem('mch_debrief_template',JSON.stringify(p));
+      return p;
+    }catch(e){}
+  }
   if(saved){try{const p=JSON.parse(saved);if(Array.isArray(p)&&p.length)return p;}catch(e){}}
+  localStorage.setItem('mch_debrief_template_ver',String(DEFAULT_TEMPLATE_VERSION));
   return JSON.parse(JSON.stringify(DEFAULT_DEBRIEF_TEMPLATE));
 }
 let debriefTemplate=loadDebriefTemplate();
@@ -838,6 +907,25 @@ function setDuration(inputId,minutes){
   chips.forEach(c=>{if(c.textContent===`${minutes}m`)c.classList.add('active');});
 }
 
+function toggleIntTypeDropdown(){
+  const panel=gi('lint-type-panel');
+  const btn=gi('lint-type-btn');
+  if(!panel||!btn)return;
+  const isOpen=panel.style.display!=='none';
+  panel.style.display=isOpen?'none':'block';
+  btn.classList.toggle('open',!isOpen);
+}
+
+function updateIntTypeSummary(){
+  const summary=gi('lint-type-summary');if(!summary)return;
+  const checked=Array.from(document.querySelectorAll('#lint-type-checks input[name="lint-type"]:checked')).map(cb=>cb.value);
+  if(!checked.length){
+    summary.innerHTML='<span style="color:var(--txt3);">Choose interaction type(s)…</span>';
+  } else {
+    summary.innerHTML=`<span class="type-summary-chips">${checked.map(t=>`<span class="log-type-badge lt-${t.toLowerCase().replace(/[\s/]+/g,'-')}">${t}</span>`).join('')}</span>`;
+  }
+}
+
 // ── NAV ──
 function nav(id){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
@@ -845,7 +933,16 @@ function nav(id){
   gi(id).classList.add('active');
   ['home','teachers','debrief','resources','log'].forEach((x,i)=>document.querySelectorAll('.nb')[i].classList.toggle('active',x===id));
   if(id==='home')renderDash();
-  if(id==='debrief'){refreshDDs();renderDebriefs();renderDebriefForm();gi('obs-banner').style.display='none';if(gi('dd')&&!gi('dd').value)sv2('dd',todayISO());}
+  if(id==='debrief'){
+    refreshDDs();
+    renderDebriefList();
+    // Show list view by default (form only visible when explicitly opened)
+    if(!pendingObsId){
+      gi('debrief-form-area').style.display='none';
+      gi('debrief-list-area').style.display='block';
+      const btn=gi('btn-new-debrief');if(btn)btn.style.display='';
+    }
+  }
   if(id==='log'){refreshDDs();['ltype-filter','lfilter','lschool-filter','lsort'].forEach(f=>{const el=gi(f);if(el)el.value=el.tagName==='SELECT'?(el.options[0]?el.options[0].value:''):'';});renderLog();renderLogStats();}
   if(id==='resources'){refreshDDs();renderResources();renderWorkspaces();}
   if(id==='teachers'){refreshSchoolFilters();renderTeachers();}
@@ -1312,27 +1409,36 @@ function openProfile(id){
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
       <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:6px;">
           <span style="font-size:13px;font-weight:600;">Observations</span>
-          <span style="font-size:11px;color:var(--txt3);background:var(--bg);padding:2px 8px;border-radius:99px;">${tL.length} total</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:11px;color:var(--txt3);background:var(--bg);padding:2px 8px;border-radius:99px;">${tL.length} total</span>
+            <button class="btn btn-o btn-xs" style="padding:2px 8px;font-weight:600;" onclick="cm('profile-modal');quickAddObsForTeacher('${esc(t.name).replace(/'/g,"\\'")}')" title="Add observation">+</button>
+          </div>
         </div>
         <div style="max-height:380px;overflow-y:auto;padding-right:4px;border:1px solid var(--bdr);border-radius:10px;background:var(--bg);padding:8px;">
           ${tL.length?tL.map(l=>{const linked=S.debriefs.find(d=>d.obsId===l.id);return `<div class="le" style="cursor:pointer;margin-bottom:6px;" onclick="cm('profile-modal');openObsModal(${l.id})"><div class="le-meta">${l.focus?`<span class="badge b-g">${l.focus}</span>`:''}<span style="margin-left:auto;font-size:11px;color:var(--txt3);">${l.date}</span></div><div style="font-size:13px;color:var(--txt2);">${l.notes.substring(0,80)}…</div><div style="margin-top:5px;display:flex;align-items:center;gap:5px;">${linked?`<span class="debrief-linked-pill" onclick="event.stopPropagation();cm('profile-modal');openDebrief(${linked.id})">🔗 Debrief →</span>`:`<span class="no-debrief-pill">No debrief</span>`}<span style="font-size:12px;color:var(--green);font-weight:500;margin-left:auto;">View obs →</span></div></div>`;}).join(''):'<div class="empty">None yet.</div>'}
         </div>
       </div>
       <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:6px;">
           <span style="font-size:13px;font-weight:600;">Interactions</span>
-          <span style="font-size:11px;color:var(--txt3);background:var(--bg);padding:2px 8px;border-radius:99px;">${tI.length} total</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:11px;color:var(--txt3);background:var(--bg);padding:2px 8px;border-radius:99px;">${tI.length} total</span>
+            <button class="btn btn-o btn-xs" style="padding:2px 8px;font-weight:600;" onclick="cm('profile-modal');quickAddIntForTeacher('${esc(t.name).replace(/'/g,"\\'")}')" title="Add interaction">+</button>
+          </div>
         </div>
         <div style="max-height:380px;overflow-y:auto;padding-right:4px;border:1px solid var(--bdr);border-radius:10px;background:var(--bg);padding:8px;">
           ${tI.length?tI.map(i=>{const types=i.types&&Array.isArray(i.types)?i.types:(i.type?i.type.split(',').map(s=>s.trim()):['Other']);const badges=types.map(t=>`<span class="log-type-badge lt-${t.toLowerCase().replace(/[\s/]+/g,'-')}">${t}</span>`).join(' ');return `<div class="le" style="cursor:pointer;margin-bottom:6px;" onclick="cm('profile-modal');openIntModal(${i.id})"><div class="le-meta">${badges}${i.duration?`<span class="badge b-x">${i.duration}m</span>`:''}<span style="margin-left:auto;font-size:11px;color:var(--txt3);">${i.date}</span></div>${i.notes?`<div style="font-size:13px;color:var(--txt2);">${i.notes.substring(0,80)}…</div>`:''}<div style="font-size:12px;color:var(--green);margin-top:4px;font-weight:500;">View →</div></div>`;}).join(''):'<div class="empty">None yet.</div>'}
         </div>
       </div>
       <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:6px;">
           <span style="font-size:13px;font-weight:600;">Debriefs</span>
-          <span style="font-size:11px;color:var(--txt3);background:var(--bg);padding:2px 8px;border-radius:99px;">${tD.length} total</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:11px;color:var(--txt3);background:var(--bg);padding:2px 8px;border-radius:99px;">${tD.length} total</span>
+            <button class="btn btn-o btn-xs" style="padding:2px 8px;font-weight:600;" onclick="cm('profile-modal');goDebrief('${esc(t.name).replace(/'/g,"\\'")}')" title="Plan debrief">+</button>
+          </div>
         </div>
         <div style="max-height:380px;overflow-y:auto;padding-right:4px;border:1px solid var(--bdr);border-radius:10px;background:var(--bg);padding:8px;">
           ${tD.length?tD.map(d=>{const lo=d.obsId?S.logs.find(l=>l.id===d.obsId):null;return `<div class="le" style="cursor:pointer;margin-bottom:6px;" onclick="cm('profile-modal');openDebrief(${d.id})"><div class="le-meta">${d.rtc?`<span class="badge b-a">RTC</span>`:''}<span style="margin-left:auto;font-size:11px;color:var(--txt3);">${d.date||'No date'}</span></div>${d.change?`<div style="font-size:13px;color:var(--txt2);">${d.change.substring(0,80)}…</div>`:''} ${lo?`<div style="font-size:11px;color:var(--purple);margin-top:3px;">🔗 Obs: ${lo.date}${lo.focus?' · '+lo.focus:''}</div>`:''}<div style="font-size:12px;color:var(--green);margin-top:4px;font-weight:500;">View →</div></div>`;}).join(''):'<div class="empty">None yet.</div>'}
@@ -1341,7 +1447,33 @@ function openProfile(id){
     </div>`;
   gi('profile-modal').classList.add('open');
 }
-function goDebrief(name){nav('debrief');setTimeout(()=>{const s=gi('dt');for(let o of s.options)if(o.value===name){o.selected=true;break;}},80);}
+function goDebrief(name){
+  nav('debrief');
+  setTimeout(()=>{
+    openDebriefForm();
+    const s=gi('dt');for(let o of s.options)if(o.value===name){o.selected=true;break;}
+  },80);
+}
+
+function quickAddObsForTeacher(name){
+  nav('log');
+  setTimeout(()=>{
+    openNewLog('observation');
+    setTimeout(()=>{
+      const s=gi('lt-obs');if(s){for(let o of s.options)if(o.value===name){o.selected=true;break;}showTeacherLookback(name);}
+    },80);
+  },80);
+}
+
+function quickAddIntForTeacher(name){
+  nav('log');
+  setTimeout(()=>{
+    openNewLog('interaction');
+    setTimeout(()=>{
+      const s=gi('lt-int');if(s){for(let o of s.options)if(o.value===name){o.selected=true;break;}}
+    },80);
+  },80);
+}
 
 function openTeacherEdit(id){
   const t=S.teachers.find(x=>x.id===id);if(!t)return;
@@ -1392,7 +1524,15 @@ function insertTs(taId){
 }
 function renderNotesWithTs(text){
   if(!text)return '';
-  return esc(text).replace(/\[(\d{1,2}:\d{2}\s*[AP]M)\]/g,(match,ts)=>`<span class="ts-mark">[${ts}]<span class="ts-bubble">Logged at ${ts}</span></span>`);
+  // First escape HTML, then auto-link URLs, then add timestamp markup
+  let html=esc(text);
+  // Match http(s):// URLs (stop at whitespace or common punctuation that shouldn't be part of the link)
+  html=html.replace(/(https?:\/\/[^\s<>"]+[^\s<>".,;:!?)\]])/g,(url)=>{
+    return `<a href="${url}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:underline;word-break:break-all;" onclick="event.stopPropagation();">${url}</a>`;
+  });
+  // Then style timestamps
+  html=html.replace(/\[(\d{1,2}:\d{2}\s*[AP]M)\]/g,(match,ts)=>`<span class="ts-mark">[${ts}]<span class="ts-bubble">Logged at ${ts}</span></span>`);
+  return html;
 }
 
 // ── LOG ENTRIES ──
@@ -1403,6 +1543,9 @@ function openNewLog(type){
   ['lt-obs','ld-obs','lfocus-obs','llink-obs','lnotes-obs','lt-int','ld-int','lint-dur','lint-loc','lint-notes'].forEach(cv);
   // Clear interaction type checkboxes
   document.querySelectorAll('input[name="lint-type"]').forEach(cb=>cb.checked=false);
+  updateIntTypeSummary();
+  const tp=gi('lint-type-panel');if(tp)tp.style.display='none';
+  const tb=gi('lint-type-btn');if(tb)tb.classList.remove('open');
   // Default date to today
   const t=todayISO();
   if(type==='observation')sv2('ld-obs',t);else sv2('ld-int',t);
@@ -1929,7 +2072,7 @@ function exportObsGDoc(id){
 
 function goDebriefFromLog(id){
   const l=S.logs.find(x=>x.id===id);if(!l)return;
-  // Close any open modals (obs viewer or teacher profile)
+  // Close any open modals
   cm('obs-modal');cm('profile-modal');
   // If this obs already has a linked debrief, open it directly
   const existing=S.debriefs.find(d=>d.obsId===id);
@@ -1940,9 +2083,10 @@ function goDebriefFromLog(id){
   pendingObsId=id;
   nav('debrief');
   setTimeout(()=>{
+    openDebriefForm();
     const s=gi('dt');for(let o of s.options)if(o.value===l.teacher){o.selected=true;break;}
     const banner=gi('obs-banner');
-    banner.innerHTML=`<div class="obs-banner"><div class="obs-banner-label">📋 Observation notes — ${l.teacher} · ${l.date}${l.focus?' · '+l.focus:''}</div><div style="font-size:13px;color:var(--txt);line-height:1.7;white-space:pre-wrap;margin-top:4px;">${l.notes}</div>${l.link?`<div style="margin-top:6px;"><a href="${l.link}" target="_blank" style="font-size:12px;color:var(--blue);">View lesson ↗</a></div>`:''}</div>`;
+    banner.innerHTML=`<div class="obs-banner"><div class="obs-banner-label">📋 Observation notes — ${l.teacher} · ${l.date}${l.focus?' · '+l.focus:''}</div><div style="font-size:13px;color:var(--txt);line-height:1.7;white-space:pre-wrap;margin-top:4px;">${renderNotesWithTs(l.notes)}</div>${l.link?`<div style="margin-top:6px;"><a href="${l.link}" target="_blank" style="font-size:12px;color:var(--blue);">View lesson ↗</a></div>`:''}</div>`;
     banner.style.display='block';banner.scrollIntoView({behavior:'smooth'});
   },80);
 }
@@ -1983,14 +2127,10 @@ function createWorkspace(){
 function openWorkspace(id){
   curWsId=id;
   const ws=S.workspaces.find(x=>x.id===id);if(!ws)return;
-  const archiveBtn=ws.archived
-    ? `<button class="btn btn-o btn-sm" style="border-color:var(--green);color:var(--green);" onclick="restoreWorkspace(${id});cm('workspace-modal');">↩ Restore</button><button class="btn-d" onclick="if(confirm('Permanently delete this workspace? This cannot be undone.')){S.workspaces=S.workspaces.filter(x=>x.id!==${id});save();renderWorkspaces();cm('workspace-modal');}">🗑 Delete permanently</button>`
-    : `<button class="btn btn-o btn-sm" onclick="archiveWorkspace(${id});cm('workspace-modal');">📦 Archive</button>`;
   gi('workspace-content').innerHTML=`
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
       <div style="width:14px;height:14px;border-radius:50%;background:${ws.color};flex-shrink:0;"></div>
       <div style="font-size:15px;font-weight:600;flex:1;">${ws.title}</div>
-      ${archiveBtn}
     </div>
     ${ws.description?`<div style="font-size:13px;color:var(--txt2);margin-bottom:14px;">${ws.description}</div>`:''}
     <div id="ws-links-list">${renderWsLinks(ws)}</div>
@@ -2002,7 +2142,11 @@ function openWorkspace(id){
     <div class="divider"></div>
     <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Add to Google Classroom</div>
     <div style="font-size:12px;color:var(--txt3);margin-bottom:8px;">Share this workspace's links with your students or teachers via Google Classroom.</div>
-    <button class="btn btn-o btn-sm" onclick="shareToClassroom(${id})">📚 Open in Google Classroom ↗</button>`;
+    <button class="btn btn-o btn-sm" onclick="shareToClassroom(${id})">📚 Open in Google Classroom ↗</button>
+    <div class="divider"></div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;">
+      <button class="btn-d" onclick="if(confirm('Delete this workspace? This cannot be undone.')){S.workspaces=S.workspaces.filter(x=>x.id!==${id});save();renderWorkspaces();renderResources();renderDash();cm('workspace-modal');}">🗑 Delete workspace</button>
+    </div>`;
   gi('workspace-modal').classList.add('open');
 }
 
@@ -2089,17 +2233,14 @@ function shareToClassroom(wsId){
 
 function renderWorkspaces(){
   const el=gi('workspaces-list');if(!el)return;
-  const isArchived=resourceView==='archived';
-  const list=S.workspaces.filter(ws=>!!ws.archived===isArchived);
+  const list=S.workspaces;
   if(!list.length){
-    el.innerHTML=`<div style="font-size:13px;color:var(--txt3);padding:8px 0;">${isArchived?'No archived workspaces.':'No workspaces yet.'}</div>`;
+    el.innerHTML=`<div style="font-size:13px;color:var(--txt3);padding:8px 0;">No workspaces yet.</div>`;
     return;
   }
   el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">
     ${list.map(ws=>{
-      const actionBtns=isArchived
-        ? `<button class="btn btn-o btn-xs" onclick="restoreWorkspace(${ws.id})" style="flex:1;border-color:var(--green);color:var(--green);">↩ Restore</button><button class="btn-d" onclick="if(confirm('Permanently delete this workspace? This cannot be undone.')){S.workspaces=S.workspaces.filter(x=>x.id!==${ws.id});save();renderWorkspaces();renderResources();renderDash();}" style="flex:1;">🗑 Delete</button>`
-        : `<button class="btn btn-o btn-xs" onclick="quickAddWsLink(${ws.id})" style="flex:1;">+ Add link</button><button class="btn btn-o btn-xs" onclick="openWorkspace(${ws.id})" style="flex:1;">⚙ Manage</button>`;
+      const actionBtns=`<button class="btn btn-o btn-xs" onclick="quickAddWsLink(${ws.id})" style="flex:1;">+ Add link</button><button class="btn btn-o btn-xs" onclick="openWorkspace(${ws.id})" style="flex:1;">⚙ Manage</button>`;
       return `<div class="workspace-tile" style="border-left:4px solid ${ws.color};display:flex;flex-direction:column;max-height:280px;">
         <div class="workspace-tile-header" style="margin-bottom:6px;">
           <div class="workspace-tile-title">${ws.title}</div>
@@ -2117,19 +2258,6 @@ function renderWorkspaces(){
   </div>`;
 }
 
-function archiveWorkspace(id){
-  const ws=S.workspaces.find(x=>x.id===id);if(!ws)return;
-  ws.archived=true;
-  save();renderWorkspaces();renderResources();renderDash();
-  flash('📦 Workspace archived');
-}
-function restoreWorkspace(id){
-  const ws=S.workspaces.find(x=>x.id===id);if(!ws)return;
-  ws.archived=false;
-  save();renderWorkspaces();renderResources();renderDash();
-  flash('↩ Workspace restored');
-}
-
 function shareWorkspace(wsId){
   const ws=S.workspaces.find(x=>x.id===wsId);if(!ws)return;
   if(!ws.links.length){alert('This workspace has no links to share yet.');return;}
@@ -2143,7 +2271,7 @@ function shareWorkspace(wsId){
     if(l.notes)lines.push(`  ${l.notes}`);
     lines.push('');
   });
-  lines.push(`Sent from Coach Hub.`);
+  lines.push(`Sent from Cadence.`);
   const body=lines.join('\n');
   const mailto=`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   // Also copy a clean version to clipboard as a fallback
@@ -2200,15 +2328,35 @@ function renderDebriefForm(){
     container.innerHTML='<div class="card" style="text-align:center;padding:30px;color:var(--txt3);">All sections are hidden. Open Settings → Debrief planner to show some.</div>';
     return;
   }
-  container.innerHTML=sections.map(s=>`
-    <div class="card" style="margin-bottom:10px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-        <span style="font-size:14px;font-weight:600;">${esc(s.label||'')}</span>
-      </div>
-      ${s.prompt?`<div class="hint">${esc(s.prompt)}</div>`:''}
+  container.innerHTML=sections.map(s=>{
+    const badge=s.badge?`<span class="badge ${s.badgeColor||'b-x'}">${esc(s.badge)}</span>`:'';
+    const tip=s.tip?`<div class="tip-wrap"><button class="tip-btn">?</button><div class="tooltip">${esc(s.tip)}</div></div>`:'';
+    const header=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">${badge}<span style="font-size:14px;font-weight:600;">${esc(s.label||'')}</span>${tip}</div>`;
+    const promptHtml=s.prompt?`<div class="hint">${esc(s.prompt)}</div>`:'';
+
+    // Special goal-box layout: first 3 fields render as a 3-column grid, rest stack normally
+    if(s.layout==='goal-box'&&(s.fields||[]).length>=3){
+      const gridFields=s.fields.slice(0,3);
+      const rest=s.fields.slice(3);
+      return `<div class="card" style="margin-bottom:10px;">
+        ${header}
+        ${promptHtml}
+        <div class="goal-box" style="margin-bottom:10px;">
+          ${gridFields.map(f=>{
+            const val=cur[f.key]!==undefined?cur[f.key]:'';
+            return `<div class="gb"><div class="gb-label">${esc(f.label||'')}</div><textarea class="dyn-field" data-field-key="${esc(f.key)}" placeholder="${esc(f.placeholder||'')}">${esc(String(val))}</textarea></div>`;
+          }).join('')}
+        </div>
+        ${rest.map(f=>renderDynamicField(f,cur)).join('')}
+      </div>`;
+    }
+
+    return `<div class="card" style="margin-bottom:10px;">
+      ${header}
+      ${promptHtml}
       ${(s.fields||[]).map(f=>renderDynamicField(f,cur)).join('')}
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderDynamicField(f,cur){
@@ -2223,11 +2371,45 @@ function renderDynamicField(f,cur){
     </div>`;
   }
   if(f.type==='text'){
-    return `<div class="fr">${lbl?`<label>${lbl}</label>`:''}<input type="text" class="dyn-field" data-field-key="${key}" placeholder="${ph}" value="${esc(String(val))}"></div>`;
+    return `<div class="fr">${lbl?`<div class="hint">${lbl}</div>`:''}<input type="text" class="dyn-field" data-field-key="${key}" placeholder="${ph}" value="${esc(String(val))}"></div>`;
   }
   // textarea (default)
-  return `<div class="fr">${lbl?`<label>${lbl}</label>`:''}<textarea class="dyn-field" data-field-key="${key}" rows="3" placeholder="${ph}">${esc(String(val))}</textarea></div>`;
+  return `<div class="fr">${lbl?`<div class="hint">${lbl}</div>`:''}<textarea class="dyn-field" data-field-key="${key}" rows="3" placeholder="${ph}">${esc(String(val))}</textarea></div>`;
 }
+
+function openDebriefForm(){
+  // Switch from list view to form view
+  gi('debrief-list-area').style.display='none';
+  gi('debrief-form-area').style.display='block';
+  gi('btn-new-debrief').style.display='none';
+  refreshDDs();renderDebriefForm();
+  // Default date to today if empty
+  if(gi('dd')&&!gi('dd').value)sv2('dd',todayISO());
+  // Smooth scroll to top of form
+  setTimeout(()=>{gi('debrief-form-area').scrollIntoView({behavior:'smooth',block:'start'});},50);
+}
+
+function closeDebriefForm(){
+  // Switch back to list view, clear any in-progress data
+  clearDebriefForm();
+  gi('debrief-form-area').style.display='none';
+  gi('debrief-list-area').style.display='block';
+  gi('btn-new-debrief').style.display='';
+  pendingObsId=null;
+  renderDebriefList();
+}
+
+function clearDebriefForm(){
+  ['dd','dlesson'].forEach(cv);
+  gi('dt').value='';gi('obs-banner').style.display='none';
+  document.querySelectorAll('#debrief-form-sections .dyn-field').forEach(el=>{
+    if(el.type==='checkbox')el.checked=false;
+    else el.value='';
+  });
+}
+
+// Backwards-compat alias for any old call sites
+function clearDebrief(){clearDebriefForm();}
 
 function saveDebrief(){
   const teacher=gi('dt').value;if(!teacher){alert('Please select a teacher.');return;}
@@ -2235,7 +2417,6 @@ function saveDebrief(){
     const exists=S.debriefs.find(d=>d.obsId===pendingObsId);
     if(exists){alert('A debrief is already linked to this observation. Open it from the observation to continue editing it.');return;}
   }
-  // Collect all values from the dynamic fields
   const debriefData={
     teacher,
     date:dateFromISO(gv('dd')),
@@ -2249,30 +2430,71 @@ function saveDebrief(){
     else debriefData[k]=el.value;
   });
   S.debriefs.push(debriefData);
+  const savedId=debriefData.id;
   pendingObsId=null;
-  save();renderDebriefs();clearDebrief();renderDash();flash('Debrief saved!');
+  save();renderDash();
+  // Clear form, hide it, show list view with a clear confirmation
+  clearDebriefForm();
+  gi('debrief-form-area').style.display='none';
+  gi('debrief-list-area').style.display='block';
+  gi('btn-new-debrief').style.display='';
+  renderDebriefList(savedId);
+  flash('✓ Debrief saved!');
 }
 
-function clearDebrief(){
-  ['dd','dlesson'].forEach(cv);
-  gi('dt').value='';gi('obs-banner').style.display='none';pendingObsId=null;
-  // Clear all dynamic fields
-  document.querySelectorAll('#debrief-form-sections .dyn-field').forEach(el=>{
-    if(el.type==='checkbox')el.checked=false;
-    else el.value='';
-  });
+function renderDebriefList(highlightId){
+  const el=gi('dlist-full');if(!el)return;
+  const stats=gi('debrief-list-stats');
+  if(!S.debriefs.length){
+    if(stats)stats.innerHTML='';
+    el.innerHTML='<div class="empty" style="padding:30px;text-align:center;"><div style="font-size:14px;margin-bottom:8px;">No debriefs planned yet.</div><div style="font-size:12px;color:var(--txt3);">Click <strong>+ Plan a debrief</strong> to start your first one.</div></div>';
+    return;
+  }
+  if(stats)stats.innerHTML=`<strong>${S.debriefs.length}</strong> ${S.debriefs.length===1?'debrief':'debriefs'} planned · click any to view, edit, or start the live debrief timer`;
+  el.innerHTML=S.debriefs.slice().sort((a,b)=>b.id-a.id).map(d=>{
+    const linkedObs=d.obsId?S.logs.find(l=>l.id===d.obsId):null;
+    // Find a "preview" — first non-empty textarea-like field
+    let preview='';
+    if(d.change)preview=d.change;
+    else if(d.praise)preview=d.praise;
+    else {
+      // Look at any dynamic field with content
+      for(const k of Object.keys(d)){
+        if(['teacher','date','lesson','obsId','id','rtc'].includes(k))continue;
+        const v=d[k];
+        if(typeof v==='string'&&v.trim()){preview=v;break;}
+      }
+    }
+    const isHighlight=highlightId&&d.id===highlightId;
+    return `<div class="le" style="cursor:pointer;${isHighlight?'border-color:var(--green);box-shadow:0 0 0 3px var(--gl);':''}" onclick="openDebrief(${d.id})">
+      <div class="le-meta">
+        ${avi(d.teacher,28,'var(--green)')}
+        <div style="display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;">
+          <span style="font-size:13px;font-weight:600;">${d.teacher}</span>
+          ${d.lesson?`<span style="font-size:11px;color:var(--txt3);">${esc(d.lesson)}</span>`:''}
+        </div>
+        ${linkedObs?`<span class="debrief-linked-pill" style="cursor:default;">🔗 Linked obs</span>`:''}
+        <span style="font-size:11px;color:var(--txt3);">${d.date||'No date'}</span>
+      </div>
+      ${preview?`<div style="font-size:13px;color:var(--txt2);margin-top:6px;line-height:1.5;">${esc(preview.substring(0,140))}${preview.length>140?'…':''}</div>`:''}
+      <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+        <span style="font-size:12px;color:var(--green);font-weight:500;">View / edit →</span>
+        <span style="font-size:11px;color:var(--txt3);">·</span>
+        <span style="font-size:11px;color:var(--txt3);">Open to start live debrief timer</span>
+      </div>
+    </div>`;
+  }).join('');
+  // If we just saved one, scroll it into view
+  if(highlightId){
+    setTimeout(()=>{
+      const target=el.querySelector(`[onclick*="${highlightId}"]`);
+      if(target)target.scrollIntoView({behavior:'smooth',block:'center'});
+    },100);
+  }
 }
-function renderDebriefs(){
-  const el=gi('dlist');if(!el)return;
-  if(!S.debriefs.length){el.innerHTML='<div class="empty">No debriefs yet.</div>';return;}
-  el.innerHTML=S.debriefs.slice().reverse().map(d=>`
-    <div class="le" style="cursor:pointer;" onclick="openDebrief(${d.id})">
-      <div class="le-meta">${avi(d.teacher,24,'var(--green)')}<span style="font-size:13px;font-weight:600;">${d.teacher}</span>${d.rtc?`<span class="badge b-a" style="font-size:10px;">RTC</span>`:''}<span style="margin-left:auto;font-size:11px;color:var(--txt3);">${d.date||'No date'}</span></div>
-      ${d.lesson?`<div style="font-size:12px;color:var(--txt3);">${d.lesson}</div>`:''}
-      ${d.change?`<div style="font-size:13px;color:var(--txt2);">${d.change.substring(0,80)}${d.change.length>80?'…':''}</div>`:''}
-      <div style="margin-top:5px;font-size:12px;color:var(--green);font-weight:500;">View / edit →</div>
-    </div>`).join('');
-}
+
+// Old alias still used in other places
+function renderDebriefs(){renderDebriefList();}
 function dvF(label,val,field){return `<div class="dv-section"><div class="dv-label">${label}</div><div class="dv-content"><textarea class="dv-edit" data-field="${field}">${esc(val||'')}</textarea></div></div>`;}
 function toggleObsPanel(){
   const body=gi('obs-panel-body');
@@ -2427,21 +2649,49 @@ function printDebrief(){
 }
 function startLive(){
   const d=S.debriefs.find(x=>x.id===curDebriefId);if(!d)return;
-  cm('dv-modal');timerSec=0;timerOn=false;
-  gi('live-timer').textContent='00:00';gi('live-tog').textContent='Start';
+  cm('dv-modal');
+  // Reset and immediately start the timer
+  clearInterval(timerInt);
+  timerSec=0;
+  timerOn=true;
+  gi('live-timer').textContent='00:00';
+  gi('live-tog').textContent='Pause';
+  timerInt=setInterval(()=>{
+    timerSec++;
+    const m=Math.floor(timerSec/60).toString().padStart(2,'0'),s=(timerSec%60).toString().padStart(2,'0');
+    gi('live-timer').textContent=`${m}:${s}`;
+  },1000);
   gi('live-title').textContent=`${d.teacher} — Live Debrief`;
   sv2('live-notes',d.notes||'');
-  // Build steps from current template, including only non-empty fields
+
+  // Build one step per SECTION (not per field) so the live view follows the conversation rhythm.
+  // Each section card shows its primary field large, with supporting fields as smaller helper text below.
   const steps=[];
   debriefTemplate.filter(s=>!s.hidden).forEach(section=>{
-    (section.fields||[]).forEach(f=>{
+    // Gather all populated fields in this section
+    const populated=(section.fields||[]).map(f=>{
       const v=d[f.key];
-      if(v===undefined||v===null||v==='')return;
-      if(f.type==='check'&&!v)return;
-      steps.push({l:f.label,v:f.type==='check'?'✓ Yes':String(v)});
-    });
+      if(v===undefined||v===null||v==='')return null;
+      if(f.type==='check'&&!v)return null;
+      return {label:f.label,value:f.type==='check'?'✓ Yes':String(v)};
+    }).filter(Boolean);
+    if(!populated.length)return;
+    steps.push({section:section.label||'',badge:section.badge||'',badgeColor:section.badgeColor||'',fields:populated});
   });
-  gi('live-steps').innerHTML=steps.map((s,i)=>`<div class="step-card${i===0?' cur':''}" onclick="document.querySelectorAll('#live-steps .step-card').forEach((e,j)=>e.classList.toggle('cur',j===${i}))"><div class="sn">${esc(s.l)}</div><div style="font-size:13px;color:var(--txt);line-height:1.6;">${esc(s.v)}</div></div>`).join('');
+
+  gi('live-steps').innerHTML=steps.map((s,i)=>{
+    // Primary field = first populated field; helpers = the rest
+    const primary=s.fields[0];
+    const helpers=s.fields.slice(1);
+    const badge=s.badge?`<span class="badge ${s.badgeColor||'b-x'}" style="font-size:10px;margin-right:6px;">${esc(s.badge)}</span>`:'';
+    const helpersHtml=helpers.length?`<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--bdr);">${helpers.map(h=>`<div style="margin-bottom:8px;"><div style="font-size:11px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;">${esc(h.label||'')}</div><div style="font-size:12px;color:var(--txt2);line-height:1.5;">${esc(h.value)}</div></div>`).join('')}</div>`:'';
+    return `<div class="step-card${i===0?' cur':''}" onclick="document.querySelectorAll('#live-steps .step-card').forEach((e,j)=>e.classList.toggle('cur',j===${i}))">
+      <div class="sn">${badge}${esc(s.section)}</div>
+      ${primary.label?`<div style="font-size:11px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;">${esc(primary.label)}</div>`:''}
+      <div style="font-size:14px;color:var(--txt);line-height:1.6;font-weight:500;">${esc(primary.value)}</div>
+      ${helpersHtml}
+    </div>`;
+  }).join('');
   gi('live-modal').classList.add('open');
 }
 function toggleTimer(){if(timerOn){clearInterval(timerInt);timerOn=false;gi('live-tog').textContent='Resume';}else{timerOn=true;gi('live-tog').textContent='Pause';timerInt=setInterval(()=>{timerSec++;const m=Math.floor(timerSec/60).toString().padStart(2,'0'),s=(timerSec%60).toString().padStart(2,'0');gi('live-timer').textContent=`${m}:${s}`;},1000);}}
@@ -2483,57 +2733,28 @@ function addResource(){
   save();renderResources();refreshDDs();renderDash();
 }
 const catIcon={'PD / professional learning':'📚','Lesson resources':'📐','Assessment tools':'📋','Curriculum / standards':'📎','Tech tools':'🔧','Student materials':'📄','Other':'🔗'};
-function setResourceView(view){
-  resourceView=view;
-  gi('res-view-active').classList.toggle('active',view==='active');
-  gi('res-view-archived').classList.toggle('active',view==='archived');
-  // Hide the "Add resource" form when switching to archived view
-  if(view==='archived')gi('rfm').style.display='none';
-  renderResources();renderWorkspaces();
-}
-
 function renderResources(){
   const el=gi('rlist');
   const search=(gv('rsearch')||'').toLowerCase(),cf=gi('rfilter').value,tf=gi('rtagfilter').value;
-  const isArchived=resourceView==='archived';
-  // Combine saved resources + workspace links (deduplicated by URL) — workspace links inherit their workspace's archived state
+  // Combine saved resources + workspace links (deduplicated by URL)
   const wsLinks=[];
-  S.workspaces.filter(ws=>!!ws.archived===isArchived).forEach(ws=>{
+  S.workspaces.forEach(ws=>{
     ws.links.forEach(l=>{
       if(!S.resources.find(r=>r.url===l.url))
         wsLinks.push({name:l.name,url:l.url,cat:'Other',tag:ws.title,notes:`From workspace: ${ws.title}`,teacher:'',id:`ws-${ws.id}-${l.url}`,_fromWs:true});
     });
   });
-  const matchingResources=S.resources.filter(r=>!!r.archived===isArchived);
-  const allRes=[...matchingResources,...wsLinks];
+  const allRes=[...S.resources,...wsLinks];
   const list=allRes.filter(r=>{
     const ms=!search||r.name.toLowerCase().includes(search)||(r.notes||'').toLowerCase().includes(search)||(r.tag||'').toLowerCase().includes(search);
     return ms&&(!cf||r.cat===cf)&&(!tf||r.tag===tf);
   });
-  if(!list.length){
-    el.innerHTML=isArchived?'<div class="empty">No archived resources.</div>':'<div class="empty">No resources found.</div>';
-    return;
-  }
+  if(!list.length){el.innerHTML='<div class="empty">No resources found.</div>';return;}
   const byTag={};list.forEach(r=>{const k=r.tag||r.cat||'Other';if(!byTag[k])byTag[k]=[];byTag[k].push(r);});
   el.innerHTML=Object.keys(byTag).sort().map(tag=>`<div style="margin-bottom:18px;"><div class="sec-cat">${tag}</div>${byTag[tag].map(r=>{
-    const actionBtns=isArchived
-      ? `<button class="btn btn-o btn-xs" onclick="restoreResource(${r.id})" style="border-color:var(--green);color:var(--green);">↩ Restore</button><button class="btn-d" onclick="if(confirm('Permanently delete? This cannot be undone.')){S.resources=S.resources.filter(x=>x.id!==${r.id});save();renderResources();renderDash();}">🗑 Delete</button>`
-      : `<button class="btn btn-o btn-xs" onclick="openShare(${JSON.stringify(r.id)})">Share</button><button class="btn btn-o btn-xs" onclick="archiveResource(${r.id})" title="Move to archive">📦 Archive</button>`;
-    return `<div class="rc"><div style="font-size:14px;">${catIcon[r.cat]||'🔗'}</div><div style="flex:1;min-width:0;"><a href="${r.url}" target="_blank" style="font-size:13px;font-weight:600;color:var(--txt);text-decoration:none;display:block;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--txt)'">${r.name} ↗</a><div style="font-size:11px;color:var(--txt3);">${r.cat}${r.notes?' · '+r.notes:''}${r.teacher?' · '+r.teacher:''}</div></div><div style="display:flex;gap:5px;align-items:center;flex-shrink:0;">${!isArchived?`<button class="btn btn-o btn-xs" onclick="copyWsLink('${encodeURIComponent(r.url)}')" title="Copy link to clipboard">🔗 Copy</button>`:''}${!r._fromWs?actionBtns:`<span style="font-size:11px;color:var(--txt3);padding:2px 6px;">from workspace</span>`}</div></div>`;
+    const actionBtns=`<button class="btn btn-o btn-xs" onclick="openShare(${JSON.stringify(r.id)})">Share</button><button class="btn-d" onclick="if(confirm('Delete this resource?')){S.resources=S.resources.filter(x=>x.id!==${r.id});save();renderResources();renderDash();}">×</button>`;
+    return `<div class="rc"><div style="font-size:14px;">${catIcon[r.cat]||'🔗'}</div><div style="flex:1;min-width:0;"><a href="${r.url}" target="_blank" style="font-size:13px;font-weight:600;color:var(--txt);text-decoration:none;display:block;" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--txt)'">${r.name} ↗</a><div style="font-size:11px;color:var(--txt3);">${r.cat}${r.notes?' · '+r.notes:''}${r.teacher?' · '+r.teacher:''}</div></div><div style="display:flex;gap:5px;align-items:center;flex-shrink:0;"><button class="btn btn-o btn-xs" onclick="copyWsLink('${encodeURIComponent(r.url)}')" title="Copy link to clipboard">🔗 Copy</button>${!r._fromWs?actionBtns:`<span style="font-size:11px;color:var(--txt3);padding:2px 6px;">from workspace</span>`}</div></div>`;
   }).join('')}</div>`).join('');
-}
-
-function archiveResource(id){
-  const r=S.resources.find(x=>x.id===id);if(!r)return;
-  r.archived=true;
-  save();renderResources();renderDash();
-  flash('📦 Resource archived');
-}
-function restoreResource(id){
-  const r=S.resources.find(x=>x.id===id);if(!r)return;
-  r.archived=false;
-  save();renderResources();renderDash();
-  flash('↩ Resource restored');
 }
 function shareToClassroomUrl(encodedUrl,encodedName){
   window.open(`https://classroom.google.com/share?url=${encodedUrl}&title=${encodedName}`,'_blank');
@@ -2552,6 +2773,7 @@ function openRes(){if(curShareRes)window.open(curShareRes.url,'_blank');}
 // ── INIT ──
 renderDash();
 renderDebriefForm();
+renderDebriefList();
 </script>
 </body>
 </html>
