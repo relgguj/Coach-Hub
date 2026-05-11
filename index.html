@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <div id="auth-section">
+  <h2>Create Account</h2>
+
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+
+  <button id="signup-btn">Sign Up</button>
+
+  <p id="auth-message"></p>
+</div>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cadence</title>
@@ -2797,6 +2807,40 @@ renderDebriefList();
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+    import {
+  createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+const signupBtn = document.getElementById("signup-btn");
+
+signupBtn.addEventListener("click", async () => {
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try {
+
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    document.getElementById("auth-message").innerText =
+      "Account created successfully!";
+
+    console.log(userCredential.user);
+
+  } catch (error) {
+
+    document.getElementById("auth-message").innerText =
+      error.message;
+
+    console.error(error);
+
+  }
+
+});
 </script>
 </body>
 </html>
