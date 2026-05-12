@@ -90,3 +90,35 @@ if (signinBtn) {
     }
   });
 }
+// Watch for sign-in / sign-out and update the page accordingly
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+onAuthStateChanged(auth, (user) => {
+  const userBar = document.getElementById("user-bar");
+  const authSection = document.getElementById("auth-section");
+  const userEmail = document.getElementById("user-email");
+  if (user) {
+    // Someone is signed in
+    if (userBar) userBar.style.display = "block";
+    if (authSection) authSection.style.display = "none";
+    if (userEmail) userEmail.textContent = user.email;
+    console.log("Signed in as:", user.email);
+  } else {
+    // Nobody signed in
+    if (userBar) userBar.style.display = "none";
+    if (authSection) authSection.style.display = "block";
+    console.log("Signed out");
+  }
+});
+
+// Sign-out button handler
+const signoutBtn = document.getElementById("signout-btn");
+if (signoutBtn) {
+  signoutBtn.addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  });
+}
