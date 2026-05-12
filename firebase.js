@@ -97,16 +97,19 @@ onAuthStateChanged(auth, (user) => {
   const userBar = document.getElementById("user-bar");
   const authSection = document.getElementById("auth-section");
   const userEmail = document.getElementById("user-email");
+  const appContainer = document.getElementById("app-container");
   if (user) {
-    // Someone is signed in
+    // Signed in: show app + user bar, hide auth form
     if (userBar) userBar.style.display = "block";
     if (authSection) authSection.style.display = "none";
+    if (appContainer) appContainer.style.display = "block";
     if (userEmail) userEmail.textContent = user.email;
     console.log("Signed in as:", user.email);
   } else {
-    // Nobody signed in
+    // Signed out: hide app, show auth form
     if (userBar) userBar.style.display = "none";
     if (authSection) authSection.style.display = "block";
+    if (appContainer) appContainer.style.display = "none";
     console.log("Signed out");
   }
 });
