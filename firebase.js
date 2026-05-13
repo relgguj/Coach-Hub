@@ -108,6 +108,7 @@ onAuthStateChanged(auth, (user) => {
     if (appContainer) appContainer.style.display = "block";
     if (userEmail) userEmail.textContent = user.email;
     console.log("Signed in as:", user.email);
+     if (window.onUserSignedIn) window.onUserSignedIn();  // NEW
   } else {
     currentUser = null;  // NEW: clear signed-in user
     if (userBar) userBar.style.display = "none";
@@ -155,4 +156,28 @@ async function saveToFirestore(data) {
 }
 
 // Expose the save function to the main app
-window.saveToFirestore = saveToFirestore;
+window.saveToFirestore = saveToFirestore; 
+// Load data from Firestore for the current user
+async function loadFromFirestore() {
+  if (!currentUser) {
+    console.log("Not signed in — cannot load from Firestore");
+    return null;
+  }
+  try {
+    const userDocRef = doc(db, "users", currentUser.uid, "data", "coachHub");
+    const docSnap = await getDoc(userDocRef);
+    if (docSnap.exists()) {
+      console.log("✓ Loaded from Firestore");
+      return docSnap.data();
+    } else {
+      console.log("No Firestore data yet — first-time sign in");
+      return null;
+    }
+  } catch (error) {
+    console.error("Firestore load failed:", error);
+    return null;
+  }
+}
+
+// Expose to main app
+window.loadFromFirestore = loadFromFirestore;
