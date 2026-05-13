@@ -5,7 +5,10 @@ import {
   signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 import {
-  getFirestore
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -99,14 +102,14 @@ onAuthStateChanged(auth, (user) => {
   const userEmail = document.getElementById("user-email");
   const appContainer = document.getElementById("app-container");
   if (user) {
-    // Signed in: show app + user bar, hide auth form
+    currentUser = user;  // NEW: track who's signed in
     if (userBar) userBar.style.display = "block";
     if (authSection) authSection.style.display = "none";
     if (appContainer) appContainer.style.display = "block";
     if (userEmail) userEmail.textContent = user.email;
     console.log("Signed in as:", user.email);
   } else {
-    // Signed out: hide app, show auth form
+    currentUser = null;  // NEW: clear signed-in user
     if (userBar) userBar.style.display = "none";
     if (authSection) authSection.style.display = "block";
     if (appContainer) appContainer.style.display = "none";
@@ -125,3 +128,31 @@ if (signoutBtn) {
     }
   });
 }
+// ── FIRESTORE SAVE ──
+// Track the current signed-in user (set by the auth listener)
+let currentUser = null;
+
+// Debounce timer — waits a moment after the last save call before actually writing
+let saveTimer = null;
+
+// Save data to Firestore (debounced — waits 1 second to batch rapid changes)
+async function saveToFirestore(data) {
+  if (!currentUser) {
+    console.log("Not signed in — skipping Firestore save");
+    return;
+  }
+  // Cancel any pending save and schedule a new one
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    try {
+      const userDocRef = doc(db, "users", currentUser.uid, "data", "coachHub");
+      await setDoc(userDocRef, data);
+      console.log("✓ Saved to Firestore");
+    } catch (error) {
+      console.error("Firestore save failed:", error);
+    }
+  }, 1000); // wait 1 second of quiet before saving
+}
+
+// Expose the save function to the main app
+window.saveToFirestore = saveToFirestore;
