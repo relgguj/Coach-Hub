@@ -674,8 +674,11 @@ dashWidgets.forEach(w=>{
   if(w.y===undefined)w.y=0;
 });
 
-function save(){try{localStorage.setItem('mch_v9',JSON.stringify({S,dashWidgets}));}catch(e){}}
-function gi(id){return document.getElementById(id);}
+function save(){
+  const data = {S, dashWidgets};
+  localStorage.setItem('mch_v9', JSON.stringify(data));
+  if (window.saveToFirestore) window.saveToFirestore(data);
+}function gi(id){return document.getElementById(id);}
 function gv(id){const e=gi(id);return e?e.value.trim():'';}
 function sv2(id,v){const e=gi(id);if(e)e.value=v||'';}
 function cv(id){sv2(id,'');}
