@@ -2811,7 +2811,6 @@ window.onUserSignedIn = async function() {
     S = cloudData.S;
     if (cloudData.dashWidgets) dashWidgets = cloudData.dashWidgets;
     console.log("Replaced local data with Firestore data");
-    // Re-render everything with the cloud data
     renderDash();
     renderTeachers();
     renderResources();
@@ -2820,6 +2819,18 @@ window.onUserSignedIn = async function() {
     renderDebriefForm();
     refreshDDs();
     flash('✓ Data loaded from cloud');
+  } else {
+    // First-time sign-in: no Firestore data yet
+    // Push current localStorage data up to Firestore so it's backed up
+    const hasLocalData = S.teachers.length || S.logs.length || S.debriefs.length ||
+                         S.interactions.length || S.resources.length || S.workspaces.length;
+    if (hasLocalData) {
+      console.log("First sign-in with local data — syncing to cloud");
+      save(); // triggers Firestore save with current local data
+      flash('✓ Your local data is now backed up to the cloud');
+    } else {
+      console.log("First sign-in, no local data — starting fresh");
+    }
   }
 };
 </script>
