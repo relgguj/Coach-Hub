@@ -2797,9 +2797,32 @@ function emailRes(){if(!curShareRes)return;const r=curShareRes;const t=S.teacher
 function openRes(){if(curShareRes)window.open(curShareRes.url,'_blank');}
 
 // ── INIT ──
+// ── INIT ──
 renderDash();
 renderDebriefForm();
 renderDebriefList();
+
+// Called by firebase.js when a user signs in — load their Firestore data
+window.onUserSignedIn = async function() {
+  if (!window.loadFromFirestore) return;
+  const cloudData = await window.loadFromFirestore();
+  if (cloudData && cloudData.S) {
+    // We have data in Firestore — use it
+    S = cloudData.S;
+    if (cloudData.dashWidgets) dashWidgets = cloudData.dashWidgets;
+    console.log("Replaced local data with Firestore data");
+    // Re-render everything with the cloud data
+    renderDash();
+    renderTeachers();
+    renderResources();
+    renderLog();
+    renderDebriefList();
+    renderDebriefForm();
+    refreshDDs();
+    flash('✓ Data loaded from cloud');
+  }
+};
+</script>
 </script>
 
 <script type="module" src="firebase.js"></script>
