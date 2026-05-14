@@ -2836,9 +2836,33 @@ window.onUserSignedIn = async function() {
     }
   }
 };
-</script>
-</script>
+  window.onUserSignedIn = async function() {
+  ... (lots of code in here) ...
+};   ← end of the existing function
 
+document.addEventListener('visibilitychange', async () => {   ← NEW code starts here
+  if (document.visibilityState === 'visible' && window.loadFromFirestore) {
+    const cloudData = await window.loadFromFirestore();
+    if (cloudData && cloudData.S) {
+      const currentJson = JSON.stringify(S);
+      const cloudJson = JSON.stringify(cloudData.S);
+      if (currentJson !== cloudJson) {
+        S = cloudData.S;
+        if (cloudData.dashWidgets) dashWidgets = cloudData.dashWidgets;
+        console.log("Refreshed data from cloud (tab became visible)");
+        renderDash();
+        renderTeachers();
+        renderResources();
+        renderLog();
+        renderDebriefList();
+        renderDebriefForm();
+        refreshDDs();
+        flash('🔄 Data refreshed from cloud');
+      }
+    }
+  }
+});
+</script>
 <script type="module" src="firebase.js"></script>
 </div>
 </body>
