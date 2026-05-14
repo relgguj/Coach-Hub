@@ -2836,14 +2836,13 @@ window.onUserSignedIn = async function() {
     }
   }
 };
-  window.onUserSignedIn = async function() {
-  ... (lots of code in here) ...
-};   ← end of the existing function
-
-document.addEventListener('visibilitychange', async () => {   ← NEW code starts here
+// Reload data from cloud when the tab becomes visible again
+// Catches the case where another device updated data while this tab was inactive
+document.addEventListener('visibilitychange', async () => {
   if (document.visibilityState === 'visible' && window.loadFromFirestore) {
     const cloudData = await window.loadFromFirestore();
     if (cloudData && cloudData.S) {
+      // Only refresh if data is meaningfully different
       const currentJson = JSON.stringify(S);
       const cloudJson = JSON.stringify(cloudData.S);
       if (currentJson !== cloudJson) {
