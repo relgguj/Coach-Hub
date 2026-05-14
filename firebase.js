@@ -183,3 +183,23 @@ async function loadFromFirestore() {
 
 // Expose to main app
 window.loadFromFirestore = loadFromFirestore;
+
+// Forgot password handler — sends a password reset email
+const forgotLink = document.getElementById("forgot-password-link");
+if (forgotLink) {
+  forgotLink.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    if (!email) {
+      showMessage("Type your email in the field above, then click 'Forgot password?'", true);
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      showMessage("Password reset email sent! Check your inbox (and spam folder).");
+    } catch (error) {
+      showMessage(error.message, true);
+      console.error(error);
+    }
+  });
+}
