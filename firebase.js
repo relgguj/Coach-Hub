@@ -10,7 +10,19 @@ import {
   setDoc,
   getDoc
 } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyBwjTHpxUk_OVe2b0Bz2FecfAmdslqJTtQ",
   authDomain: "cadence-93672.firebaseapp.com",
