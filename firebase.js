@@ -109,11 +109,13 @@ onAuthStateChanged(auth, (user) => {
     if (userEmail) userEmail.textContent = user.email;
     console.log("Signed in as:", user.email);
      if (window.onUserSignedIn) window.onUserSignedIn();  // NEW
-  } else {
-    currentUser = null;  // NEW: clear signed-in user
+ } else {
+    currentUser = null;
     if (userBar) userBar.style.display = "none";
     if (authSection) authSection.style.display = "block";
     if (appContainer) appContainer.style.display = "none";
+    // Clear localStorage so next signed-in user starts fresh
+    try { localStorage.removeItem('mch_v9'); } catch(e) {}
     console.log("Signed out");
   }
 });
